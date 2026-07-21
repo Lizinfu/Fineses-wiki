@@ -1,5 +1,5 @@
 ---
-title: "卡俄斯"
+title: "德诺尼塞"
 description: "位于东南，齐黄大陆南方，幅员辽阔的多民族国家。"
 weight: 10
 keywords: 
@@ -15,10 +15,10 @@ topics:
     - "贸易" 
     - "外交" 
 params: 
-    id: "nat.kha" 
+    id: "nat.dun" 
     entity_kind: "nation" 
     library: 
-        catalog_no: "NAT-0002" 
+        catalog_no: "NAT-0008" 
         access_level: "public" 
         reliability: "verified" 
         last_reviewed: "2026-07-17" 

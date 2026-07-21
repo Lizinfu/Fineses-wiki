@@ -18,7 +18,7 @@ params:
     id: "nat.yin" 
     entity_kind: "nation" 
     library: 
-        catalog_no: "NAT-0002" 
+        catalog_no: "NAT-0004" 
         access_level: "public" 
         reliability: "verified" 
         last_reviewed: "2026-07-17" 

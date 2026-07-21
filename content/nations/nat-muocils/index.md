@@ -1,6 +1,6 @@
 ---
-title: "拉门斯"
-description: "位于东南，齐黄大陆南方，幅员辽阔的多民族国家。"
+title: "莫尔索斯"
+description: "位于大陆极北，幅员辽阔的大陆国家。"
 weight: 10
 keywords: 
     - "拉门斯" 
@@ -15,10 +15,10 @@ topics:
     - "贸易" 
     - "外交" 
 params: 
-    id: "nat.ram" 
+    id: "nat.muo" 
     entity_kind: "nation" 
     library: 
-        catalog_no: "NAT-0001" 
+        catalog_no: "NAT-0006" 
         access_level: "public" 
         reliability: "verified" 
         last_reviewed: "2026-07-21" 
