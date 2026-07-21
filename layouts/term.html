@@ -1,0 +1,45 @@
+{{ define "main" }}
+  <div class="page-main__inner">
+    {{ partial "navigation/breadcrumbs.html" . }}
+
+    <header class="list-hero">
+      <div class="list-hero__topline">
+        <span class="ui-label">TERM</span>
+        <span class="ui-index">
+          MATCHES / {{ len .Pages }}
+        </span>
+      </div>
+
+      <h1 class="list-hero__title">{{ .Title }}</h1>
+
+      {{ with .Content }}
+        <div class="prose reading-column">{{ . }}</div>
+      {{ end }}
+    </header>
+
+    <section class="list-section" aria-labelledby="term-records-title">
+      <header class="list-section__header">
+        <h2 id="term-records-title">相关档案</h2>
+        <span class="list-section__count">
+          {{ len .Pages }} RECORDS
+        </span>
+      </header>
+
+      {{ with .Pages }}
+        <div class="auto-grid list-grid">
+          {{ range .ByTitle }}
+            {{ partial "ui/catalog-card.html" (dict
+              "Page" .
+              "Variant" "compact"
+            ) }}
+          {{ end }}
+        </div>
+      {{ else }}
+        {{ partial "ui/empty-state.html" (dict
+          "Title" "暂无关联档案"
+          "Text" "该分类词条当前没有公开内容。"
+        ) }}
+      {{ end }}
+    </section>
+  </div>
+{{ end }}

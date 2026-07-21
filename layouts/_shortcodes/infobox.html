@@ -1,0 +1,13 @@
+{{- $title := .Get "title" | default "档案信息" -}}
+{{- $code := .Get "code" | default "INFO" -}}
+
+<aside class="manual-infobox" role="note">
+  <header class="manual-infobox__header">
+    <h3 class="manual-infobox__title">{{ $title }}</h3>
+    <span class="ui-index">{{ $code | upper }}</span>
+  </header>
+
+  <div class="prose">
+    {{ .Inner | markdownify }}
+  </div>
+</aside>

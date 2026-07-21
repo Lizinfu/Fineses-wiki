@@ -1,0 +1,56 @@
+<section
+  class="entity-appendix__section"
+  aria-labelledby="entity-revision-title">
+
+  <header class="entity-appendix__header">
+    <h2 id="entity-revision-title">修订与复核</h2>
+    <span class="entity-appendix__count">REVISION LOG</span>
+  </header>
+
+  <div class="revision-panel">
+    <div class="revision-panel__item">
+      <span class="revision-panel__key">Published</span>
+      <time
+        class="revision-panel__value"
+        datetime="{{ .Date.Format "2006-01-02" }}">
+        {{ .Date.Format "2006-01-02" }}
+      </time>
+    </div>
+
+    <div class="revision-panel__item">
+      <span class="revision-panel__key">Last modified</span>
+      <time
+        class="revision-panel__value"
+        datetime="{{ .Lastmod.Format "2006-01-02" }}">
+        {{ .Lastmod.Format "2006-01-02" }}
+      </time>
+    </div>
+
+    <div class="revision-panel__item">
+      <span class="revision-panel__key">Last reviewed</span>
+      <span class="revision-panel__value">
+        {{ with .Params.library }}
+          {{ index . "last_reviewed" | default "PENDING" }}
+        {{ else }}
+          PENDING
+        {{ end }}
+      </span>
+    </div>
+
+    <div class="revision-panel__item">
+      <span class="revision-panel__key">Schema</span>
+      <span class="revision-panel__value">
+        {{ .Params.schema | default "UNSPECIFIED" }}
+      </span>
+    </div>
+
+    {{ with .GitInfo }}
+      <div class="revision-panel__item">
+        <span class="revision-panel__key">Commit</span>
+        <span class="revision-panel__value">
+          {{ .AbbreviatedHash }}
+        </span>
+      </div>
+    {{ end }}
+  </div>
+</section>

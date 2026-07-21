@@ -1,0 +1,39 @@
+{{ define "main" }}
+  <div class="page-main__inner search-page">
+    {{ partial "navigation/breadcrumbs.html" . }}
+
+    <header class="search-hero">
+      <div class="search-hero__content">
+        <div class="cluster">
+          <span class="ui-label">SEARCH</span>
+          <span class="ui-index">PAGEFIND / STATIC INDEX</span>
+        </div>
+
+        <h1 class="search-hero__title">{{ .Title }}</h1>
+
+        <p class="search-hero__description">
+          {{ .Description
+            | default "检索公开馆藏中的名称、别名、编号、分类和正文内容。" }}
+        </p>
+      </div>
+
+      <aside class="search-hero__protocol" aria-label="检索协议">
+        <div class="search-hero__protocol-row">
+          <span class="search-hero__protocol-key">Engine</span>
+          <strong class="search-hero__protocol-value">Pagefind</strong>
+        </div>
+        <div class="search-hero__protocol-row">
+          <span class="search-hero__protocol-key">Mode</span>
+          <strong class="search-hero__protocol-value">Static</strong>
+        </div>
+        <div class="search-hero__protocol-row">
+          <span class="search-hero__protocol-key">Access</span>
+          <strong class="search-hero__protocol-value">Public</strong>
+        </div>
+      </aside>
+    </header>
+
+    {{ partial "search/interface.html" . }}
+    {{ partial "search/fallback-directory.html" . }}
+  </div>
+{{ end }}

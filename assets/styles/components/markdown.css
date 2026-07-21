@@ -1,0 +1,106 @@
+/* Stage 3 — Markdown render-hook output */
+
+.content-heading {
+  position: relative;
+}
+
+.content-heading__anchor {
+  display: inline-flex;
+  margin-inline-start: 0.35em;
+  color: var(--text-faint);
+  font-family: var(--font-mono);
+  font-size: 0.55em;
+  font-weight: 500;
+  text-decoration: none;
+  vertical-align: 0.16em;
+  opacity: 0;
+  transition: opacity var(--duration-fast) var(--ease-out);
+}
+
+.content-heading:hover .content-heading__anchor,
+.content-heading__anchor:focus-visible {
+  opacity: 1;
+}
+
+.content-link {
+  text-decoration-color: var(--accent);
+}
+
+.content-link--external::after {
+  margin-inline-start: 0.25em;
+  content: "↗";
+  color: var(--text-muted);
+  font-family: var(--font-mono);
+  font-size: 0.72em;
+}
+
+.content-figure {
+  position: relative;
+  margin-block: var(--space-8);
+}
+
+.content-figure__media {
+  display: block;
+  width: fit-content;
+  max-width: 100%;
+  background: var(--surface-2);
+  border: 1px solid var(--line-default);
+}
+
+.content-figure__media img {
+  width: auto;
+  max-width: 100%;
+}
+
+.content-figure__caption {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: var(--space-3);
+  margin-block-start: var(--space-2);
+  padding-block-start: var(--space-2);
+  color: var(--text-muted);
+  border-block-start: 1px solid var(--line-default);
+  font-size: var(--text-sm);
+  line-height: 1.55;
+}
+
+.content-figure__caption::before {
+  content: "FIG.";
+  color: var(--text-strong);
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  font-weight: 800;
+}
+
+.markdown-table {
+  max-width: 100%;
+  margin-block: var(--space-8);
+  overflow-x: auto;
+  border: 1px solid var(--line-default);
+  overscroll-behavior-inline: contain;
+}
+
+.markdown-table table {
+  width: 100%;
+  min-width: 40rem;
+  margin: 0;
+  border: 0;
+}
+
+.markdown-table th:first-child,
+.markdown-table td:first-child {
+  border-inline-start: 0;
+}
+
+.markdown-table th:last-child,
+.markdown-table td:last-child {
+  border-inline-end: 0;
+}
+
+.markdown-table tr:first-child th {
+  border-block-start: 0;
+}
+
+.markdown-table tr:last-child td {
+  border-block-end: 0;
+}

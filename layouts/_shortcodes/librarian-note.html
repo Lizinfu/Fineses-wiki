@@ -1,0 +1,24 @@
+{{- $title := .Get "title" | default "馆员注释" -}}
+{{- $author := .Get "author" | default "未署名馆员" -}}
+{{- $status := .Get "status" | default "info" -}}
+
+<aside
+  class="archive-note"
+  data-status="{{ $status | urlize }}"
+  role="note">
+
+  <header class="archive-note__header">
+    <span class="archive-note__code" aria-hidden="true">LIB</span>
+    <strong class="archive-note__title">{{ $title }}</strong>
+    <span class="archive-note__status">{{ $status | upper }}</span>
+  </header>
+
+  <div class="archive-note__body prose">
+    {{ .Inner | markdownify }}
+  </div>
+
+  <footer class="archive-note__footer">
+    <span>Filed by</span>
+    <cite>{{ $author }}</cite>
+  </footer>
+</aside>

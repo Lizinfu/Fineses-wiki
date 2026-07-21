@@ -1,0 +1,13 @@
+{
+  "scripts": {
+    "dev": "hugo server -D",
+    "build:hugo": "hugo --minify",
+    "search:index": "pagefind --site public",
+    "build": "npm run build:hugo && npm run search:index",
+    "preview:search": "npm run build:hugo && pagefind --site public --serve",
+    "verify:search": "node scripts/verify-search-index.mjs"
+  },
+  "devDependencies": {
+    "pagefind": "1.5.2"
+  }
+}

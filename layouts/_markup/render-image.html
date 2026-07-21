@@ -1,0 +1,29 @@
+{{- $src := .Destination -}}
+{{- with .PageInner.Resources.GetMatch .Destination -}}
+  {{- $src = .RelPermalink -}}
+{{- end -}}
+
+{{- if .IsBlock -}}
+  <figure class="content-figure">
+    <a class="content-figure__media" href="{{ $src | safeURL }}">
+      <img
+        src="{{ $src | safeURL }}"
+        alt="{{ .PlainText }}"
+        loading="lazy"
+        decoding="async">
+    </a>
+
+    {{- with .Title -}}
+      <figcaption class="content-figure__caption">
+        {{ . }}
+      </figcaption>
+    {{- end -}}
+  </figure>
+{{- else -}}
+  <img
+    src="{{ $src | safeURL }}"
+    alt="{{ .PlainText }}"
+    {{- with .Title }} title="{{ . }}"{{ end -}}
+    loading="lazy"
+    decoding="async">
+{{- end -}}

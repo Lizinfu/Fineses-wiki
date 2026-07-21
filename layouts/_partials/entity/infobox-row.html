@@ -1,0 +1,15 @@
+<div class="entity-infobox__row">
+  <dt class="entity-infobox__key">{{ .Key }}</dt>
+
+  <dd class="entity-infobox__value">
+    {{- if reflect.IsSlice .Value -}}
+      <ul>
+        {{- range .Value -}}
+          <li>{{ printf "%v" . }}</li>
+        {{- end -}}
+      </ul>
+    {{- else -}}
+      {{ printf "%v" . }}
+    {{- end -}}
+  </dd>
+</div>

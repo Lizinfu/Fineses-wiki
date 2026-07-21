@@ -1,0 +1,70 @@
+{{- with .Params.relations -}}
+<section
+  class="entity-appendix__section"
+  aria-labelledby="entity-relations-title">
+
+  <header class="entity-appendix__header">
+    <h2 id="entity-relations-title">关系与关联条目</h2>
+    <span class="entity-appendix__count">
+      {{ len . }} RELATIONS
+    </span>
+  </header>
+
+  <ul class="relation-list">
+    {{- range . -}}
+      {{- $type := index . "type" | default "related_to" -}}
+      {{- $target := index . "target" | default "" -}}
+      {{- $note := index . "note" | default "" -}}
+      {{- $period := index . "period" -}}
+      {{- $matches := where site.RegularPages "Params.id" $target -}}
+
+      <li class="relation-item">
+        <span class="relation-item__type">
+          {{ replace $type "_" " " }}
+        </span>
+
+        <div class="relation-item__body">
+          {{ with first 1 $matches }}
+            {{- $targetPage := index . 0 -}}
+            <a
+              class="relation-item__target"
+              href="{{ $targetPage.RelPermalink }}">
+              {{ $targetPage.LinkTitle }}
+            </a>
+          {{ else }}
+            <span
+              class="relation-item__target"
+              data-unresolved="true"
+              title="未找到具有该稳定 ID 的公开页面">
+              {{ $target | default "UNRESOLVED TARGET" }}
+            </span>
+          {{ end }}
+
+          {{ if or $target $period }}
+            <div class="relation-item__meta">
+              {{ with $target }}<span>ID / {{ . }}</span>{{ end }}
+
+              {{ with $period }}
+                {{ if reflect.IsMap . }}
+                  <span>
+                    PERIOD /
+                    {{ index . "start" | default "?" }}
+                    —
+                    {{ index . "end" | default "?" }}
+                  </span>
+                {{ else }}
+                  <span>PERIOD / {{ printf "%v" . }}</span>
+                {{ end }}
+              {{ end }}
+            </div>
+          {{ end }}
+
+          {{ with $note }}
+            <p class="relation-item__note">{{ . }}</p>
+          {{ end }}
+        </div>
+      </li>
+    {{- end -}}
+  </ul>
+</section>
+{{- end -}}

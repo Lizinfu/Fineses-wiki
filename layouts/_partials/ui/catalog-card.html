@@ -1,0 +1,51 @@
+{{- $page := .Page -}}
+{{- $variant := .Variant | default "" -}}
+{{- $kind := $page.Params.entity_kind
+  | default $page.Type
+  | default $page.Section
+  | default $page.Kind
+-}}
+
+{{- $catalog := "" -}}
+{{- with $page.Params.library -}}
+  {{- with index . "catalog_no" -}}
+    {{- $catalog = printf "%v" . -}}
+  {{- end -}}
+{{- end -}}
+
+{{- $description := $page.Description -}}
+{{- if not $description -}}
+  {{- $description = $page.Summary | plainify -}}
+{{- end -}}
+
+<a
+  class="catalog-card{{ if eq $variant "compact" }} catalog-card--compact{{ end }}"
+  href="{{ $page.RelPermalink }}">
+  <header class="catalog-card__header">
+    <span class="catalog-card__code">
+      {{ $catalog | default (printf "%s / %02d" ($kind | upper) $page.Weight) }}
+    </span>
+
+    <span class="catalog-card__kind">{{ $kind | upper }}</span>
+  </header>
+
+  <div class="catalog-card__body">
+    <h3 class="catalog-card__title">{{ $page.LinkTitle }}</h3>
+
+    {{ with $description }}
+      <p class="catalog-card__description">{{ . | plainify }}</p>
+    {{ end }}
+  </div>
+
+  <footer class="catalog-card__footer">
+    <span class="catalog-card__meta">
+      {{ if $page.IsSection }}
+        {{ len $page.RegularPagesRecursive }} RECORDS
+      {{ else }}
+        REV. {{ $page.Lastmod.Format "2006-01-02" }}
+      {{ end }}
+    </span>
+
+    <span class="catalog-card__meta">OPEN</span>
+  </footer>
+</a>

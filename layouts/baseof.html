@@ -1,0 +1,32 @@
+<!doctype html>
+<html
+  class="no-js"
+  lang="{{ site.Language.LanguageCode | default "zh-CN" }}">
+<head>
+  {{ partial "head/meta.html" . }}
+  {{ partial "head/styles.html" . }}
+</head>
+
+<body class="kind-{{ .Kind }}{{ with .Section }} section-{{ . | urlize }}{{ end }}">
+  <a class="skip-link" href="#main-content">跳至正文</a>
+
+  <div class="page-frame">
+    {{ partial "shell/header.html" . }}
+
+    <div class="site-shell">
+      {{ partial "shell/sidebar.html" . }}
+
+      <main class="page-main" id="main-content" tabindex="-1">
+        {{ block "main" . }}{{ end }}
+      </main>
+
+      {{ partial "shell/page-aside.html" . }}
+    </div>
+
+    {{ partial "shell/footer.html" . }}
+  </div>
+
+  {{ partial "navigation/mobile-drawer.html" . }}
+  {{ partial "head/scripts.html" . }}
+</body>
+</html>

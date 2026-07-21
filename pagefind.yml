@@ -1,0 +1,6 @@
+site: public
+output_subdir: pagefind
+glob: "**/*.html"
+keep_index_url: false
+write_playground: false
+verbose: false

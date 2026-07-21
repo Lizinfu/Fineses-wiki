@@ -1,0 +1,48 @@
+{{ define "main" }}
+  <div class="page-main__inner">
+    {{ partial "navigation/breadcrumbs.html" . }}
+
+    <header class="list-hero">
+      <div class="list-hero__topline">
+        <span class="ui-label">TAXONOMY</span>
+        <span class="ui-index">
+          TERMS / {{ len .Data.Terms }}
+        </span>
+      </div>
+
+      <h1 class="list-hero__title">{{ .Title }}</h1>
+
+      {{ with .Content }}
+        <div class="prose reading-column">{{ . }}</div>
+      {{ end }}
+    </header>
+
+    <section class="list-section" aria-labelledby="taxonomy-terms-title">
+      <header class="list-section__header">
+        <h2 id="taxonomy-terms-title">分类词条</h2>
+        <span class="list-section__count">
+          {{ len .Data.Terms }} TERMS
+        </span>
+      </header>
+
+      {{ with .Data.Terms }}
+        <div class="taxonomy-index">
+          {{ range .Alphabetical }}
+            <a class="taxonomy-row" href="{{ .Page.RelPermalink }}">
+              <span class="taxonomy-row__title">{{ .Page.LinkTitle }}</span>
+              <span class="taxonomy-row__code">
+                {{ .Page.Data.Singular | default "TERM" | upper }}
+              </span>
+              <span class="taxonomy-row__count">{{ .Count }}</span>
+            </a>
+          {{ end }}
+        </div>
+      {{ else }}
+        {{ partial "ui/empty-state.html" (dict
+          "Title" "暂无分类词条"
+          "Text" "当内容使用该 Taxonomy 后，词条会自动显示。"
+        ) }}
+      {{ end }}
+    </section>
+  </div>
+{{ end }}

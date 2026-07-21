@@ -1,0 +1,40 @@
+{{- $description := .Description
+  | default site.Params.description
+  | default "世界观图书馆公开馆藏与交叉索引系统。" -}}
+
+{{- $title := site.Title -}}
+{{- if not .IsHome -}}
+  {{- $title = printf "%s · %s" .Title site.Title -}}
+{{- end -}}
+
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<meta name="theme-color" content="#111315">
+
+<title>{{ $title }}</title>
+<meta name="description" content="{{ $description | plainify }}">
+<link rel="canonical" href="{{ .Permalink }}">
+
+<meta property="og:type" content="{{ if .IsPage }}article{{ else }}website{{ end }}">
+<meta property="og:title" content="{{ $title }}">
+<meta property="og:description" content="{{ $description | plainify }}">
+<meta property="og:url" content="{{ .Permalink }}">
+<meta property="og:site_name" content="{{ site.Title }}">
+
+{{ hugo.Generator }}
+
+<script>
+  (() => {
+    try {
+      const stored = localStorage.getItem("world-library-theme");
+      const preferred = matchMedia("(prefers-color-scheme: dark)").matches
+        ? "dark"
+        : "light";
+      document.documentElement.dataset.theme =
+        stored === "light" || stored === "dark" ? stored : preferred;
+    } catch {
+      document.documentElement.dataset.theme = "light";
+    }
+  })();
+</script>

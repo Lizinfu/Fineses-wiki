@@ -1,0 +1,21 @@
+{{- if not .IsHome -}}
+<nav class="breadcrumbs" aria-label="面包屑">
+  <ol class="breadcrumbs__list">
+    <li class="breadcrumbs__item">
+      <a href="{{ site.Home.RelPermalink }}">阅览大厅</a>
+    </li>
+
+    {{- range .Ancestors.Reverse -}}
+      {{- if not .IsHome -}}
+        <li class="breadcrumbs__item">
+          <a href="{{ .RelPermalink }}">{{ .LinkTitle }}</a>
+        </li>
+      {{- end -}}
+    {{- end -}}
+
+    <li class="breadcrumbs__item">
+      <span aria-current="page">{{ .LinkTitle }}</span>
+    </li>
+  </ol>
+</nav>
+{{- end -}}

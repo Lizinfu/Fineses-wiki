@@ -1,0 +1,45 @@
+{{- $library := .Params.library -}}
+{{- $catalog := "" -}}
+{{- $lastReviewed := "" -}}
+
+{{- with $library -}}
+  {{- with index . "catalog_no" -}}
+    {{- $catalog = printf "%v" . -}}
+  {{- end -}}
+
+  {{- with index . "last_reviewed" -}}
+    {{- $lastReviewed = printf "%v" . -}}
+  {{- end -}}
+{{- end -}}
+
+<section class="archive-meta-strip" aria-label="档案元数据">
+  <div class="archive-meta-strip__item">
+    <span class="archive-meta-strip__key">Stable ID</span>
+    <span class="archive-meta-strip__value">
+      {{ .Params.id | default "UNASSIGNED" }}
+    </span>
+  </div>
+
+  <div class="archive-meta-strip__item">
+    <span class="archive-meta-strip__key">Catalog</span>
+    <span class="archive-meta-strip__value">
+      {{ $catalog | default "PENDING" }}
+    </span>
+  </div>
+
+  <div class="archive-meta-strip__item">
+    <span class="archive-meta-strip__key">Last modified</span>
+    <time
+      class="archive-meta-strip__value"
+      datetime="{{ .Lastmod.Format "2006-01-02" }}">
+      {{ .Lastmod.Format "2006-01-02" }}
+    </time>
+  </div>
+
+  <div class="archive-meta-strip__item">
+    <span class="archive-meta-strip__key">Last reviewed</span>
+    <span class="archive-meta-strip__value">
+      {{ $lastReviewed | default "PENDING" }}
+    </span>
+  </div>
+</section>

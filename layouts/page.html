@@ -1,0 +1,34 @@
+{{ define "main" }}
+  <div class="page-main__inner">
+    {{ partial "search/pagefind-metadata.html" . }}
+
+    {{ partial "navigation/breadcrumbs.html" . }}
+    {{ partial "entity/header.html" . }}
+    {{ partial "entity/archive-meta.html" . }}
+
+    <div class="entity-layout">
+      <article
+        class="prose entity-content"
+        data-pagefind-body>
+        {{ .Content }}
+      </article>
+
+      <aside
+        class="entity-layout__aside"
+        aria-label="实体信息"
+        data-pagefind-ignore>
+        {{ partial "entity/infobox.html" . }}
+      </aside>
+    </div>
+
+    <div class="entity-appendix" data-pagefind-ignore>
+      {{ partial "entity/relations.html" . }}
+      {{ partial "entity/sources.html" . }}
+      {{ partial "entity/revision.html" . }}
+    </div>
+
+    <div data-pagefind-ignore>
+      {{ partial "navigation/section-pagination.html" . }}
+    </div>
+  </div>
+{{ end }}

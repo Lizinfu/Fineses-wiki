@@ -1,0 +1,59 @@
+{{- $kind := .Params.entity_kind
+  | default .Type
+  | default .Section
+  | default .Kind
+-}}
+
+{{- $catalog := "" -}}
+{{- $access := "" -}}
+{{- $reliability := "" -}}
+
+{{- with .Params.library -}}
+  {{- with index . "catalog_no" -}}
+    {{- $catalog = printf "%v" . -}}
+  {{- end -}}
+  {{- with index . "access_level" -}}
+    {{- $access = printf "%v" . -}}
+  {{- end -}}
+  {{- with index . "reliability" -}}
+    {{- $reliability = printf "%v" . -}}
+  {{- end -}}
+{{- end -}}
+
+<header class="entity-header">
+  <div class="entity-header__topline">
+    <span class="ui-label">{{ $kind | upper }}</span>
+
+    <span class="ui-index">
+      {{ $catalog | default (.Params.id | default .RelPermalink) }}
+    </span>
+  </div>
+
+  <h1 class="entity-header__title">{{ .Title }}</h1>
+
+  {{ with .Description }}
+    <p class="entity-header__description">{{ . }}</p>
+  {{ end }}
+
+  {{ if or $access $reliability .Params.canon_status }}
+    <div class="entity-header__status" aria-label="档案状态">
+      {{ with $access }}
+        <span class="status-chip" data-status="{{ . | urlize }}">
+          Access / {{ . }}
+        </span>
+      {{ end }}
+
+      {{ with $reliability }}
+        <span class="status-chip" data-status="{{ . | urlize }}">
+          Reliability / {{ . }}
+        </span>
+      {{ end }}
+
+      {{ with .Params.canon_status }}
+        <span class="status-chip" data-status="{{ . | urlize }}">
+          Canon / {{ . }}
+        </span>
+      {{ end }}
+    </div>
+  {{ end }}
+</header>

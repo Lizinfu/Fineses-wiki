@@ -1,0 +1,82 @@
+<div class="page-main__inner">
+  {{- $isEntitySection := isset .Params "id" -}}
+
+  {{- if $isEntitySection -}}
+    {{ partial "search/pagefind-metadata.html" . }}
+  {{- end -}}
+
+  {{ partial "navigation/breadcrumbs.html" . }}
+
+  <header
+    class="list-hero"
+    {{- if $isEntitySection }} data-pagefind-body{{ end }}>
+    <div class="list-hero__topline">
+      <span class="ui-label">
+        {{ .Kind | upper }}
+      </span>
+
+      <span class="ui-index">
+        RECORDS / {{ len .RegularPagesRecursive }}
+      </span>
+    </div>
+
+    <h1 class="list-hero__title">{{ .Title }}</h1>
+
+    {{ with .Description }}
+      <p class="list-hero__description">{{ . }}</p>
+    {{ end }}
+
+    {{ with .Content }}
+      <div class="prose reading-column">{{ . }}</div>
+    {{ end }}
+  </header>
+
+  {{ with .Sections }}
+    <section
+      class="list-section"
+      aria-labelledby="subsections-title"
+      data-pagefind-ignore>
+      <header class="list-section__header">
+        <h2 id="subsections-title">下级目录</h2>
+        <span class="list-section__count">{{ len . }} SECTIONS</span>
+      </header>
+
+      <div class="auto-grid list-grid">
+        {{ range .ByWeight }}
+          {{ partial "ui/catalog-card.html" (dict
+            "Page" .
+            "Variant" "portal"
+          ) }}
+        {{ end }}
+      </div>
+    </section>
+  {{ end }}
+
+  <section
+    class="list-section"
+    aria-labelledby="records-title"
+    data-pagefind-ignore>
+    <header class="list-section__header">
+      <h2 id="records-title">馆藏条目</h2>
+      <span class="list-section__count">
+        {{ len .RegularPages }} RECORDS
+      </span>
+    </header>
+
+    {{ with .RegularPages }}
+      <div class="auto-grid list-grid">
+        {{ range .ByTitle }}
+          {{ partial "ui/catalog-card.html" (dict
+            "Page" .
+            "Variant" "compact"
+          ) }}
+        {{ end }}
+      </div>
+    {{ else }}
+      {{ partial "ui/empty-state.html" (dict
+        "Title" "当前目录暂无普通条目"
+        "Text" "新增 Markdown 页面后，条目会自动出现在这里。"
+      ) }}
+    {{ end }}
+  </section>
+</div>

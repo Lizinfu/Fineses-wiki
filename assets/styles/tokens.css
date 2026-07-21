@@ -1,0 +1,149 @@
+/*
+  Stage 1 — Design tokens
+  Visual direction: modernist / functionalist / industrial archive system.
+  The palette is original and does not reproduce third-party game assets.
+*/
+
+:root {
+  color-scheme: light;
+
+  /* Type */
+  --font-sans:
+    Inter, "Noto Sans SC", "Source Han Sans SC", "PingFang SC",
+    "Microsoft YaHei", system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-display:
+    "Arial Narrow", "Roboto Condensed", Inter, "Noto Sans SC",
+    "PingFang SC", system-ui, sans-serif;
+  --font-mono:
+    "JetBrains Mono", "SFMono-Regular", Consolas, "Liberation Mono",
+    monospace;
+
+  --text-2xs: 0.6875rem;
+  --text-xs: 0.75rem;
+  --text-sm: 0.875rem;
+  --text-base: 1rem;
+  --text-md: 1.0625rem;
+  --text-lg: 1.25rem;
+  --text-xl: 1.5rem;
+  --text-2xl: 2rem;
+  --text-3xl: clamp(2.35rem, 5vw, 4.8rem);
+  --text-display: clamp(3.25rem, 9vw, 8.5rem);
+
+  --leading-tight: 1.05;
+  --leading-heading: 1.16;
+  --leading-body: 1.82;
+  --tracking-tight: -0.025em;
+  --tracking-normal: 0;
+  --tracking-wide: 0.08em;
+  --tracking-wider: 0.14em;
+
+  /* Spacing — 4px base rhythm */
+  --space-0: 0;
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.25rem;
+  --space-6: 1.5rem;
+  --space-8: 2rem;
+  --space-10: 2.5rem;
+  --space-12: 3rem;
+  --space-16: 4rem;
+  --space-20: 5rem;
+  --space-24: 6rem;
+
+  /* Layout */
+  --page-max: 96rem;
+  --content-readable: 72ch;
+  --content-wide: 88rem;
+  --rail-left: 17rem;
+  --rail-right: 15rem;
+  --header-height: 4.5rem;
+  --gutter: clamp(1rem, 3vw, 3rem);
+
+  /* Surfaces */
+  --canvas: #ececea;
+  --surface-0: #f7f7f4;
+  --surface-1: #ffffff;
+  --surface-2: #e4e4df;
+  --surface-inverse: #111315;
+  --surface-inverse-2: #1d2023;
+
+  /* Text */
+  --text-strong: #101214;
+  --text-body: #303438;
+  --text-muted: #6d7378;
+  --text-faint: #92989d;
+  --text-inverse: #f4f5f2;
+
+  /* Lines */
+  --line-strong: #101214;
+  --line-default: #b6bab8;
+  --line-subtle: #d8dad6;
+  --line-inverse: rgb(255 255 255 / 24%);
+
+  /* Accent and semantic colors */
+  --accent: #f2a900;
+  --accent-hover: #ffbc24;
+  --accent-soft: #fff2c9;
+  --accent-ink: #17130a;
+
+  --status-info: #377ba8;
+  --status-success: #397d5d;
+  --status-warning: #b97200;
+  --status-danger: #b6423d;
+  --status-disputed: #7655a9;
+  --status-damaged: #7e6659;
+
+  /* Interaction */
+  --focus-ring: 0 0 0 3px rgb(242 169 0 / 44%);
+  --selection-bg: #17191b;
+  --selection-text: #ffffff;
+
+  /* Geometry */
+  --radius-none: 0;
+  --radius-sm: 0.125rem;
+  --radius-md: 0.25rem;
+  --cut-sm: 0.5rem;
+  --cut-md: 0.875rem;
+  --border-thin: 1px;
+  --border-thick: 2px;
+
+  /* Motion */
+  --duration-fast: 120ms;
+  --duration-base: 180ms;
+  --duration-slow: 280ms;
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-standard: cubic-bezier(0.2, 0, 0, 1);
+
+  /* Layering */
+  --z-base: 0;
+  --z-sticky: 30;
+  --z-nav: 50;
+  --z-modal: 100;
+}
+
+:root[data-theme="dark"] {
+  color-scheme: dark;
+
+  --canvas: #0d0f10;
+  --surface-0: #131517;
+  --surface-1: #181b1e;
+  --surface-2: #24282b;
+  --surface-inverse: #f1f2ef;
+  --surface-inverse-2: #d9dbd7;
+
+  --text-strong: #f4f5f2;
+  --text-body: #d6d9d5;
+  --text-muted: #a2a8a5;
+  --text-faint: #727a78;
+  --text-inverse: #111315;
+
+  --line-strong: #f0f1ed;
+  --line-default: #555b5d;
+  --line-subtle: #303537;
+  --line-inverse: rgb(0 0 0 / 24%);
+
+  --accent-soft: #3b2b03;
+  --accent-ink: #fff8e1;
+}

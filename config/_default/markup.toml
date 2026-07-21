@@ -1,0 +1,16 @@
+[goldmark]
+
+  [goldmark.parser]
+    wrapStandAloneImageWithinParagraph = false
+
+    [goldmark.parser.attribute]
+      block = true
+      title = true
+
+  [goldmark.renderHooks]
+
+    [goldmark.renderHooks.image]
+      useEmbedded = "fallback"
+
+    [goldmark.renderHooks.link]
+      useEmbedded = "fallback"

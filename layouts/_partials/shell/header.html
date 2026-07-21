@@ -1,0 +1,57 @@
+<header class="site-header">
+  <a class="site-header__brand" href="{{ site.Home.RelPermalink }}">
+    <span class="site-brand__mark" aria-hidden="true"></span>
+
+    <span class="site-brand__copy">
+      <span class="site-brand__title">{{ site.Title }}</span>
+      <span class="site-brand__subtitle">World Archive Interface</span>
+    </span>
+  </a>
+
+  <div class="site-header__context" aria-hidden="true">
+    <span class="site-context__code">
+      {{ if .IsHome }}00{{ else }}{{ .Section | default .Kind | upper }}{{ end }}
+    </span>
+
+    <span class="site-context__label">
+      {{ if .IsHome }}Reading Hall{{ else }}{{ .Title }}{{ end }}
+    </span>
+  </div>
+
+  <div class="site-header__actions">
+    <a
+      class="icon-button"
+      href="{{ "search/" | relLangURL }}"
+      aria-label="打开检索中心">
+      <svg viewBox="0 0 24 24" aria-hidden="true">
+        <circle cx="10.5" cy="10.5" r="6.5"></circle>
+        <path d="m15.5 15.5 5 5"></path>
+      </svg>
+    </a>
+
+    <button
+      class="icon-button"
+      type="button"
+      data-theme-toggle
+      aria-pressed="false"
+      aria-label="切换显示模式">
+      <svg viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M12 3v2.5M12 18.5V21M3 12h2.5M18.5 12H21"></path>
+        <path d="m5.6 5.6 1.8 1.8M16.6 16.6l1.8 1.8M18.4 5.6l-1.8 1.8M7.4 16.6l-1.8 1.8"></path>
+        <circle cx="12" cy="12" r="4.25"></circle>
+      </svg>
+    </button>
+
+    <button
+      class="icon-button mobile-nav-toggle"
+      type="button"
+      data-nav-toggle
+      aria-controls="mobile-navigation"
+      aria-expanded="false"
+      aria-label="打开导航菜单">
+      <svg viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M4 7h16M4 12h16M4 17h16"></path>
+      </svg>
+    </button>
+  </div>
+</header>

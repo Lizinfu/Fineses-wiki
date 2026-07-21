@@ -1,0 +1,59 @@
+{{- $page := .Page -}}
+{{- $mode := .Mode | default "desktop" -}}
+
+<nav
+  class="primary-nav"
+  aria-label="{{ if eq $mode "mobile" }}移动端主要导航{{ else }}主要导航{{ end }}">
+
+  {{- with site.Menus.main -}}
+    {{- range $index, $item := . -}}
+      {{- $href := $item.URL -}}
+      {{- with $item.Page -}}
+        {{- $href = .RelPermalink -}}
+      {{- end -}}
+
+      {{- $active := or
+        ($page.IsMenuCurrent "main" $item)
+        ($page.HasMenuCurrent "main" $item)
+      -}}
+
+      <a
+        class="primary-nav__link{{ if $active }} is-active{{ end }}"
+        href="{{ $href }}"
+        {{ if $active }}aria-current="page"{{ end }}>
+        <span class="primary-nav__code">
+          {{ printf "%02d" $index }}
+        </span>
+        <span class="primary-nav__name">{{ $item.Name }}</span>
+      </a>
+    {{- end -}}
+  {{- else -}}
+    {{- $fallback := slice
+      (dict "name" "阅览大厅" "url" site.Home.RelPermalink "code" "00")
+      (dict "name" "国家与地区" "url" ("nations/" | relLangURL) "code" "01")
+      (dict "name" "人物与组织" "url" ("people/" | relLangURL) "code" "02")
+      (dict "name" "历史与年代" "url" ("history/" | relLangURL) "code" "03")
+      (dict "name" "概念与档案" "url" ("concepts/" | relLangURL) "code" "04")
+      (dict "name" "生态与物种" "url" ("ecology/" | relLangURL) "code" "05")
+      (dict "name" "检索中心" "url" ("search/" | relLangURL) "code" "06")
+    -}}
+
+    {{- range $fallback -}}
+      {{- $active := eq $page.RelPermalink .url -}}
+      {{- if and
+        (ne .url site.Home.RelPermalink)
+        (strings.HasPrefix $page.RelPermalink .url)
+      -}}
+        {{- $active = true -}}
+      {{- end -}}
+
+      <a
+        class="primary-nav__link{{ if $active }} is-active{{ end }}"
+        href="{{ .url }}"
+        {{ if $active }}aria-current="page"{{ end }}>
+        <span class="primary-nav__code">{{ .code }}</span>
+        <span class="primary-nav__name">{{ .name }}</span>
+      </a>
+    {{- end -}}
+  {{- end -}}
+</nav>

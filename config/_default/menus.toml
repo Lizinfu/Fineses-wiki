@@ -1,0 +1,34 @@
+[[main]]
+name = '首页'
+pageRef = '/'
+weight = 10
+
+[[main]]
+name = '国家'
+pageRef = '/nations'
+weight = 20
+
+[[main]]
+name = '人物'
+pageRef = '/people'
+weight = 30
+
+[[main]]
+name = '历史'
+pageRef = '/history'
+weight = 40
+
+[[main]]
+name = '概念设定'
+pageRef = '/concepts'
+weight = 50
+
+[[main]]
+name = '地区生态'
+pageRef = '/regions'
+weight = 60
+
+[[main]]
+name = '检索'
+pageRef = '/search'
+weight = 70

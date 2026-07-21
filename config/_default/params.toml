@@ -1,0 +1,4 @@
+library_name = '菲恩尼斯图书馆'
+library_subtitle = '互联档案检索系统'
+site_description = '用于检索国家、人物、历史、概念与地区生态资料的世界观档案库。'
+footer_text = '本馆资料仍在持续整理；馆藏内容以最新修订版本为准。'

@@ -1,0 +1,16 @@
+{{- $class := "content-heading" -}}
+{{- with .Attributes.class -}}
+  {{- $class = printf "%s %s" $class . -}}
+{{- end -}}
+
+<h{{ .Level }}
+  class="{{ $class }}"
+  id="{{ .Anchor }}">
+  {{- .Text -}}
+  <a
+    class="content-heading__anchor"
+    href="#{{ .Anchor }}"
+    aria-label="复制“{{ .PlainText }}”小节链接">
+    #
+  </a>
+</h{{ .Level }}>

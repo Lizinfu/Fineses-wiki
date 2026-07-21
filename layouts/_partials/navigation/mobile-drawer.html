@@ -1,0 +1,50 @@
+<div
+  class="mobile-nav"
+  id="mobile-navigation"
+  data-mobile-nav
+  data-state="closed"
+  aria-hidden="true">
+
+  <button
+    class="mobile-nav__backdrop"
+    type="button"
+    data-nav-close
+    aria-label="关闭导航菜单"></button>
+
+  <section
+    class="mobile-nav__panel"
+    data-nav-panel
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="mobile-navigation-title"
+    tabindex="-1">
+
+    <header class="mobile-nav__header">
+      <div class="mobile-nav__title">
+        <strong id="mobile-navigation-title">馆藏导航</strong>
+        <span>Portal index / Mobile</span>
+      </div>
+
+      <button
+        class="icon-button"
+        type="button"
+        data-nav-close
+        aria-label="关闭导航菜单">
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M5 5l14 14M19 5 5 19"></path>
+        </svg>
+      </button>
+    </header>
+
+    <div class="mobile-nav__body">
+      {{ partial "navigation/primary-nav.html" (dict
+        "Page" .
+        "Mode" "mobile"
+      ) }}
+    </div>
+
+    <footer class="mobile-nav__footer">
+      Public access / {{ len site.RegularPages }} records indexed
+    </footer>
+  </section>
+</div>

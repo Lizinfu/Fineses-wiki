@@ -1,0 +1,44 @@
+<aside class="page-aside">
+  <div class="sticky-rail">
+    {{- $toc := printf "%s" .TableOfContents -}}
+
+    {{- if and .IsPage (strings.Contains $toc "<li>") -}}
+      {{ partial "navigation/page-toc.html" . }}
+    {{- else -}}
+      <section class="archive-status" aria-labelledby="archive-status-title">
+        <div class="page-toc__title">
+          <strong id="archive-status-title">系统状态</strong>
+          <span>LIVE</span>
+        </div>
+
+        <div class="archive-status__grid">
+          <div class="archive-status__item">
+            <span class="archive-status__key">Access</span>
+            <span class="archive-status__value">Public</span>
+          </div>
+
+          <div class="archive-status__item">
+            <span class="archive-status__key">Records</span>
+            <span class="archive-status__value">
+              {{ len site.RegularPages }}
+            </span>
+          </div>
+
+          <div class="archive-status__item">
+            <span class="archive-status__key">Sections</span>
+            <span class="archive-status__value">
+              {{ len site.Sections }}
+            </span>
+          </div>
+
+          <div class="archive-status__item">
+            <span class="archive-status__key">Language</span>
+            <span class="archive-status__value">
+              {{ site.Language.LanguageCode | default "zh-CN" }}
+            </span>
+          </div>
+        </div>
+      </section>
+    {{- end -}}
+  </div>
+</aside>

@@ -1,0 +1,90 @@
+{{- /*
+Search metadata is deliberately outside data-pagefind-body. Pagefind still
+captures metadata and filters here, while the visible element is ignored as
+body text.
+*/ -}}
+
+{{- $kind := .Params.entity_kind
+  | default .Type
+  | default .Section
+  | default .Kind
+-}}
+
+{{- $catalog := "" -}}
+{{- with .Params.library -}}
+  {{- with index . "catalog_no" -}}
+    {{- $catalog = printf "%v" . -}}
+  {{- end -}}
+{{- end -}}
+
+{{- $aliases := slice -}}
+
+{{- with .Params.keywords -}}
+  {{- if reflect.IsSlice . -}}
+    {{- range . -}}
+      {{- $aliases = $aliases | append (printf "%v" .) -}}
+    {{- end -}}
+  {{- else -}}
+    {{- $aliases = $aliases | append (printf "%v" .) -}}
+  {{- end -}}
+{{- end -}}
+
+{{- with .Params.names -}}
+  {{- range $field := slice "official" "short" "native" "former" "aliases" -}}
+    {{- with index . $field -}}
+      {{- if reflect.IsSlice . -}}
+        {{- range . -}}
+          {{- $aliases = $aliases | append (printf "%v" .) -}}
+        {{- end -}}
+      {{- else -}}
+        {{- $aliases = $aliases | append (printf "%v" .) -}}
+      {{- end -}}
+    {{- end -}}
+  {{- end -}}
+{{- end -}}
+
+<div
+  class="visually-hidden"
+  aria-hidden="true"
+  data-pagefind-ignore>
+
+  <span data-pagefind-meta="title">{{ .Title }}</span>
+
+  {{ with .Description }}
+    <span data-pagefind-meta="description">{{ . }}</span>
+  {{ end }}
+
+  {{ with .Params.id }}
+    <span data-pagefind-meta="stable_id">{{ . }}</span>
+  {{ end }}
+
+  {{ with $catalog }}
+    <span data-pagefind-meta="catalog_no">{{ . }}</span>
+  {{ end }}
+
+  {{ with $kind }}
+    <span
+      data-pagefind-meta="entity_kind"
+      data-pagefind-filter="entity_kind">
+      {{ . }}
+    </span>
+  {{ end }}
+
+  {{ with .Section }}
+    <span
+      data-pagefind-meta="section"
+      data-pagefind-filter="section">
+      {{ . }}
+    </span>
+  {{ end }}
+
+  {{ with $aliases }}
+    {{- if gt (len .) 0 -}}
+      <span data-pagefind-meta="aliases">{{ delimit . " / " }}</span>
+    {{- end -}}
+  {{ end }}
+
+  <span data-pagefind-meta="lastmod">
+    {{ .Lastmod.Format "2006-01-02" }}
+  </span>
+</div>

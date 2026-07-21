@@ -1,0 +1,8 @@
+{{- $reveal := .Get "reveal" | default false -}}
+<span
+  class="redaction"
+  data-reveal="{{ $reveal }}"
+  {{ if $reveal }}tabindex="0"{{ end }}
+  aria-label="{{ if $reveal }}可聚焦查看的遮蔽文本{{ else }}已遮蔽文本{{ end }}">
+  {{ .Inner | plainify }}
+</span>

@@ -1,0 +1,26 @@
+{{- $title := .Get "title" | default "馆藏批注" -}}
+{{- $status := .Get "status" | default "info" -}}
+{{- $source := .Get "source" -}}
+
+<aside
+  class="archive-note"
+  data-status="{{ $status | urlize }}"
+  role="note">
+
+  <header class="archive-note__header">
+    <span class="archive-note__code" aria-hidden="true">NOTE</span>
+    <strong class="archive-note__title">{{ $title }}</strong>
+    <span class="archive-note__status">{{ $status | upper }}</span>
+  </header>
+
+  <div class="archive-note__body prose">
+    {{ .Inner | markdownify }}
+  </div>
+
+  {{ with $source }}
+    <footer class="archive-note__footer">
+      <span>Source</span>
+      <cite>{{ . }}</cite>
+    </footer>
+  {{ end }}
+</aside>

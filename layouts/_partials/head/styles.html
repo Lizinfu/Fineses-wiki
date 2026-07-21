@@ -1,0 +1,49 @@
+{{- /*
+Stage 4 stylesheet bundle.
+Every listed file is required. Missing resources stop the Hugo build instead
+of silently producing a partially styled site.
+*/ -}}
+
+{{- $paths := slice
+  "styles/tokens.css"
+  "styles/reset.css"
+  "styles/base.css"
+  "styles/typography.css"
+  "styles/layout.css"
+  "styles/components/navigation.css"
+  "styles/components/catalog-card.css"
+  "styles/components/infobox.css"
+  "styles/components/relation-list.css"
+  "styles/components/archive-note.css"
+  "styles/components/markdown.css"
+  "styles/components/search.css"
+  "styles/pages/home.css"
+  "styles/pages/list.css"
+  "styles/pages/entity.css"
+  "styles/pages/search-page.css"
+  "styles/utilities.css"
+-}}
+
+{{- $styles := slice -}}
+
+{{- range $paths -}}
+  {{- $resource := resources.Get . -}}
+
+  {{- if not $resource -}}
+    {{- errorf "Required stylesheet not found: assets/%s" . -}}
+  {{- end -}}
+
+  {{- $styles = $styles | append $resource -}}
+{{- end -}}
+
+{{- $bundle := $styles
+  | resources.Concat "css/site.css"
+  | minify
+  | fingerprint "sha384"
+-}}
+
+<link
+  rel="stylesheet"
+  href="{{ $bundle.RelPermalink }}"
+  integrity="{{ $bundle.Data.Integrity }}"
+  crossorigin="anonymous">

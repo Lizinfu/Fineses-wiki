@@ -1,0 +1,47 @@
+{{- $sourceRefs := slice -}}
+
+{{- with .Params.library -}}
+  {{- with index . "source_refs" -}}
+    {{- $sourceRefs = . -}}
+  {{- end -}}
+{{- end -}}
+
+{{- with $sourceRefs -}}
+<section
+  class="entity-appendix__section"
+  aria-labelledby="entity-sources-title">
+
+  <header class="entity-appendix__header">
+    <h2 id="entity-sources-title">馆藏来源</h2>
+    <span class="entity-appendix__count">
+      {{ len . }} SOURCES
+    </span>
+  </header>
+
+  <ul class="source-list">
+    {{- range . -}}
+      {{- $sourceID := printf "%v" . -}}
+      {{- $matches := where site.RegularPages "Params.id" $sourceID -}}
+
+      <li class="source-item">
+        <span class="source-item__code">SRC</span>
+
+        {{ with first 1 $matches }}
+          {{- $sourcePage := index . 0 -}}
+          <a
+            class="source-item__title"
+            href="{{ $sourcePage.RelPermalink }}">
+            {{ $sourcePage.LinkTitle }}
+          </a>
+        {{ else }}
+          <span class="source-item__title">
+            未解析来源
+          </span>
+        {{ end }}
+
+        <span class="source-item__id">{{ $sourceID }}</span>
+      </li>
+    {{- end -}}
+  </ul>
+</section>
+{{- end -}}

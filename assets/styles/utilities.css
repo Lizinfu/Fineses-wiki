@@ -1,0 +1,65 @@
+/* Stage 1 — Intentionally small utility layer */
+
+.visually-hidden {
+  position: absolute !important;
+  width: 1px !important;
+  height: 1px !important;
+  padding: 0 !important;
+  overflow: hidden !important;
+  clip: rect(0 0 0 0) !important;
+  white-space: nowrap !important;
+  border: 0 !important;
+}
+
+.hidden {
+  display: none !important;
+}
+
+.text-strong {
+  color: var(--text-strong);
+}
+
+.text-muted {
+  color: var(--text-muted);
+}
+
+.text-accent {
+  color: var(--accent);
+}
+
+.surface-1 {
+  background: var(--surface-1);
+}
+
+.surface-inverse {
+  color: var(--text-inverse);
+  background: var(--surface-inverse);
+}
+
+.border-top {
+  border-block-start: 1px solid var(--line-default);
+}
+
+.border-bottom {
+  border-block-end: 1px solid var(--line-default);
+}
+
+.pad-4 {
+  padding: var(--space-4);
+}
+
+.pad-6 {
+  padding: var(--space-6);
+}
+
+.pad-8 {
+  padding: var(--space-8);
+}
+
+.measure-readable {
+  max-width: var(--content-readable);
+}
+
+.no-wrap {
+  white-space: nowrap;
+}

@@ -1,0 +1,9 @@
+{{- $url := urls.Parse .Destination -}}
+<a
+  class="content-link{{ if $url.IsAbs }} content-link--external{{ end }}"
+  href="{{ .Destination | safeURL }}"
+  {{- with .Title }} title="{{ . }}"{{ end -}}
+  {{- if $url.IsAbs }} rel="external noopener"{{ end }}>
+  {{- .Text -}}
+</a>
+{{- /* chomp trailing newline */ -}}

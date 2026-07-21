@@ -1,0 +1,21 @@
+{{- $entry := resources.Get "scripts/app.ts" -}}
+
+{{- if not $entry -}}
+  {{- errorf "Required script not found: assets/scripts/app.ts" -}}
+{{- end -}}
+
+{{- $script := $entry
+  | js.Build (dict
+    "targetPath" "js/site.js"
+    "format" "iife"
+    "target" "es2018"
+    "minify" true
+  )
+  | fingerprint "sha384"
+-}}
+
+<script
+  src="{{ $script.RelPermalink }}"
+  integrity="{{ $script.Data.Integrity }}"
+  crossorigin="anonymous"
+  defer></script>

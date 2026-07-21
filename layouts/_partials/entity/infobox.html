@@ -1,0 +1,185 @@
+{{- $kind := .Params.entity_kind
+  | default .Type
+  | default .Section
+  | default .Kind
+-}}
+
+{{- $catalog := "" -}}
+{{- with .Params.library -}}
+  {{- with index . "catalog_no" -}}
+    {{- $catalog = printf "%v" . -}}
+  {{- end -}}
+{{- end -}}
+
+{{- $hero := "" -}}
+{{- with .Params.display -}}
+  {{- with index . "hero" -}}
+    {{- $hero = printf "%v" . -}}
+  {{- end -}}
+{{- end -}}
+
+{{- $heroResource := false -}}
+{{- with $hero -}}
+  {{- $heroResource = $.Resources.GetMatch . -}}
+{{- end -}}
+
+<aside class="entity-infobox">
+  {{ if or $hero $heroResource }}
+    <div class="entity-infobox__media">
+      <img
+        src="{{ with $heroResource }}{{ .RelPermalink }}{{ else }}{{ $hero | safeURL }}{{ end }}"
+        alt="{{ .Title }}的档案图像"
+        loading="eager"
+        decoding="async">
+      <span class="entity-infobox__media-code">
+        Visual record / 01
+      </span>
+    </div>
+  {{ end }}
+
+  <header class="entity-infobox__header">
+    <div class="entity-infobox__header-topline">
+      <span class="entity-infobox__kind">{{ $kind }}</span>
+      <span class="entity-infobox__catalog">
+        {{ $catalog | default "CATALOG PENDING" }}
+      </span>
+    </div>
+
+    <h2 class="entity-infobox__title">{{ .Title }}</h2>
+  </header>
+
+  {{ with .Params.names }}
+    <section class="entity-infobox__section">
+      <h3 class="entity-infobox__section-title">名称记录</h3>
+
+      <dl class="entity-infobox__rows">
+        {{ with index . "official" }}
+          {{ partial "entity/infobox-row.html" (dict
+            "Key" "正式名称"
+            "Value" .
+          ) }}
+        {{ end }}
+
+        {{ with index . "short" }}
+          {{ partial "entity/infobox-row.html" (dict
+            "Key" "简称"
+            "Value" .
+          ) }}
+        {{ end }}
+
+        {{ with index . "native" }}
+          {{ partial "entity/infobox-row.html" (dict
+            "Key" "原文名称"
+            "Value" .
+          ) }}
+        {{ end }}
+
+        {{ with index . "former" }}
+          {{ partial "entity/infobox-row.html" (dict
+            "Key" "旧称"
+            "Value" .
+          ) }}
+        {{ end }}
+
+        {{ with index . "aliases" }}
+          {{ partial "entity/infobox-row.html" (dict
+            "Key" "别名"
+            "Value" .
+          ) }}
+        {{ end }}
+      </dl>
+    </section>
+  {{ end }}
+
+  {{ with .Params.chronology }}
+    <section class="entity-infobox__section">
+      <h3 class="entity-infobox__section-title">年代记录</h3>
+
+      <dl class="entity-infobox__rows">
+        {{ with index . "established" }}
+          {{ with index . "display" }}
+            {{ partial "entity/infobox-row.html" (dict
+              "Key" "建立／起始"
+              "Value" .
+            ) }}
+          {{ end }}
+        {{ end }}
+
+        {{ with index . "dissolved" }}
+          {{ with index . "display" }}
+            {{ partial "entity/infobox-row.html" (dict
+              "Key" "终止／消亡"
+              "Value" .
+            ) }}
+          {{ end }}
+        {{ end }}
+      </dl>
+    </section>
+  {{ end }}
+
+  {{ with .Params.classifications }}
+    <section class="entity-infobox__section">
+      <h3 class="entity-infobox__section-title">分类索引</h3>
+
+      <dl class="entity-infobox__rows">
+        {{ with index . "cultures" }}
+          {{ partial "entity/infobox-row.html" (dict
+            "Key" "文化圈"
+            "Value" .
+          ) }}
+        {{ end }}
+
+        {{ with index . "eras" }}
+          {{ partial "entity/infobox-row.html" (dict
+            "Key" "时代"
+            "Value" .
+          ) }}
+        {{ end }}
+
+        {{ with index . "regions" }}
+          {{ partial "entity/infobox-row.html" (dict
+            "Key" "地区"
+            "Value" .
+          ) }}
+        {{ end }}
+
+        {{ with index . "government_forms" }}
+          {{ partial "entity/infobox-row.html" (dict
+            "Key" "政体"
+            "Value" .
+          ) }}
+        {{ end }}
+
+        {{ with index . "topics" }}
+          {{ partial "entity/infobox-row.html" (dict
+            "Key" "主题"
+            "Value" .
+          ) }}
+        {{ end }}
+      </dl>
+    </section>
+  {{ end }}
+
+  <section class="entity-infobox__section">
+    <h3 class="entity-infobox__section-title">系统字段</h3>
+
+    <dl class="entity-infobox__rows">
+      {{ partial "entity/infobox-row.html" (dict
+        "Key" "稳定 ID"
+        "Value" (.Params.id | default "UNASSIGNED")
+      ) }}
+
+      {{ partial "entity/infobox-row.html" (dict
+        "Key" "Schema"
+        "Value" (.Params.schema | default "UNSPECIFIED")
+      ) }}
+
+      {{ with .Params.canon_status }}
+        {{ partial "entity/infobox-row.html" (dict
+          "Key" "正史状态"
+          "Value" .
+        ) }}
+      {{ end }}
+    </dl>
+  </section>
+</aside>

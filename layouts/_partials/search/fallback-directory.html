@@ -1,0 +1,34 @@
+<section
+  class="search-directory"
+  aria-labelledby="search-directory-title"
+  data-pagefind-ignore="all">
+
+  <header class="search-directory__header">
+    <div class="stack" data-gap="2">
+      <span class="ui-kicker">Directory fallback</span>
+      <h2 id="search-directory-title">通过目录继续浏览</h2>
+    </div>
+
+    <span class="search-directory__meta">
+      SEARCH-INDEPENDENT ACCESS
+    </span>
+  </header>
+
+  {{- $sections := where site.Sections "Section" "ne" "search" -}}
+
+  {{ with $sections }}
+    <div class="auto-grid search-directory__grid">
+      {{ range .ByWeight }}
+        {{ partial "ui/catalog-card.html" (dict
+          "Page" .
+          "Variant" "compact"
+        ) }}
+      {{ end }}
+    </div>
+  {{ else }}
+    {{ partial "ui/empty-state.html" (dict
+      "Title" "尚未建立可浏览目录"
+      "Text" "创建一级 Section 后，目录入口会自动显示在这里。"
+    ) }}
+  {{ end }}
+</section>

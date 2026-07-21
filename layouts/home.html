@@ -1,0 +1,114 @@
+{{ define "main" }}
+  <div class="page-main__inner">
+    <section class="home-hero" aria-labelledby="home-title">
+      <div class="home-hero__content">
+        <span class="ui-kicker">Recovered Information System</span>
+
+        <h1 class="home-hero__title" id="home-title">
+          {{ site.Title }}
+        </h1>
+
+        <p class="home-hero__description">
+          {{ site.Params.description
+            | default "面向公众开放的世界观馆藏、实体档案与交叉索引系统。" }}
+        </p>
+
+        <div class="home-hero__actions">
+          <a class="button-link" href="#portal-index">
+            进入馆藏目录
+            <span aria-hidden="true">↓</span>
+          </a>
+
+          <a
+            class="button-link button-link--secondary"
+            href="{{ "search/" | relLangURL }}">
+            检索档案
+          </a>
+        </div>
+      </div>
+
+      <aside class="home-hero__status" aria-label="馆藏统计">
+        <div class="system-stat">
+          <strong class="system-stat__value">
+            {{ len site.RegularPages }}
+          </strong>
+          <span class="system-stat__label">Indexed records</span>
+        </div>
+
+        <div class="system-stat">
+          <strong class="system-stat__value">
+            {{ len site.Sections }}
+          </strong>
+          <span class="system-stat__label">Active sections</span>
+        </div>
+
+        <div class="system-stat">
+          <strong class="system-stat__value">PUBLIC</strong>
+          <span class="system-stat__label">Access protocol</span>
+        </div>
+      </aside>
+    </section>
+
+    <section
+      class="home-section"
+      id="portal-index"
+      aria-labelledby="portal-index-title">
+      <header class="section-heading">
+        <div class="section-heading__title">
+          <span class="ui-kicker">Primary Portals</span>
+          <h2 id="portal-index-title">馆藏入口</h2>
+        </div>
+
+        <span class="section-heading__meta">
+          {{ len site.Sections }} SECTIONS
+        </span>
+      </header>
+
+      {{ with site.Sections }}
+        <div class="auto-grid home-portals">
+          {{ range .ByWeight }}
+            {{ partial "ui/catalog-card.html" (dict
+              "Page" .
+              "Variant" "portal"
+            ) }}
+          {{ end }}
+        </div>
+      {{ else }}
+        {{ partial "ui/empty-state.html" (dict
+          "Title" "尚未建立一级 Section"
+          "Text" "创建 content/<section>/_index.md 后，入口会自动出现在这里。"
+        ) }}
+      {{ end }}
+    </section>
+
+    <section class="home-section" aria-labelledby="recent-records-title">
+      <header class="section-heading">
+        <div class="section-heading__title">
+          <span class="ui-kicker">Revision Feed</span>
+          <h2 id="recent-records-title">最近修订</h2>
+        </div>
+
+        <span class="section-heading__meta">
+          SORT / LASTMOD
+        </span>
+      </header>
+
+      {{ $recent := site.RegularPages.ByLastmod.Reverse | first 6 }}
+      {{ with $recent }}
+        <div class="auto-grid home-recent">
+          {{ range . }}
+            {{ partial "ui/catalog-card.html" (dict
+              "Page" .
+              "Variant" "compact"
+            ) }}
+          {{ end }}
+        </div>
+      {{ else }}
+        {{ partial "ui/empty-state.html" (dict
+          "Title" "暂无公开条目"
+          "Text" "已发布的普通页面会按 lastmod 自动排列在这里。"
+        ) }}
+      {{ end }}
+    </section>
+  </div>
+{{ end }}

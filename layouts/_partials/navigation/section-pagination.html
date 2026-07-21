@@ -1,0 +1,24 @@
+{{- $previous := .PrevInSection -}}
+{{- $next := .NextInSection -}}
+
+{{- if or $previous $next -}}
+<nav class="article-navigation" aria-label="相邻条目">
+  {{- with $previous -}}
+    <a class="article-navigation__link" href="{{ .RelPermalink }}">
+      <span class="article-navigation__direction">← Previous record</span>
+      <span class="article-navigation__title">{{ .LinkTitle }}</span>
+    </a>
+  {{- else -}}
+    <span></span>
+  {{- end -}}
+
+  {{- with $next -}}
+    <a
+      class="article-navigation__link article-navigation__link--next"
+      href="{{ .RelPermalink }}">
+      <span class="article-navigation__direction">Next record →</span>
+      <span class="article-navigation__title">{{ .LinkTitle }}</span>
+    </a>
+  {{- end -}}
+</nav>
+{{- end -}}

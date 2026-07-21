@@ -1,0 +1,42 @@
+{{ define "main" }}
+  <div class="page-main__inner">
+    <section class="home-hero" aria-labelledby="not-found-title">
+      <div class="home-hero__content">
+        <span class="ui-kicker">Archive Routing Error</span>
+        <span class="ui-index">ERROR / 404</span>
+
+        <h1 class="home-hero__title" id="not-found-title">
+          档案未发现
+        </h1>
+
+        <p class="home-hero__description">
+          当前路径不存在、已被重新归档，或尚未对公众开放。
+        </p>
+
+        <div class="home-hero__actions">
+          <a class="button-link" href="{{ site.Home.RelPermalink }}">
+            返回阅览大厅
+          </a>
+
+          <a
+            class="button-link button-link--secondary"
+            href="{{ "search/" | relLangURL }}">
+            检索其他档案
+          </a>
+        </div>
+      </div>
+
+      <aside class="home-hero__status" aria-label="错误状态">
+        <div class="system-stat">
+          <strong class="system-stat__value">404</strong>
+          <span class="system-stat__label">Routing status</span>
+        </div>
+
+        <div class="system-stat">
+          <strong class="system-stat__value">NULL</strong>
+          <span class="system-stat__label">Resolved target</span>
+        </div>
+      </aside>
+    </section>
+  </div>
+{{ end }}

@@ -1,0 +1,21 @@
+baseURL = 'https://example.org/'
+title = '菲恩尼斯图书馆'
+languageCode = 'zh-CN'
+defaultContentLanguage = 'zh-cn'
+hasCJKLanguage = true
+enableRobotsTXT = true
+summaryLength = 80
+titleCaseStyle = 'none'
+
+[markup]
+    [markup.goldmark]
+        [markup.goldmark.renderer]
+            unsafe = false
+    
+    [markup.tableOfContents]
+        startLevel = 2
+        endLevel = 4 
+        ordered = false
+[caches]
+    [caches.images]
+        dir = ':cacheDir/images'

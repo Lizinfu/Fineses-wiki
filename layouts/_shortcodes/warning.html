@@ -1,0 +1,18 @@
+{{- $title := .Get "title" | default "档案警告" -}}
+{{- $level := .Get "level" | default "warning" -}}
+
+<aside
+  class="archive-note"
+  data-status="{{ $level | urlize }}"
+  role="alert">
+
+  <header class="archive-note__header">
+    <span class="archive-note__code" aria-hidden="true">WARN</span>
+    <strong class="archive-note__title">{{ $title }}</strong>
+    <span class="archive-note__status">{{ $level | upper }}</span>
+  </header>
+
+  <div class="archive-note__body prose">
+    {{ .Inner | markdownify }}
+  </div>
+</aside>
