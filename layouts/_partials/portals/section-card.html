@@ -1,0 +1,56 @@
+{{- $config := .Config -}}
+{{- $sectionPage := site.GetPage $config.page_ref -}}
+{{- $available := ne $sectionPage nil -}}
+{{- $href := "#" -}}
+{{- $count := 0 -}}
+
+{{- with $sectionPage -}}
+  {{- $href = .RelPermalink -}}
+  {{- $count = len .RegularPagesRecursive -}}
+{{- end -}}
+
+{{- if $available -}}
+<a
+  class="portal-section-card"
+  href="{{ $href }}"
+  data-available="true">
+  <div class="portal-section-card__content">
+    <span class="portal-section-card__code">
+      SECTION / {{ $config.key | upper }}
+    </span>
+
+    <h3 class="portal-section-card__title">{{ $config.label }}</h3>
+
+    <p class="portal-section-card__description">
+      {{ $config.description }}
+    </p>
+  </div>
+
+  <div class="portal-section-card__stats">
+    <strong class="portal-section-card__value">{{ $count }}</strong>
+    <span class="portal-section-card__label">Records</span>
+  </div>
+</a>
+{{- else -}}
+<div
+  class="portal-section-card"
+  data-available="false"
+  aria-disabled="true">
+  <div class="portal-section-card__content">
+    <span class="portal-section-card__code">
+      SECTION / {{ $config.key | upper }}
+    </span>
+
+    <h3 class="portal-section-card__title">{{ $config.label }}</h3>
+
+    <p class="portal-section-card__description">
+      尚未找到 {{ $config.page_ref }} 对应的公开 Section。
+    </p>
+  </div>
+
+  <div class="portal-section-card__stats">
+    <strong class="portal-section-card__value">—</strong>
+    <span class="portal-section-card__label">Unavailable</span>
+  </div>
+</div>
+{{- end -}}

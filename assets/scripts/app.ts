@@ -2,6 +2,7 @@ import { initNavigation } from "./navigation";
 import { initSearch } from "./search";
 import { initThemeToggle } from "./theme";
 import { initTableOfContents } from "./table-of-contents";
+import { initTimeline } from "./timeline";
 
 function boot(): void {
   document.documentElement.classList.remove("no-js");
@@ -11,6 +12,7 @@ function boot(): void {
   initNavigation();
   initTableOfContents();
   initSearch();
+  initTimeline();
 }
 
 if (document.readyState === "loading") {

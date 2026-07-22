@@ -18,10 +18,10 @@ topics:
     - "公共卫生"
 
 params:
-    id: "per.luo-yan"
-    entity_kind: "person"
+    id: "org.fas"
+    entity_kind: "organization"
     library: 
-        catalog_no: "PER-0001"
+        catalog_no: "ORG-cle01"
         access_level: "public"
         reliability: "partially-verified"
         last_reviewed: "2026-07-16"

@@ -1,0 +1,15 @@
+{{- $references := .References | default slice -}}
+{{- $idMap := .IDMap -}}
+
+{{- range $index, $reference := $references -}}
+  {{- $sourceID := printf "%v" $reference -}}
+  {{- $sourcePage := index $idMap $sourceID -}}
+
+  {{- if gt $index 0 -}}<span aria-hidden="true">/</span>{{- end -}}
+
+  {{- with $sourcePage -}}
+    <a href="{{ .RelPermalink }}">{{ .LinkTitle }}</a>
+  {{- else -}}
+    <span title="未找到来源实体">{{ $sourceID }}</span>
+  {{- end -}}
+{{- end -}}

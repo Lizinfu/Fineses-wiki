@@ -1,0 +1,31 @@
+{{- $portal := .Portal -}}
+{{- $portalPage := site.GetPage $portal.page_ref -}}
+{{- $href := $portal.page_ref | relLangURL -}}
+{{- with $portalPage }}{{- $href = .RelPermalink -}}{{- end -}}
+
+{{- $recordCount := 0 -}}
+{{- range $portal.sections -}}
+  {{- with site.GetPage .page_ref -}}
+    {{- $recordCount = add $recordCount (len .RegularPagesRecursive) -}}
+  {{- end -}}
+{{- end -}}
+
+<a class="portal-card" href="{{ $href }}">
+  <header class="portal-card__header">
+    <span class="portal-card__code">{{ $portal.code }}</span>
+    <span class="portal-card__count">
+      {{ $recordCount }} RECORDS
+    </span>
+  </header>
+
+  <div class="portal-card__body">
+    <h3 class="portal-card__title">{{ $portal.title }}</h3>
+    <p class="portal-card__description">{{ $portal.description }}</p>
+  </div>
+
+  <footer class="portal-card__footer">
+    {{- range first 4 $portal.sections -}}
+      <span class="portal-card__section">{{ .label }}</span>
+    {{- end -}}
+  </footer>
+</a>

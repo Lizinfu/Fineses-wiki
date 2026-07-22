@@ -1,0 +1,30 @@
+timeline_categories:
+  - id: "politics"
+    label: "政治与制度"
+
+  - id: "war"
+    label: "战争与冲突"
+
+  - id: "diplomacy"
+    label: "外交与条约"
+
+  - id: "society"
+    label: "社会与文化"
+
+  - id: "science"
+    label: "科学与技术"
+
+  - id: "economy"
+    label: "经济与贸易"
+
+  - id: "ecology"
+    label: "生态与灾害"
+
+  - id: "biography"
+    label: "人物生平"
+
+  - id: "discovery"
+    label: "发现与考古"
+
+  - id: "other"
+    label: "其他"

@@ -1,0 +1,35 @@
+{{- $page := . -}}
+{{- $parent := .Parent -}}
+
+{{- if and $parent (isset $parent.Params "id") -}}
+  {{- $siblings := $parent.RegularPages.ByWeight -}}
+
+  <nav
+    class="entity-subnav"
+    aria-label="{{ $parent.Title }}的子页面">
+    <header class="entity-subnav__header">
+      <a class="entity-subnav__parent" href="{{ $parent.RelPermalink }}">
+        {{ $parent.LinkTitle }}
+      </a>
+
+      <span class="entity-subnav__meta">
+        SUBPAGE /
+        {{ add 1 (len (where $siblings "Weight" "lt" $page.Weight)) }}
+        OF {{ len $siblings }}
+      </span>
+    </header>
+
+    <div class="entity-subnav__items">
+      {{- range $siblings -}}
+        <a
+          class="entity-subnav__link"
+          href="{{ .RelPermalink }}"
+          {{ if eq .RelPermalink $page.RelPermalink }}
+            aria-current="page"
+          {{ end }}>
+          {{ .LinkTitle }}
+        </a>
+      {{- end -}}
+    </div>
+  </nav>
+{{- end -}}

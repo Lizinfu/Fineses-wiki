@@ -1,34 +1,79 @@
 [[main]]
-name = '首页'
-pageRef = '/'
+identifier = "home"
+name = "阅览大厅"
+pageRef = "/"
 weight = 10
 
+  [main.params]
+  code = "00"
+  sections = []
+
 [[main]]
-name = '国家'
-pageRef = '/nations'
+identifier = "geography"
+name = "国家与地区"
+pageRef = "/portals/geography"
 weight = 20
 
+  [main.params]
+  code = "01"
+  sections = ["nations", "regions"]
+
 [[main]]
-name = '人物'
-pageRef = '/people'
+identifier = "characters-organizations"
+name = "人物与组织"
+pageRef = "/portals/characters-organizations"
 weight = 30
 
+  [main.params]
+  code = "02"
+  sections = ["characters", "organizations"]
+
 [[main]]
-name = '历史'
-pageRef = '/history'
+identifier = "history"
+name = "历史与年代"
+pageRef = "/portals/history"
 weight = 40
 
+  [main.params]
+  code = "03"
+  sections = ["history"]
+
 [[main]]
-name = '概念设定'
-pageRef = '/concepts'
+identifier = "concepts-records"
+name = "概念与档案"
+pageRef = "/portals/concepts-records"
 weight = 50
 
-[[main]]
-name = '地区生态'
-pageRef = '/regions'
-weight = 60
+  [main.params]
+  code = "04"
+  sections = ["concepts", "artifacts", "records"]
 
 [[main]]
-name = '检索'
-pageRef = '/search'
+identifier = "ecology"
+name = "生态与物种"
+pageRef = "/portals/ecology"
+weight = 60
+
+  [main.params]
+  code = "05"
+  sections = ["ecology"]
+
+[[main]]
+identifier = "timeline"
+name = "世界时间线"
+pageRef = "/timeline"
 weight = 70
+
+  [main.params]
+  code = "06"
+  sections = ["timeline"]
+
+[[main]]
+identifier = "search"
+name = "检索中心"
+pageRef = "/search"
+weight = 80
+
+  [main.params]
+  code = "07"
+  sections = ["search"]

@@ -1,0 +1,8 @@
+# 把以下内容合并到 config/_default/params.toml。
+# repository 可填写 OWNER/REPOSITORY，也可以填写完整 GitHub URL。
+
+[editor]
+enabled = true
+repository = "YOUR-ACCOUNT/YOUR-REPOSITORY"
+branch = "main"
+content_dir = "content"

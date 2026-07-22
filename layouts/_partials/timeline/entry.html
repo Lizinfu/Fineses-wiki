@@ -1,0 +1,123 @@
+{{- $entry := .Entry -}}
+{{- $idMap := .IDMap -}}
+{{- $id := index $entry "id" | default "" -}}
+{{- $page := index $idMap $id -}}
+{{- $pageRef := index $entry "page_ref" | default "/" -}}
+{{- $href := $pageRef | relLangURL -}}
+{{- with $page }}{{- $href = .RelPermalink -}}{{- end -}}
+
+{{- $categories := index $entry "categories" | default slice -}}
+{{- $categoryLabels := index $entry "category_labels" | default slice -}}
+{{- $status := index $entry "status" | default "unknown" -}}
+{{- $statusLabel := index $entry "status_label" | default $status -}}
+{{- $entityKind := index $entry "entity_kind" | default "page" -}}
+{{- $calendar := index $entry "calendar" | default "default" -}}
+{{- $calendarLabel := index $entry "calendar_label" | default $calendar -}}
+{{- $summary := index $entry "summary" | default "" -}}
+{{- $sourceRefs := index $entry "source_refs" | default slice -}}
+{{- $variants := index $entry "variants" | default slice -}}
+{{- $note := index $entry "note" | default "" -}}
+
+<li
+  class="timeline-entry"
+  id="timeline-{{ $id | urlize }}"
+  data-timeline-entry
+  data-timeline-calendar="{{ $calendar }}"
+  data-timeline-categories="{{ delimit $categories "|" }}"
+  data-timeline-kind="{{ $entityKind }}"
+  data-timeline-status="{{ $status }}"
+  data-timeline-search="{{ printf "%s %s %s %s %s"
+    (index $entry "title" | default "")
+    $id
+    $summary
+    (delimit $categoryLabels " ")
+    $calendarLabel
+  | plainify }}">
+
+  <div class="timeline-entry__date">
+    <strong class="timeline-entry__date-primary">
+      {{ partial "timeline/date-label.html" $entry }}
+    </strong>
+
+    <span class="timeline-entry__calendar">
+      {{ $calendarLabel }}
+    </span>
+
+    <span class="timeline-entry__index">
+      ID / {{ $id }}
+    </span>
+  </div>
+
+  <div class="timeline-entry__body">
+    <div class="timeline-entry__topline">
+      <span class="timeline-entry__chip">
+        {{ $entityKind | replaceRE "[-_]+" " " }}
+      </span>
+
+      {{- range $categoryLabels -}}
+        <span class="timeline-entry__chip">{{ . }}</span>
+      {{- end -}}
+
+      <span
+        class="timeline-entry__chip"
+        data-status="{{ $status }}">
+        {{ $statusLabel }}
+      </span>
+    </div>
+
+    <h3 class="timeline-entry__title">
+      <a href="{{ $href }}">{{ index $entry "title" }}</a>
+    </h3>
+
+    {{ with $summary }}
+      <p class="timeline-entry__summary">{{ . }}</p>
+    {{ end }}
+
+    {{ with $note }}
+      <p class="timeline-entry__note">{{ . }}</p>
+    {{ end }}
+
+    {{ with $sourceRefs }}
+      <div class="timeline-entry__sources">
+        <span>SOURCES /</span>
+        {{ partial "relations/source-links.html" (dict
+          "References" .
+          "IDMap" $idMap
+        ) }}
+      </div>
+    {{ end }}
+
+    {{ with $variants }}
+      <details class="timeline-variants">
+        <summary>{{ len . }} 个争议日期版本</summary>
+
+        <ul class="timeline-variants__list">
+          {{- range . -}}
+            <li class="timeline-variant">
+              <strong class="timeline-variant__date">
+                {{ if index . "circa" }}约 {{ end }}
+                {{ index . "display" }}
+                ·
+                {{ index . "calendar" }}
+              </strong>
+
+              {{ with index . "note" }}
+                <span class="timeline-variant__note">{{ . }}</span>
+              {{ end }}
+
+              {{ with index . "source_refs" }}
+                <span class="timeline-entry__sources">
+                  SOURCE /
+                  {{ partial "relations/source-links.html" (dict
+                    "References" .
+                    "IDMap" $idMap
+                  ) }}
+                </span>
+              {{ end }}
+            </li>
+          {{- end -}}
+        </ul>
+      </details>
+    {{ end }}
+  </div>
+</li>

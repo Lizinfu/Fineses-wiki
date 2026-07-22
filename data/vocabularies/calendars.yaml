@@ -1,0 +1,10 @@
+calendars:
+  - id: "default"
+    label: "主历法"
+    short_label: "主历"
+    description: "项目默认使用的世界内历法。"
+
+  - id: "relative"
+    label: "相对年代"
+    short_label: "相对"
+    description: "仅能确定前后关系、无法换算为完整历法日期的记录。"

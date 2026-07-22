@@ -8,6 +8,7 @@
   {{- with site.Menus.main -}}
     {{- range $index, $item := . -}}
       {{- $href := $item.URL -}}
+
       {{- with $item.Page -}}
         {{- $href = .RelPermalink -}}
       {{- end -}}
@@ -17,43 +18,57 @@
         ($page.HasMenuCurrent "main" $item)
       -}}
 
+      {{- if and (not $active) $item.Params.sections -}}
+        {{- range $item.Params.sections -}}
+          {{- if eq (printf "%v" .) $page.Section -}}
+            {{- $active = true -}}
+          {{- end -}}
+        {{- end -}}
+      {{- end -}}
+
       <a
         class="primary-nav__link{{ if $active }} is-active{{ end }}"
         href="{{ $href }}"
         {{ if $active }}aria-current="page"{{ end }}>
         <span class="primary-nav__code">
-          {{ printf "%02d" $index }}
+          {{ $item.Params.code | default (printf "%02d" $index) }}
         </span>
-        <span class="primary-nav__name">{{ $item.Name }}</span>
+        <span class="primary-nav__name">
+          {{ or (T $item.Identifier) $item.Name }}
+        </span>
       </a>
     {{- end -}}
+
   {{- else -}}
-    {{- $fallback := slice
-      (dict "name" "阅览大厅" "url" site.Home.RelPermalink "code" "00")
-      (dict "name" "国家与地区" "url" ("nations/" | relLangURL) "code" "01")
-      (dict "name" "人物与组织" "url" ("people/" | relLangURL) "code" "02")
-      (dict "name" "历史与年代" "url" ("history/" | relLangURL) "code" "03")
-      (dict "name" "概念与档案" "url" ("concepts/" | relLangURL) "code" "04")
-      (dict "name" "生态与物种" "url" ("ecology/" | relLangURL) "code" "05")
-      (dict "name" "检索中心" "url" ("search/" | relLangURL) "code" "06")
-    -}}
+    <a
+      class="primary-nav__link{{ if $page.IsHome }} is-active{{ end }}"
+      href="{{ site.Home.RelPermalink }}"
+      {{ if $page.IsHome }}aria-current="page"{{ end }}>
+      <span class="primary-nav__code">00</span>
+      <span class="primary-nav__name">阅览大厅</span>
+    </a>
 
-    {{- range $fallback -}}
-      {{- $active := eq $page.RelPermalink .url -}}
-      {{- if and
-        (ne .url site.Home.RelPermalink)
-        (strings.HasPrefix $page.RelPermalink .url)
-      -}}
-        {{- $active = true -}}
+    {{- with site.Data.navigation.portals.portals -}}
+      {{- range . -}}
+        {{- $portalPage := site.GetPage .page_ref -}}
+        {{- $href := .page_ref | relLangURL -}}
+        {{- with $portalPage }}{{ $href = .RelPermalink }}{{ end -}}
+
+        <a
+          class="primary-nav__link"
+          href="{{ $href }}">
+          <span class="primary-nav__code">{{ .code }}</span>
+          <span class="primary-nav__name">{{ .title }}</span>
+        </a>
       {{- end -}}
-
-      <a
-        class="primary-nav__link{{ if $active }} is-active{{ end }}"
-        href="{{ .url }}"
-        {{ if $active }}aria-current="page"{{ end }}>
-        <span class="primary-nav__code">{{ .code }}</span>
-        <span class="primary-nav__name">{{ .name }}</span>
-      </a>
     {{- end -}}
+
+    <a
+      class="primary-nav__link{{ if eq $page.Section "search" }} is-active{{ end }}"
+      href="{{ "search/" | relLangURL }}"
+      {{ if eq $page.Section "search" }}aria-current="page"{{ end }}>
+      <span class="primary-nav__code">06</span>
+      <span class="primary-nav__name">检索中心</span>
+    </a>
   {{- end -}}
 </nav>

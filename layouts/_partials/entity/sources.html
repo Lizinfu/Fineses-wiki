@@ -6,7 +6,17 @@
   {{- end -}}
 {{- end -}}
 
+{{- if and $sourceRefs (not (reflect.IsSlice $sourceRefs)) -}}
+  {{- $sourceRefs = slice $sourceRefs -}}
+{{- end -}}
+
 {{- with $sourceRefs -}}
+  {{- $idMap := partialCached
+    "relations/id-map.html"
+    site
+    site.Language.Lang
+  -}}
+
 <section
   class="entity-appendix__section"
   aria-labelledby="entity-sources-title">
@@ -21,17 +31,16 @@
   <ul class="source-list">
     {{- range . -}}
       {{- $sourceID := printf "%v" . -}}
-      {{- $matches := where site.RegularPages "Params.id" $sourceID -}}
+      {{- $sourcePage := index $idMap $sourceID -}}
 
       <li class="source-item">
         <span class="source-item__code">SRC</span>
 
-        {{ with first 1 $matches }}
-          {{- $sourcePage := index . 0 -}}
+        {{ with $sourcePage }}
           <a
             class="source-item__title"
-            href="{{ $sourcePage.RelPermalink }}">
-            {{ $sourcePage.LinkTitle }}
+            href="{{ .RelPermalink }}">
+            {{ .LinkTitle }}
           </a>
         {{ else }}
           <span class="source-item__title">

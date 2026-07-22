@@ -1,0 +1,83 @@
+/* Stage 5 — Responsive images and galleries */
+
+.content-figure__media img,
+.archive-gallery__item img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.archive-gallery {
+  --gallery-columns: 3;
+  display: grid;
+  grid-template-columns: repeat(
+    var(--gallery-columns),
+    minmax(0, 1fr)
+  );
+  gap: var(--space-3);
+  max-width: var(--content-wide);
+  margin-block: var(--space-8);
+}
+
+.archive-gallery__item {
+  position: relative;
+  display: grid;
+  align-content: end;
+  min-height: 10rem;
+  overflow: hidden;
+  color: var(--text-inverse);
+  background: var(--surface-inverse);
+  border: 1px solid var(--line-default);
+  text-decoration: none;
+}
+
+.archive-gallery__item img {
+  aspect-ratio: var(--gallery-ratio, 4 / 3);
+  object-fit: cover;
+  transition: transform var(--duration-slow) var(--ease-out);
+}
+
+.archive-gallery__item:hover img {
+  transform: scale(1.025);
+}
+
+.archive-gallery__caption {
+  position: absolute;
+  inset-inline: 0;
+  inset-block-end: 0;
+  display: grid;
+  gap: 0.15rem;
+  padding: var(--space-3);
+  color: var(--text-inverse);
+  background:
+    linear-gradient(
+      transparent,
+      rgb(17 19 21 / 88%)
+    );
+}
+
+.archive-gallery__caption strong {
+  color: inherit;
+  font-family: var(--font-display);
+  font-size: var(--text-sm);
+}
+
+.archive-gallery__caption span {
+  color: rgb(244 245 242 / 58%);
+  font-family: var(--font-mono);
+  font-size: var(--text-2xs);
+  letter-spacing: var(--tracking-wide);
+  text-transform: uppercase;
+}
+
+@media (max-width: 55rem) {
+  .archive-gallery {
+    --gallery-columns: 2 !important;
+  }
+}
+
+@media (max-width: 32rem) {
+  .archive-gallery {
+    --gallery-columns: 1 !important;
+  }
+}

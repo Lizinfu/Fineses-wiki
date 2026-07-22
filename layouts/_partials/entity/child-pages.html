@@ -1,0 +1,50 @@
+{{- $children := .RegularPages.ByWeight -}}
+{{- $sections := .Sections.ByWeight -}}
+{{- $count := add (len $children) (len $sections) -}}
+
+{{- if gt $count 0 -}}
+<section class="entity-children" aria-labelledby="entity-children-title">
+  <header class="entity-children__header">
+    <h2 id="entity-children-title">子档案目录</h2>
+    <span class="entity-children__count">
+      {{ $count }} SUBPAGES
+    </span>
+  </header>
+
+  <ol class="entity-child-list">
+    {{- range $index, $child := $sections -}}
+      <li>
+        <a class="entity-child-link" href="{{ $child.RelPermalink }}">
+          <span class="entity-child-link__index">
+            {{ printf "%02d" (add $index 1) }}
+          </span>
+          <span class="entity-child-link__title">
+            {{ $child.LinkTitle }}
+          </span>
+          <span class="entity-child-link__kind">SECTION</span>
+        </a>
+      </li>
+    {{- end -}}
+
+    {{- $offset := len $sections -}}
+
+    {{- range $index, $child := $children -}}
+      <li>
+        <a class="entity-child-link" href="{{ $child.RelPermalink }}">
+          <span class="entity-child-link__index">
+            {{ printf "%02d" (add (add $index 1) $offset) }}
+          </span>
+          <span class="entity-child-link__title">
+            {{ $child.LinkTitle }}
+          </span>
+          <span class="entity-child-link__kind">
+            {{ $child.Params.entity_kind
+              | default $child.Kind
+              | upper }}
+          </span>
+        </a>
+      </li>
+    {{- end -}}
+  </ol>
+</section>
+{{- end -}}

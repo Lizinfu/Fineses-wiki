@@ -1,0 +1,48 @@
+{{- $resource := .Resource -}}
+{{- $src := .Src | default "" -}}
+{{- $alt := .Alt | default "" -}}
+{{- $class := .Class | default "" -}}
+{{- $loading := .Loading | default "lazy" -}}
+{{- $sizes := .Sizes | default "(max-width: 55rem) 100vw, 72ch" -}}
+{{- $srcset := slice -}}
+{{- $width := 0 -}}
+{{- $height := 0 -}}
+
+{{- with $resource -}}
+  {{- $src = .RelPermalink -}}
+
+  {{- if reflect.IsImageResourceWithMeta . -}}
+    {{- $width = .Width -}}
+    {{- $height = .Height -}}
+  {{- end -}}
+
+  {{- if reflect.IsImageResourceProcessable . -}}
+    {{- $original := . -}}
+
+    {{- range slice 480 768 1200 1600 -}}
+      {{- if gt $original.Width . -}}
+        {{- $candidate := $original.Resize (printf "%dx" .) -}}
+        {{- $srcset = $srcset | append
+          (printf "%s %dw" $candidate.RelPermalink $candidate.Width)
+        -}}
+      {{- end -}}
+    {{- end -}}
+
+    {{- $srcset = $srcset | append
+      (printf "%s %dw" $original.RelPermalink $original.Width)
+    -}}
+  {{- end -}}
+{{- end -}}
+
+<img
+  {{ with $class }}class="{{ . }}"{{ end }}
+  src="{{ $src | safeURL }}"
+  {{ if gt (len $srcset) 1 }}
+    srcset="{{ delimit $srcset ", " }}"
+    sizes="{{ $sizes }}"
+  {{ end }}
+  {{ if gt $width 0 }}width="{{ $width }}"{{ end }}
+  {{ if gt $height 0 }}height="{{ $height }}"{{ end }}
+  alt="{{ $alt }}"
+  loading="{{ $loading }}"
+  decoding="async">

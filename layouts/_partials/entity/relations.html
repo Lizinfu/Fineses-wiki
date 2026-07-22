@@ -1,4 +1,16 @@
 {{- with .Params.relations -}}
+  {{- $idMap := partialCached
+    "relations/id-map.html"
+    site
+    site.Language.Lang
+  -}}
+
+  {{- $typeMap := partialCached
+    "relations/type-map.html"
+    site
+    site.Language.Lang
+  -}}
+
 <section
   class="entity-appendix__section"
   aria-labelledby="entity-relations-title">
@@ -6,7 +18,7 @@
   <header class="entity-appendix__header">
     <h2 id="entity-relations-title">关系与关联条目</h2>
     <span class="entity-appendix__count">
-      {{ len . }} RELATIONS
+      {{ len . }} OUTGOING
     </span>
   </header>
 
@@ -16,20 +28,38 @@
       {{- $target := index . "target" | default "" -}}
       {{- $note := index . "note" | default "" -}}
       {{- $period := index . "period" -}}
-      {{- $matches := where site.RegularPages "Params.id" $target -}}
+      {{- $reliability := index . "reliability" | default "" -}}
+
+      {{- $sourceRefs := index . "source_refs" -}}
+      {{- if not $sourceRefs -}}
+        {{- $sourceRefs = index . "source_ref" -}}
+      {{- end -}}
+      {{- if not $sourceRefs -}}
+        {{- $sourceRefs = index . "source" -}}
+      {{- end -}}
+      {{- if and $sourceRefs (not (reflect.IsSlice $sourceRefs)) -}}
+        {{- $sourceRefs = slice $sourceRefs -}}
+      {{- end -}}
+
+      {{- $targetPage := index $idMap $target -}}
+      {{- $typeDefinition := index $typeMap $type -}}
+      {{- $label := replace $type "_" " " -}}
+
+      {{- with $typeDefinition -}}
+        {{- with index . "label" -}}
+          {{- $label = printf "%v" . -}}
+        {{- end -}}
+      {{- end -}}
 
       <li class="relation-item">
-        <span class="relation-item__type">
-          {{ replace $type "_" " " }}
-        </span>
+        <span class="relation-item__type">{{ $label }}</span>
 
         <div class="relation-item__body">
-          {{ with first 1 $matches }}
-            {{- $targetPage := index . 0 -}}
+          {{ with $targetPage }}
             <a
               class="relation-item__target"
-              href="{{ $targetPage.RelPermalink }}">
-              {{ $targetPage.LinkTitle }}
+              href="{{ .RelPermalink }}">
+              {{ .LinkTitle }}
             </a>
           {{ else }}
             <span
@@ -40,24 +70,36 @@
             </span>
           {{ end }}
 
-          {{ if or $target $period }}
-            <div class="relation-item__meta">
-              {{ with $target }}<span>ID / {{ . }}</span>{{ end }}
+          <div class="relation-item__badges">
+            {{ with $reliability }}
+              <span
+                class="relation-chip"
+                data-reliability="{{ . | urlize }}">
+                Reliability / {{ . }}
+              </span>
+            {{ end }}
 
-              {{ with $period }}
-                {{ if reflect.IsMap . }}
-                  <span>
-                    PERIOD /
-                    {{ index . "start" | default "?" }}
-                    —
-                    {{ index . "end" | default "?" }}
-                  </span>
-                {{ else }}
-                  <span>PERIOD / {{ printf "%v" . }}</span>
-                {{ end }}
-              {{ end }}
-            </div>
-          {{ end }}
+            {{ with $period }}
+              <span class="relation-chip">
+                Period /
+                {{ partial "relations/period.html" . }}
+              </span>
+            {{ end }}
+          </div>
+
+          <div class="relation-item__meta">
+            {{ with $target }}<span>ID / {{ . }}</span>{{ end }}
+
+            {{ with $sourceRefs }}
+              <span class="relation-item__sources">
+                SOURCE /
+                {{ partial "relations/source-links.html" (dict
+                  "References" .
+                  "IDMap" $idMap
+                ) }}
+              </span>
+            {{ end }}
+          </div>
 
           {{ with $note }}
             <p class="relation-item__note">{{ . }}</p>

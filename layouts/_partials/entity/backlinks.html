@@ -1,0 +1,116 @@
+{{- $entityID := .Params.id | default "" -}}
+{{- $backlinkData := index site.Data.generated "backlinks" -}}
+
+{{- if and $entityID $backlinkData -}}
+  {{- $records := index $backlinkData $entityID -}}
+
+  {{- with $records -}}
+    {{- $idMap := partialCached
+      "relations/id-map.html"
+      site
+      site.Language.Lang
+    -}}
+
+    {{- $typeMap := partialCached
+      "relations/type-map.html"
+      site
+      site.Language.Lang
+    -}}
+
+<section
+  class="entity-appendix__section"
+  aria-labelledby="entity-backlinks-title">
+
+  <header class="entity-appendix__header">
+    <h2 id="entity-backlinks-title">引用本条目的档案</h2>
+    <span class="entity-appendix__count">
+      {{ len . }} INCOMING
+    </span>
+  </header>
+
+  <ul class="relation-list">
+    {{- range . -}}
+      {{- $sourceID := index . "source_id" | default "" -}}
+      {{- $type := index . "type" | default "related_to" -}}
+      {{- $note := index . "note" | default "" -}}
+      {{- $period := index . "period" -}}
+      {{- $reliability := index . "reliability" | default "" -}}
+      {{- $sourceRefs := index . "source_refs" | default slice -}}
+
+      {{- $sourcePage := index $idMap $sourceID -}}
+      {{- $typeDefinition := index $typeMap $type -}}
+      {{- $label := replace $type "_" " " -}}
+
+      {{- with $typeDefinition -}}
+        {{- $symmetric := index . "symmetric" | default false -}}
+
+        {{- if $symmetric -}}
+          {{- with index . "label" -}}
+            {{- $label = printf "%v" . -}}
+          {{- end -}}
+        {{- else -}}
+          {{- with index . "reverse_label" -}}
+            {{- $label = printf "%v" . -}}
+          {{- end -}}
+        {{- end -}}
+      {{- end -}}
+
+      <li class="relation-item relation-item--incoming">
+        <span class="relation-item__type">{{ $label }}</span>
+
+        <div class="relation-item__body">
+          {{ with $sourcePage }}
+            <a
+              class="relation-item__target"
+              href="{{ .RelPermalink }}">
+              {{ .LinkTitle }}
+            </a>
+          {{ else }}
+            <span
+              class="relation-item__target"
+              data-unresolved="true">
+              {{ $sourceID | default "UNRESOLVED SOURCE" }}
+            </span>
+          {{ end }}
+
+          <div class="relation-item__badges">
+            {{ with $reliability }}
+              <span
+                class="relation-chip"
+                data-reliability="{{ . | urlize }}">
+                Reliability / {{ . }}
+              </span>
+            {{ end }}
+
+            {{ with $period }}
+              <span class="relation-chip">
+                Period /
+                {{ partial "relations/period.html" . }}
+              </span>
+            {{ end }}
+          </div>
+
+          <div class="relation-item__meta">
+            {{ with $sourceID }}<span>ID / {{ . }}</span>{{ end }}
+
+            {{ with $sourceRefs }}
+              <span class="relation-item__sources">
+                SOURCE /
+                {{ partial "relations/source-links.html" (dict
+                  "References" .
+                  "IDMap" $idMap
+                ) }}
+              </span>
+            {{ end }}
+          </div>
+
+          {{ with $note }}
+            <p class="relation-item__note">{{ . }}</p>
+          {{ end }}
+        </div>
+      </li>
+    {{- end -}}
+  </ul>
+</section>
+  {{- end -}}
+{{- end -}}

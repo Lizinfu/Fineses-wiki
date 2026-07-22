@@ -1,13 +1,44 @@
 {
+  "name": "worldbuilding-wiki",
+  "version": "0.7.0",
+  "private": true,
+  "description": "Hugo + Pagefind worldbuilding Wiki with portals, entity relations, backlinks, timeline generation, and GitHub Pages deployment.",
+  "license": "UNLICENSED",
+  "engines": {
+    "node": ">=22 <23",
+    "npm": ">=10"
+  },
   "scripts": {
-    "dev": "hugo server -D",
-    "build:hugo": "hugo --minify",
+    "dev": "npm run wiki:preview",
+    "build": "npm run wiki:build",
+    "check": "npm run wiki:validate",
+
+    "content:generate": "node scripts/generate-content-graph.mjs",
+    "content:validate": "node scripts/generate-content-graph.mjs --check",
+    "content:report": "node scripts/print-content-report.mjs",
+
+    "timeline:generate": "node scripts/generate-timeline.mjs",
+    "timeline:validate": "node scripts/generate-timeline.mjs --check",
+    "timeline:report": "node scripts/print-timeline-report.mjs",
+
+    "wiki:prepare": "node scripts/prepare-wiki.mjs",
+    "wiki:validate": "node scripts/prepare-wiki.mjs --check",
+    "wiki:preview": "node scripts/prepare-wiki.mjs --check --include-drafts && node scripts/prepare-wiki.mjs --include-drafts && hugo server -D",
+    "wiki:preview-search": "node scripts/prepare-wiki.mjs --check --include-drafts && node scripts/prepare-wiki.mjs --include-drafts && hugo --buildDrafts --gc --minify && pagefind --site public --serve",
+    "wiki:build": "npm run wiki:validate && npm run wiki:prepare && hugo --gc --minify && pagefind --site public && node scripts/verify-search-index.mjs",
+
+    "hugo:server": "hugo server -D",
+    "hugo:build": "hugo --gc --minify",
+    "build:hugo": "npm run hugo:build",
+
     "search:index": "pagefind --site public",
-    "build": "npm run build:hugo && npm run search:index",
-    "preview:search": "npm run build:hugo && pagefind --site public --serve",
-    "verify:search": "node scripts/verify-search-index.mjs"
+    "search:serve": "pagefind --site public --serve",
+    "search:verify": "node scripts/verify-search-index.mjs",
+    "preview:search": "npm run wiki:preview-search",
+    "verify:search": "npm run search:verify"
   },
   "devDependencies": {
-    "pagefind": "1.5.2"
+    "pagefind": "1.5.2",
+    "yaml": "2.9.0"
   }
 }

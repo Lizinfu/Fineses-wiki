@@ -1,0 +1,33 @@
+{{- $ids := .IDs | default (slice) -}}
+{{- $pages := slice -}}
+
+{{- range $ids -}}
+  {{- $matches := where site.Pages "Params.id" (printf "%v" .) -}}
+  {{- with first 1 $matches -}}
+    {{- $pages = $pages | append (index . 0) -}}
+  {{- end -}}
+{{- end -}}
+
+{{- with $pages -}}
+<section
+  class="portal-section"
+  aria-labelledby="portal-featured-title">
+  <header class="portal-section__header">
+    <div class="stack" data-gap="2">
+      <span class="ui-kicker">Curated records</span>
+      <h2 id="portal-featured-title">精选馆藏</h2>
+    </div>
+
+    <span class="portal-section__meta">{{ len . }} RECORDS</span>
+  </header>
+
+  <div class="auto-grid portal-featured-grid">
+    {{- range . -}}
+      {{ partial "ui/catalog-card.html" (dict
+        "Page" .
+        "Variant" "compact"
+      ) }}
+    {{- end -}}
+  </div>
+</section>
+{{- end -}}

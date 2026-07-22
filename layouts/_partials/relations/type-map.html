@@ -1,0 +1,29 @@
+{{- $scratch := newScratch -}}
+{{- $source := index site.Data.vocabularies "relation-types" -}}
+
+{{- if not $source -}}
+  {{- $source = site.Data.vocabularies.relation_types -}}
+{{- end -}}
+
+{{- $records := slice -}}
+
+{{- if reflect.IsSlice $source -}}
+  {{- $records = $source -}}
+{{- else if $source -}}
+  {{- with index $source "relation_types" -}}
+    {{- $records = . -}}
+  {{- end -}}
+{{- end -}}
+
+{{- range $records -}}
+  {{- with index . "id" -}}
+    {{- $scratch.SetInMap "types" (printf "%v" .) $ -}}
+  {{- end -}}
+{{- end -}}
+
+{{- $result := $scratch.Get "types" -}}
+{{- if not $result -}}
+  {{- $result = dict -}}
+{{- end -}}
+
+{{- return $result -}}

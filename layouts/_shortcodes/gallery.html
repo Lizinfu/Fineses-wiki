@@ -1,0 +1,58 @@
+{{- $match := .Get "match" | default "gallery/*" -}}
+{{- $columns := .Get "columns" | default 3 -}}
+{{- $ratio := .Get "ratio" | default "4 / 3" -}}
+{{- $resources := .Page.Resources.Match $match -}}
+
+{{- if eq (len $resources) 0 -}}
+  {{- with .Page.Parent -}}
+    {{- $resources = .Resources.Match $match -}}
+  {{- end -}}
+{{- end -}}
+
+{{- if gt (len $resources) 0 -}}
+<div
+  class="archive-gallery"
+  style="
+    --gallery-columns: {{ $columns }};
+    --gallery-ratio: {{ $ratio }};
+  "
+  role="list">
+
+  {{- range $index, $image := $resources -}}
+    {{- if reflect.IsImageResource $image -}}
+      {{- $title := $image.Title
+        | default
+          (replace
+            (path.BaseName $image.Name)
+            "-"
+            " "
+          )
+      -}}
+
+      <a
+        class="archive-gallery__item"
+        href="{{ $image.RelPermalink }}"
+        role="listitem">
+        {{ partial "media/responsive-image.html" (dict
+          "Resource" $image
+          "Src" $image.RelPermalink
+          "Alt" $title
+          "Loading" "lazy"
+          "Sizes" "(max-width: 32rem) 100vw, (max-width: 55rem) 50vw, 33vw"
+        ) }}
+
+        <span class="archive-gallery__caption">
+          <strong>{{ $title }}</strong>
+          <span>FIG. {{ printf "%02d" (add $index 1) }}</span>
+        </span>
+      </a>
+    {{- end -}}
+  {{- end -}}
+</div>
+{{- else -}}
+  {{- warnf
+    "gallery shortcode found no resources matching %q in %s"
+    $match
+    .Page.File.Path
+  -}}
+{{- end -}}

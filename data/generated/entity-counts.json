@@ -1,0 +1,20 @@
+{
+  "total": 24,
+  "by_kind": {
+    "concept": 1,
+    "event": 1,
+    "nation": 16,
+    "organization": 1,
+    "person": 3,
+    "region": 1,
+    "subpage": 1
+  },
+  "by_section": {
+    "concepts": 1,
+    "history": 1,
+    "nations": 17,
+    "organizations": 1,
+    "people": 3,
+    "regions": 1
+  }
+}

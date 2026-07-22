@@ -1,0 +1,9 @@
+{{- $period := . -}}
+
+{{- if reflect.IsMap $period -}}
+  {{- $start := index $period "start" | default "?" -}}
+  {{- $end := index $period "end" | default "?" -}}
+  {{- printf "%v — %v" $start $end -}}
+{{- else if $period -}}
+  {{- printf "%v" $period -}}
+{{- end -}}

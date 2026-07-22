@@ -1,0 +1,100 @@
+{{ define "main" }}
+  {{- $portal := partial "portals/get.html" .Params.portal_key -}}
+
+  <div class="page-main__inner portal-page">
+    {{ partial "navigation/breadcrumbs.html" . }}
+
+    {{- if gt (len $portal) 0 -}}
+      {{- $recordCount := 0 -}}
+      {{- $availableCount := 0 -}}
+
+      {{- range $portal.sections -}}
+        {{- with site.GetPage .page_ref -}}
+          {{- $availableCount = add $availableCount 1 -}}
+          {{- $recordCount = add
+            $recordCount
+            (len .RegularPagesRecursive)
+          -}}
+        {{- end -}}
+      {{- end -}}
+
+      <header class="portal-hero">
+        <div class="portal-hero__content">
+          <div class="cluster">
+            <span class="ui-label">PORTAL</span>
+            <span class="ui-index">
+              {{ $portal.code }} / {{ $portal.key | upper }}
+            </span>
+          </div>
+
+          <h1 class="portal-hero__title">{{ $portal.title }}</h1>
+
+          <p class="portal-hero__description">
+            {{ $portal.description }}
+          </p>
+
+          {{ with .Content }}
+            <div class="prose reading-column">{{ . }}</div>
+          {{ end }}
+        </div>
+
+        <aside class="portal-hero__status" aria-label="门户统计">
+          <div class="portal-hero__stat">
+            <strong class="portal-hero__value">
+              {{ $recordCount }}
+            </strong>
+            <span class="portal-hero__label">Indexed records</span>
+          </div>
+
+          <div class="portal-hero__stat">
+            <strong class="portal-hero__value">
+              {{ $availableCount }}
+            </strong>
+            <span class="portal-hero__label">Active sections</span>
+          </div>
+        </aside>
+      </header>
+
+      <section
+        class="portal-section"
+        aria-labelledby="portal-directories-title">
+        <header class="portal-section__header">
+          <div class="stack" data-gap="2">
+            <span class="ui-kicker">Directory groups</span>
+            <h2 id="portal-directories-title">馆藏目录</h2>
+          </div>
+
+          <span class="portal-section__meta">
+            {{ len $portal.sections }} CONFIGURED
+          </span>
+        </header>
+
+        <div class="auto-grid portal-section-grid">
+          {{- range $portal.sections -}}
+            {{ partial "portals/section-card.html" (dict
+              "Config" .
+            ) }}
+          {{- end -}}
+        </div>
+      </section>
+
+      {{ partial "portals/featured.html" (dict
+        "IDs" $portal.featured_ids
+      ) }}
+
+    {{- else -}}
+      <header class="list-hero">
+        <div class="list-hero__topline">
+          <span class="ui-label">PORTAL</span>
+          <span class="ui-index">CONFIGURATION ERROR</span>
+        </div>
+
+        <h1 class="list-hero__title">{{ .Title }}</h1>
+        <p class="list-hero__description">
+          未在 data/navigation/portals.yaml 中找到
+          portal_key={{ .Params.portal_key }} 的配置。
+        </p>
+      </header>
+    {{- end -}}
+  </div>
+{{ end }}

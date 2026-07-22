@@ -1,7 +1,6 @@
 {{- /*
-Search metadata is deliberately outside data-pagefind-body. Pagefind still
-captures metadata and filters here, while the visible element is ignored as
-body text.
+Search metadata is deliberately outside data-pagefind-body. Pagefind captures
+metadata and filters here while the visible element is ignored as body text.
 */ -}}
 
 {{- $kind := .Params.entity_kind
@@ -38,6 +37,56 @@ body text.
         {{- end -}}
       {{- else -}}
         {{- $aliases = $aliases | append (printf "%v" .) -}}
+      {{- end -}}
+    {{- end -}}
+  {{- end -}}
+{{- end -}}
+
+{{- $timeline := .Params.timeline -}}
+{{- $timelineDisplay := "" -}}
+{{- $timelineCalendar := "" -}}
+{{- $timelineCategories := slice -}}
+
+{{- with $timeline -}}
+  {{- $timelineCalendar = index . "calendar" | default "default" -}}
+  {{- $timelineCategories = index . "categories" | default slice -}}
+
+  {{- if not (reflect.IsSlice $timelineCategories) -}}
+    {{- $timelineCategories = slice $timelineCategories -}}
+  {{- end -}}
+
+  {{- if index . "undated" -}}
+    {{- $timelineDisplay = index . "undated_label"
+      | default "日期不详"
+    -}}
+  {{- else -}}
+    {{- $start := index . "start" -}}
+    {{- $end := index . "end" -}}
+
+    {{- if reflect.IsMap $start -}}
+      {{- $timelineDisplay = index $start "display" | default "" -}}
+      {{- with index $start "calendar" -}}
+        {{- $timelineCalendar = . -}}
+      {{- end -}}
+    {{- else if $start -}}
+      {{- $timelineDisplay = printf "%v" $start -}}
+    {{- end -}}
+
+    {{- with $end -}}
+      {{- $endDisplay := "" -}}
+
+      {{- if reflect.IsMap . -}}
+        {{- $endDisplay = index . "display" | default "" -}}
+      {{- else -}}
+        {{- $endDisplay = printf "%v" . -}}
+      {{- end -}}
+
+      {{- if $endDisplay -}}
+        {{- $timelineDisplay = printf
+          "%s — %s"
+          $timelineDisplay
+          $endDisplay
+        -}}
       {{- end -}}
     {{- end -}}
   {{- end -}}
@@ -82,6 +131,26 @@ body text.
     {{- if gt (len .) 0 -}}
       <span data-pagefind-meta="aliases">{{ delimit . " / " }}</span>
     {{- end -}}
+  {{ end }}
+
+  {{ with $timelineDisplay }}
+    <span data-pagefind-meta="timeline_date">{{ . }}</span>
+  {{ end }}
+
+  {{ with $timelineCalendar }}
+    <span
+      data-pagefind-meta="timeline_calendar"
+      data-pagefind-filter="timeline_calendar">
+      {{ . }}
+    </span>
+  {{ end }}
+
+  {{ range $timelineCategories }}
+    <span
+      data-pagefind-meta="timeline_category"
+      data-pagefind-filter="timeline_category">
+      {{ . }}
+    </span>
   {{ end }}
 
   <span data-pagefind-meta="lastmod">

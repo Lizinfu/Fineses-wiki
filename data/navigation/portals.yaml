@@ -1,0 +1,83 @@
+version: 1
+
+portals:
+  - key: geography
+    code: "P01"
+    title: "国家与地区"
+    description: "国家、政权、行政区、城市与地理区域的综合入口。"
+    page_ref: "/portals/geography"
+    weight: 10
+    sections:
+      - key: "nations"
+        label: "国家与政权"
+        page_ref: "/nations"
+        description: "政治实体、政体、社会结构、经济、外交与国家历史。"
+      - key: "regions"
+        label: "地区与城市"
+        page_ref: "/regions"
+        description: "大陆、区域、行政区、城市、聚落与地理环境。"
+    featured_ids: []
+
+  - key: characters-organizations
+    code: "P02"
+    title: "人物与组织"
+    description: "人物、政府机构、企业、军队、宗教与派系档案。"
+    page_ref: "/portals/characters-organizations"
+    weight: 20
+    sections:
+      - key: "characters"
+        label: "人物档案"
+        page_ref: "/characters"
+        description: "人物经历、身份、关系、活动范围与历史影响。"
+      - key: "organizations"
+        label: "组织档案"
+        page_ref: "/organizations"
+        description: "政府、企业、军队、宗教、学术机构与派系。"
+    featured_ids: []
+
+  - key: history
+    code: "P03"
+    title: "历史与年代"
+    description: "时代、事件、战争、灾害、迁徙与制度变迁。"
+    page_ref: "/portals/history"
+    weight: 30
+    sections:
+      - key: "history"
+        label: "历史档案"
+        page_ref: "/history"
+        description: "历史时代、事件、战争、会议、改革与灾害。"
+    featured_ids: []
+
+  - key: concepts-records
+    code: "P04"
+    title: "概念与档案"
+    description: "制度、技术、思想、物品与世界内原始文献。"
+    page_ref: "/portals/concepts-records"
+    weight: 40
+    sections:
+      - key: "concepts"
+        label: "概念与制度"
+        page_ref: "/concepts"
+        description: "技术、信仰、语言、法律、经济、哲学与理论。"
+      - key: "artifacts"
+        label: "物品与技术"
+        page_ref: "/artifacts"
+        description: "材料、武器、载具、遗物、艺术品与技术实体。"
+      - key: "records"
+        label: "原始文献"
+        page_ref: "/records"
+        description: "报告、信件、法令、访谈、新闻与残片。"
+    featured_ids: []
+
+  - key: ecology
+    code: "P05"
+    title: "生态与物种"
+    description: "生态区、物种、疾病、环境与自然现象。"
+    page_ref: "/portals/ecology"
+    weight: 50
+    sections:
+      - key: "ecology"
+        label: "生态档案"
+        page_ref: "/ecology"
+        description: "生态区、物种、疾病、生物群落与自然现象。"
+    featured_ids: []

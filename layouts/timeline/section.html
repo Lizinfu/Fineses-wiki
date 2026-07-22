@@ -1,0 +1,235 @@
+{{ define "main" }}
+  {{- $timeline := index site.Data.generated "timeline" -}}
+  {{- $entries := slice -}}
+  {{- $undated := slice -}}
+  {{- $filters := dict -}}
+
+  {{- with $timeline -}}
+    {{- $entries = index . "entries" | default slice -}}
+    {{- $undated = index . "undated" | default slice -}}
+    {{- $filters = index . "filters" | default dict -}}
+  {{- end -}}
+
+  {{- $total := add (len $entries) (len $undated) -}}
+  {{- $idMap := partialCached
+    "relations/id-map.html"
+    site
+    site.Language.Lang
+  -}}
+
+  <div class="page-main__inner timeline-page">
+    {{ partial "timeline/status.html" . }}
+    {{ partial "navigation/breadcrumbs.html" . }}
+
+    <header class="timeline-hero">
+      <div class="timeline-hero__content">
+        <div class="cluster">
+          <span class="ui-label">TIMELINE</span>
+          <span class="ui-index">GENERATED / CHRONOLOGY</span>
+        </div>
+
+        <h1 class="timeline-hero__title">{{ .Title }}</h1>
+
+        <p class="timeline-hero__description">
+          {{ .Description
+            | default
+              "按世界内年代浏览事件、人物、国家与其他实体的时间记录。" }}
+        </p>
+
+        {{ with .Content }}
+          <div class="prose reading-column">{{ . }}</div>
+        {{ end }}
+      </div>
+
+      <aside class="timeline-hero__stats" aria-label="时间线统计">
+        <div class="timeline-hero__stat">
+          <strong class="timeline-hero__value">{{ $total }}</strong>
+          <span class="timeline-hero__label">Timeline records</span>
+        </div>
+
+        <div class="timeline-hero__stat">
+          <strong class="timeline-hero__value">
+            {{ len $entries }}
+          </strong>
+          <span class="timeline-hero__label">Dated records</span>
+        </div>
+
+        <div class="timeline-hero__stat">
+          <strong class="timeline-hero__value">
+            {{ len $undated }}
+          </strong>
+          <span class="timeline-hero__label">Undated records</span>
+        </div>
+      </aside>
+    </header>
+
+    <div
+      class="timeline-browser"
+      data-timeline-root
+      data-timeline-state="{{ if gt $total 0 }}results{{ else }}empty{{ end }}">
+
+      <noscript>
+        <section class="search-nojs">
+          <span class="ui-kicker">JavaScript unavailable</span>
+          <h2>筛选功能不可用</h2>
+          <p>
+            全部时间记录仍按排序值显示；JavaScript 仅用于本页筛选，
+            不影响内容阅读和实体链接。
+          </p>
+        </section>
+      </noscript>
+
+      <section class="timeline-controls" aria-label="时间线筛选">
+        <div class="timeline-control">
+          <label for="timeline-query">标题、摘要或稳定 ID</label>
+          <input
+            id="timeline-query"
+            type="search"
+            placeholder="筛选当前时间线"
+            autocomplete="off"
+            data-timeline-query
+            disabled>
+        </div>
+
+        <div class="timeline-control">
+          <label for="timeline-calendar">历法</label>
+          <select
+            id="timeline-calendar"
+            data-timeline-calendar
+            disabled>
+            <option value="">全部历法</option>
+            {{- range index $filters "calendars" -}}
+              <option value="{{ index . "id" }}">
+                {{ index . "label" }} ({{ index . "count" }})
+              </option>
+            {{- end -}}
+          </select>
+        </div>
+
+        <div class="timeline-control">
+          <label for="timeline-category">事件类型</label>
+          <select
+            id="timeline-category"
+            data-timeline-category
+            disabled>
+            <option value="">全部类型</option>
+            {{- range index $filters "categories" -}}
+              <option value="{{ index . "id" }}">
+                {{ index . "label" }} ({{ index . "count" }})
+              </option>
+            {{- end -}}
+          </select>
+        </div>
+
+        <div class="timeline-control">
+          <label for="timeline-kind">实体类型</label>
+          <select
+            id="timeline-kind"
+            data-timeline-kind
+            disabled>
+            <option value="">全部实体</option>
+            {{- range index $filters "entity_kinds" -}}
+              <option value="{{ index . "id" }}">
+                {{ index . "label" | replaceRE "[-_]+" " " }}
+                ({{ index . "count" }})
+              </option>
+            {{- end -}}
+          </select>
+        </div>
+
+        <div class="timeline-control">
+          <label for="timeline-status">档案状态</label>
+          <select
+            id="timeline-status"
+            data-timeline-status
+            disabled>
+            <option value="">全部状态</option>
+            {{- range index $filters "statuses" -}}
+              <option value="{{ index . "id" }}">
+                {{ index . "label" }} ({{ index . "count" }})
+              </option>
+            {{- end -}}
+          </select>
+        </div>
+
+        <button
+          class="timeline-controls__clear"
+          type="button"
+          data-timeline-clear
+          disabled>
+          清除筛选
+        </button>
+      </section>
+
+      <header class="timeline-summary">
+        <strong class="timeline-summary__title">年代记录</strong>
+        <span
+          class="timeline-summary__count"
+          data-timeline-count
+          aria-live="polite">
+          {{ $total }} / {{ $total }} RECORDS
+        </span>
+      </header>
+
+      <section class="timeline-state" data-state="empty">
+        <span class="ui-kicker">No matching records</span>
+        <h2>没有符合当前筛选条件的记录</h2>
+        <p>清除部分筛选条件，或尝试使用其他标题和稳定 ID。</p>
+      </section>
+
+      <section class="timeline-state" data-state="error">
+        <span class="ui-kicker">Timeline error</span>
+        <h2>时间线筛选初始化失败</h2>
+        <p>静态时间线仍可阅读，请检查浏览器控制台中的错误。</p>
+      </section>
+
+      {{ with $entries }}
+        <section
+          class="timeline-group"
+          data-timeline-group
+          aria-labelledby="dated-timeline-title">
+          <header class="timeline-group__header">
+            <h2 id="dated-timeline-title">已确定年代</h2>
+            <span class="timeline-group__meta">
+              {{ len . }} DATED
+            </span>
+          </header>
+
+          <ol class="timeline-rail">
+            {{- range . -}}
+              {{ partial "timeline/entry.html" (dict
+                "Entry" .
+                "IDMap" $idMap
+              ) }}
+            {{- end -}}
+          </ol>
+        </section>
+      {{ end }}
+
+      {{ with $undated }}
+        <section
+          class="timeline-group"
+          data-timeline-group
+          aria-labelledby="undated-timeline-title">
+          <header class="timeline-group__header">
+            <h2 id="undated-timeline-title">日期不详</h2>
+            <span class="timeline-group__meta">
+              {{ len . }} UNDATED
+            </span>
+          </header>
+
+          <ol class="timeline-rail">
+            {{- range . -}}
+              {{ partial "timeline/entry.html" (dict
+                "Entry" .
+                "IDMap" $idMap
+              ) }}
+            {{- end -}}
+          </ol>
+        </section>
+      {{ end }}
+    </div>
+
+    {{ partial "editor/edit-link.html" . }}
+  </div>
+{{ end }}

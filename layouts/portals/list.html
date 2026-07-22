@@ -1,0 +1,37 @@
+{{ define "main" }}
+  <div class="page-main__inner">
+    {{ partial "navigation/breadcrumbs.html" . }}
+
+    <header class="list-hero">
+      <div class="list-hero__topline">
+        <span class="ui-label">PORTALS</span>
+        <span class="ui-index">READER-FACING STRUCTURE</span>
+      </div>
+
+      <h1 class="list-hero__title">{{ .Title }}</h1>
+
+      {{ with .Description }}
+        <p class="list-hero__description">{{ . }}</p>
+      {{ end }}
+    </header>
+
+    <section class="list-section" aria-labelledby="all-portals-title">
+      <header class="list-section__header">
+        <h2 id="all-portals-title">全部门户</h2>
+        <span class="list-section__count">
+          {{ len site.Data.navigation.portals.portals }} PORTALS
+        </span>
+      </header>
+
+      <div class="auto-grid home-portals">
+        {{- range sort
+          site.Data.navigation.portals.portals
+          "weight"
+          "asc"
+        -}}
+          {{ partial "ui/portal-card.html" (dict "Portal" .) }}
+        {{- end -}}
+      </div>
+    </section>
+  </div>
+{{ end }}

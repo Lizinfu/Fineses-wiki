@@ -1,4 +1,14 @@
 {{ define "main" }}
+  {{- $timeline := index site.Data.generated "timeline" -}}
+  {{- $timelineCount := 0 -}}
+
+  {{- with $timeline -}}
+    {{- $timelineCount = add
+      (len (index . "entries"))
+      (len (index . "undated"))
+    -}}
+  {{- end -}}
+
   <div class="page-main__inner">
     <section class="home-hero" aria-labelledby="home-title">
       <div class="home-hero__content">
@@ -21,6 +31,12 @@
 
           <a
             class="button-link button-link--secondary"
+            href="{{ "timeline/" | relLangURL }}">
+            世界时间线
+          </a>
+
+          <a
+            class="button-link button-link--secondary"
             href="{{ "search/" | relLangURL }}">
             检索档案
           </a>
@@ -37,9 +53,16 @@
 
         <div class="system-stat">
           <strong class="system-stat__value">
-            {{ len site.Sections }}
+            {{ len site.Data.navigation.portals.portals }}
           </strong>
-          <span class="system-stat__label">Active sections</span>
+          <span class="system-stat__label">Reader portals</span>
+        </div>
+
+        <div class="system-stat">
+          <strong class="system-stat__value">
+            {{ $timelineCount }}
+          </strong>
+          <span class="system-stat__label">Timeline records</span>
         </div>
 
         <div class="system-stat">
@@ -60,23 +83,22 @@
         </div>
 
         <span class="section-heading__meta">
-          {{ len site.Sections }} SECTIONS
+          {{ len site.Data.navigation.portals.portals }} PORTALS
         </span>
       </header>
 
-      {{ with site.Sections }}
+      {{ with site.Data.navigation.portals.portals }}
         <div class="auto-grid home-portals">
-          {{ range .ByWeight }}
-            {{ partial "ui/catalog-card.html" (dict
-              "Page" .
-              "Variant" "portal"
+          {{ range sort . "weight" "asc" }}
+            {{ partial "ui/portal-card.html" (dict
+              "Portal" .
             ) }}
           {{ end }}
         </div>
       {{ else }}
         {{ partial "ui/empty-state.html" (dict
-          "Title" "尚未建立一级 Section"
-          "Text" "创建 content/<section>/_index.md 后，入口会自动出现在这里。"
+          "Title" "尚未建立门户配置"
+          "Text" "请配置 data/navigation/portals.yaml。"
         ) }}
       {{ end }}
     </section>
@@ -94,6 +116,7 @@
       </header>
 
       {{ $recent := site.RegularPages.ByLastmod.Reverse | first 6 }}
+
       {{ with $recent }}
         <div class="auto-grid home-recent">
           {{ range . }}

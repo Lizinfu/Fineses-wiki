@@ -1,0 +1,62 @@
+{{- $editor := site.Params.editor -}}
+
+{{- if and $editor .File -}}
+  {{- $enabled := index $editor "enabled" | default false -}}
+  {{- $repository := index $editor "repository" | default "" -}}
+  {{- $branch := index $editor "branch" | default "main" -}}
+  {{- $contentDir := index $editor "content_dir" | default "content" -}}
+
+  {{- if and $enabled $repository -}}
+    {{- $repositoryURL := strings.TrimSuffix "/" $repository -}}
+
+    {{- if not (strings.HasPrefix $repositoryURL "http") -}}
+      {{- $repositoryURL = printf
+        "https://github.com/%s"
+        $repositoryURL
+      -}}
+    {{- end -}}
+
+    {{- $filePath := printf
+      "%s/%s"
+      (strings.TrimSuffix "/" $contentDir)
+      .File.Path
+    -}}
+
+    {{- $editURL := printf
+      "%s/edit/%s/%s"
+      $repositoryURL
+      $branch
+      $filePath
+    -}}
+
+    {{- $actionsURL := printf
+      "%s/actions/workflows/deploy-pages.yml"
+      $repositoryURL
+    -}}
+
+<aside class="editor-tools" data-pagefind-ignore>
+  <div class="editor-tools__context">
+    <strong class="editor-tools__label">内容维护</strong>
+    <span class="editor-tools__hint">
+      编辑 Markdown 后，检索索引会随部署自动重建。
+    </span>
+  </div>
+
+  <div class="editor-tools__actions">
+    <a
+      class="editor-tools__link editor-tools__link--primary"
+      href="{{ $editURL }}"
+      rel="external">
+      在 GitHub 编辑本页
+    </a>
+
+    <a
+      class="editor-tools__link"
+      href="{{ $actionsURL }}"
+      rel="external">
+      查看发布状态
+    </a>
+  </div>
+</aside>
+  {{- end -}}
+{{- end -}}

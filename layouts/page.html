@@ -1,8 +1,9 @@
 {{ define "main" }}
   <div class="page-main__inner">
+    {{ partial "entity/graph-status.html" . }}
     {{ partial "search/pagefind-metadata.html" . }}
-
     {{ partial "navigation/breadcrumbs.html" . }}
+    {{ partial "navigation/entity-subnav.html" . }}
     {{ partial "entity/header.html" . }}
     {{ partial "entity/archive-meta.html" . }}
 
@@ -22,7 +23,9 @@
     </div>
 
     <div class="entity-appendix" data-pagefind-ignore>
+      {{ partial "entity/timeline.html" . }}
       {{ partial "entity/relations.html" . }}
+      {{ partial "entity/backlinks.html" . }}
       {{ partial "entity/sources.html" . }}
       {{ partial "entity/revision.html" . }}
     </div>
@@ -30,5 +33,7 @@
     <div data-pagefind-ignore>
       {{ partial "navigation/section-pagination.html" . }}
     </div>
+
+    {{ partial "editor/edit-link.html" . }}
   </div>
 {{ end }}

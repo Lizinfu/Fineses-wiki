@@ -1,0 +1,20 @@
+{{- if hugo.IsDevelopment -}}
+  {{- $report := index site.Data.generated "timeline-report" -}}
+
+  {{- with $report -}}
+    {{- $totals := index . "totals" -}}
+    {{- $errors := index $totals "errors" | default 0 -}}
+    {{- $warnings := index $totals "warnings" | default 0 -}}
+
+    {{- if or (gt $errors 0) (gt $warnings 0) -}}
+      <aside
+        class="graph-status"
+        data-status="{{ if gt $errors 0 }}error{{ else }}warning{{ end }}"
+        role="status">
+        <strong>TIMELINE DATA</strong>
+        <span>{{ $errors }} errors / {{ $warnings }} warnings</span>
+        <span>运行 npm run timeline:report 查看详情</span>
+      </aside>
+    {{- end -}}
+  {{- end -}}
+{{- end -}}

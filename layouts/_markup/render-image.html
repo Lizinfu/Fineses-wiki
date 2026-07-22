@@ -1,16 +1,29 @@
-{{- $src := .Destination -}}
-{{- with .PageInner.Resources.GetMatch .Destination -}}
+{{- $destination := .Destination -}}
+{{- $resource := .PageInner.Resources.GetMatch $destination -}}
+
+{{- if not $resource -}}
+  {{- with .PageInner.Parent -}}
+    {{- $resource = .Resources.GetMatch $destination -}}
+  {{- end -}}
+{{- end -}}
+
+{{- $src := $destination -}}
+{{- with $resource -}}
   {{- $src = .RelPermalink -}}
 {{- end -}}
 
 {{- if .IsBlock -}}
   <figure class="content-figure">
-    <a class="content-figure__media" href="{{ $src | safeURL }}">
-      <img
-        src="{{ $src | safeURL }}"
-        alt="{{ .PlainText }}"
-        loading="lazy"
-        decoding="async">
+    <a
+      class="content-figure__media"
+      href="{{ $src | safeURL }}">
+      {{ partial "media/responsive-image.html" (dict
+        "Resource" $resource
+        "Src" $src
+        "Alt" .PlainText
+        "Loading" "lazy"
+        "Sizes" "(max-width: 55rem) 100vw, 72ch"
+      ) }}
     </a>
 
     {{- with .Title -}}
@@ -20,10 +33,10 @@
     {{- end -}}
   </figure>
 {{- else -}}
-  <img
-    src="{{ $src | safeURL }}"
-    alt="{{ .PlainText }}"
-    {{- with .Title }} title="{{ . }}"{{ end -}}
-    loading="lazy"
-    decoding="async">
+  {{ partial "media/responsive-image.html" (dict
+    "Resource" $resource
+    "Src" $src
+    "Alt" .PlainText
+    "Loading" "lazy"
+  ) }}
 {{- end -}}

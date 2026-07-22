@@ -1,0 +1,19 @@
+{{- $entry := . -}}
+
+{{- if index $entry "undated" -}}
+  {{- index $entry "undated_label" | default "日期不详" -}}
+{{- else -}}
+  {{- $start := index $entry "start" -}}
+  {{- $end := index $entry "end" -}}
+
+  {{- with $start -}}
+    {{- if index . "circa" -}}约 {{- end -}}
+    {{- index . "display" -}}
+  {{- end -}}
+
+  {{- with $end -}}
+    {{- " — " -}}
+    {{- if index . "circa" -}}约 {{- end -}}
+    {{- index . "display" -}}
+  {{- end -}}
+{{- end -}}

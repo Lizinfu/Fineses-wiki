@@ -1,7 +1,6 @@
 {{- /*
-Stage 4 stylesheet bundle.
-Every listed file is required. Missing resources stop the Hugo build instead
-of silently producing a partially styled site.
+Stage 7 stylesheet bundle.
+Every listed file is required. Missing resources stop the Hugo build.
 */ -}}
 
 {{- $paths := slice
@@ -12,14 +11,21 @@ of silently producing a partially styled site.
   "styles/layout.css"
   "styles/components/navigation.css"
   "styles/components/catalog-card.css"
+  "styles/components/portal-card.css"
   "styles/components/infobox.css"
+  "styles/components/entity-children.css"
   "styles/components/relation-list.css"
+  "styles/components/relation-advanced.css"
+  "styles/components/timeline.css"
   "styles/components/archive-note.css"
   "styles/components/markdown.css"
+  "styles/components/media.css"
   "styles/components/search.css"
+  "styles/components/editor-tools.css"
   "styles/pages/home.css"
   "styles/pages/list.css"
   "styles/pages/entity.css"
+  "styles/pages/portal.css"
   "styles/pages/search-page.css"
   "styles/utilities.css"
 -}}

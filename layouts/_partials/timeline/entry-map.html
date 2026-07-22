@@ -1,0 +1,23 @@
+{{- $scratch := newScratch -}}
+{{- $timeline := index site.Data.generated "timeline" -}}
+
+{{- with $timeline -}}
+  {{- range index . "entries" -}}
+    {{- with index . "id" -}}
+      {{- $scratch.SetInMap "entries" (printf "%v" .) $ -}}
+    {{- end -}}
+  {{- end -}}
+
+  {{- range index . "undated" -}}
+    {{- with index . "id" -}}
+      {{- $scratch.SetInMap "entries" (printf "%v" .) $ -}}
+    {{- end -}}
+  {{- end -}}
+{{- end -}}
+
+{{- $result := $scratch.Get "entries" -}}
+{{- if not $result -}}
+  {{- $result = dict -}}
+{{- end -}}
+
+{{- return $result -}}

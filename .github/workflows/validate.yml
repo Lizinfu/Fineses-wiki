@@ -1,0 +1,69 @@
+name: Validate Wiki Content
+
+on:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+env:
+  HUGO_VERSION: "0.155.3"
+  NODE_VERSION: "22"
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+
+      - name: Install Hugo Extended
+        shell: bash
+        run: |
+          set -euo pipefail
+          archive="hugo_extended_${HUGO_VERSION}_linux-amd64.tar.gz"
+          url="https://github.com/gohugoio/hugo/releases/download/v${HUGO_VERSION}/${archive}"
+
+          curl --fail --location --retry 3 \
+            --output "${RUNNER_TEMP}/${archive}" \
+            "${url}"
+
+          tar \
+            --extract \
+            --gzip \
+            --file "${RUNNER_TEMP}/${archive}" \
+            --directory "${RUNNER_TEMP}" \
+            hugo
+
+          sudo install \
+            --mode 0755 \
+            "${RUNNER_TEMP}/hugo" \
+            /usr/local/bin/hugo
+
+      - name: Install Wiki dependencies
+        run: npm ci
+
+      - name: Validate content data
+        run: npm run wiki:validate
+
+      - name: Generate derived data
+        run: npm run wiki:prepare
+
+      - name: Build Hugo
+        run: hugo --gc --minify
+
+      - name: Build Pagefind index
+        run: npx pagefind --site public
+
+      - name: Verify Pagefind bundle
+        run: node scripts/verify-search-index.mjs

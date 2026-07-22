@@ -1,0 +1,51 @@
+{{- $entityID := .Params.id | default "" -}}
+
+{{- if $entityID -}}
+  {{- $entryMap := partialCached
+    "timeline/entry-map.html"
+    site
+    site.Language.Lang
+  -}}
+  {{- $entry := index $entryMap $entityID -}}
+
+  {{- with $entry -}}
+<section
+  class="entity-appendix__section"
+  aria-labelledby="entity-timeline-title">
+
+  <header class="entity-appendix__header">
+    <h2 id="entity-timeline-title">年代定位</h2>
+    <span class="entity-appendix__count">TIMELINE</span>
+  </header>
+
+  <div class="entity-timeline-record">
+    <strong class="entity-timeline-record__date">
+      {{ partial "timeline/date-label.html" . }}
+    </strong>
+
+    <div class="entity-timeline-record__body">
+      <div class="entity-timeline-record__meta">
+        <span>{{ index . "calendar_label" }}</span>
+        <span>{{ index . "status_label" }}</span>
+
+        {{- range index . "category_labels" -}}
+          <span>{{ . }}</span>
+        {{- end -}}
+      </div>
+
+      {{ with index . "summary" }}
+        <p>{{ . }}</p>
+      {{ end }}
+
+      <a
+        class="entity-timeline-record__link"
+        href="{{ printf "timeline/#timeline-%s"
+          ($entityID | urlize)
+        | relLangURL }}">
+        在世界时间线中定位
+      </a>
+    </div>
+  </div>
+</section>
+  {{- end -}}
+{{- end -}}

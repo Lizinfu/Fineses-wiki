@@ -1,0 +1,12 @@
+{{- $key := . -}}
+{{- $result := dict -}}
+
+{{- with site.Data.navigation.portals.portals -}}
+  {{- range . -}}
+    {{- if eq .key $key -}}
+      {{- $result = . -}}
+    {{- end -}}
+  {{- end -}}
+{{- end -}}
+
+{{- return $result -}}
