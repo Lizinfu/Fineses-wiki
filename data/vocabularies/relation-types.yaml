@@ -1,0 +1,69 @@
+relation_types:
+  - id: "located_in"
+    label: "位于"
+    reverse_label: "包含"
+    symmetric: false
+  - id: "capital_of"
+    label: "是首都"
+    reverse_label: "首都是"
+    symmetric: false
+  - id: "part_of"
+    label: "属于"
+    reverse_label: "包含"
+    symmetric: false
+  - id: "predecessor"
+    label: "前身是"
+    reverse_label: "继承自"
+    symmetric: false
+  - id: "successor"
+    label: "继承了"
+    reverse_label: "后继是"
+    symmetric: false
+  - id: "member_of"
+    label: "隶属于"
+    reverse_label: "成员包括"
+    symmetric: false
+  - id: "founded_by"
+    label: "由其建立"
+    reverse_label: "建立了"
+    symmetric: false
+  - id: "ruled_by"
+    label: "由其统治"
+    reverse_label: "统治了"
+    symmetric: false
+  - id: "allied_with"
+    label: "与其结盟"
+    reverse_label: "与其结盟"
+    symmetric: true
+  - id: "hostile_to"
+    label: "与其敌对"
+    reverse_label: "与其敌对"
+    symmetric: true
+  - id: "participated_in"
+    label: "参与了"
+    reverse_label: "参与者包括"
+    symmetric: false
+  - id: "caused"
+    label: "导致了"
+    reverse_label: "由其导致"
+    symmetric: false
+  - id: "affected"
+    label: "影响了"
+    reverse_label: "受其影响"
+    symmetric: false
+  - id: "created_by"
+    label: "由其创造"
+    reverse_label: "创造了"
+    symmetric: false
+  - id: "owned_by"
+    label: "由其持有"
+    reverse_label: "持有"
+    symmetric: false
+  - id: "documented_by"
+    label: "记载于"
+    reverse_label: "记载了"
+    symmetric: false
+  - id: "related_to"
+    label: "相关"
+    reverse_label: "相关"
+    symmetric: true

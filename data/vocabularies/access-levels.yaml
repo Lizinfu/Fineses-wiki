@@ -1,0 +1,7 @@
+access_levels:
+  - id: "public"
+    label: "公开"
+  - id: "restricted"
+    label: "限制阅览"
+  - id: "classified"
+    label: "机密档案"

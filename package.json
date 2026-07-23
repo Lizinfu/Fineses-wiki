@@ -16,13 +16,15 @@
     "content:generate": "node scripts/generate-content-graph.mjs",
     "content:validate": "node scripts/generate-content-graph.mjs --check",
     "content:report": "node scripts/print-content-report.mjs",
+    "content:migrate-v1": "node scripts/migrate-frontmatter-v1.mjs --write",
+    "content:model:validate": "node scripts/validate-content-model.mjs",
 
     "timeline:generate": "node scripts/generate-timeline.mjs",
     "timeline:validate": "node scripts/generate-timeline.mjs --check",
     "timeline:report": "node scripts/print-timeline-report.mjs",
 
     "wiki:prepare": "node scripts/prepare-wiki.mjs",
-    "wiki:validate": "node scripts/prepare-wiki.mjs --check",
+    "wiki:validate": "node scripts/validate-content-model.mjs && node scripts/prepare-wiki.mjs --check",
     "wiki:preview": "node scripts/prepare-wiki.mjs --check --include-drafts && node scripts/prepare-wiki.mjs --include-drafts && hugo server -D",
     "wiki:preview-search": "node scripts/prepare-wiki.mjs --check --include-drafts && node scripts/prepare-wiki.mjs --include-drafts && hugo --buildDrafts --gc --minify && pagefind --site public --serve",
     "wiki:build": "npm run wiki:validate && npm run wiki:prepare && hugo --gc --minify && pagefind --site public && node scripts/verify-search-index.mjs",

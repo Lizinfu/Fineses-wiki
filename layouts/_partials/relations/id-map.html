@@ -1,8 +1,9 @@
 {{- $scratch := newScratch -}}
 
 {{- range site.Pages -}}
-  {{- with .Params.id -}}
-    {{- $scratch.SetInMap "entities" (printf "%v" .) $ -}}
+  {{- $page := . -}}
+  {{- with $page.Params.id -}}
+    {{- $scratch.SetInMap "entities" (printf "%v" .) $page -}}
   {{- end -}}
 {{- end -}}
 

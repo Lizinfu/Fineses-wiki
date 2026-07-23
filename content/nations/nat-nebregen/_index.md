@@ -1,28 +1,48 @@
 ---
-title: "奈布雷根"
-description: "Nebregen"
+title: 奈布雷根
+description: Nebregen
 weight: 10
-keywords: 
-    - "天照" 
-
-cultures: 
-    - "齐黄文化圈" 
-eras: 
-    - "新历时代"
-topics: 
-    - "政体" 
-    - "贸易" 
-    - "外交" 
-params: 
-    id: "nat.neb" 
-    entity_kind: "nation" 
-    library: 
-        catalog_no: "NAT-0016" 
-        access_level: "public" 
-        reliability: "verified" 
-        last_reviewed: "2026-07-21" 
-    
---- 
+keywords:
+  - 天照
+cultures:
+  - 齐黄文化圈
+eras:
+  - 新历时代
+topics:
+  - 政体
+  - 贸易
+  - 外交
+params:
+  id: nat.neb
+  entity_kind: nation
+  library:
+    catalog_no: NAT-0016
+    access_level: public
+    reliability: verified
+    last_reviewed: 2026-07-21
+  schema: nation.v1
+  canon_status: canon
+  names:
+    official: 奈布雷根
+    short: ""
+    native: []
+    former: []
+    aliases:
+      - 天照
+  classifications:
+    cultures:
+      - 齐黄文化圈
+    eras:
+      - 新历时代
+    regions: []
+    government_forms: []
+    topics:
+      - 政体
+      - 贸易
+      - 外交
+  relations: []
+  allow_orphan: true
+---
 
 Nebregen
 

@@ -1,29 +1,49 @@
 ---
-title: "埃萨勒"
-description: "ऐशाल"
+title: 埃萨勒
+description: ऐशाल
 weight: 10
-keywords: 
-    - "埃萨勒" 
-    - "热带部族联盟"
-
-cultures: 
-    - "齐黄文化圈" 
-eras: 
-    - "新历时代"
-topics: 
-    - "政体" 
-    - "贸易" 
-    - "外交" 
-params: 
-    id: "nat.esa" 
-    entity_kind: "nation" 
-    library: 
-        catalog_no: "NAT-0003" 
-        access_level: "public" 
-        reliability: "verified" 
-        last_reviewed: "2026-07-17" 
-    
---- 
+keywords:
+  - 埃萨勒
+  - 热带部族联盟
+cultures:
+  - 齐黄文化圈
+eras:
+  - 新历时代
+topics:
+  - 政体
+  - 贸易
+  - 外交
+params:
+  id: nat.esa
+  entity_kind: nation
+  library:
+    catalog_no: NAT-0003
+    access_level: public
+    reliability: verified
+    last_reviewed: 2026-07-17
+  schema: nation.v1
+  canon_status: canon
+  names:
+    official: 埃萨勒
+    short: ""
+    native: []
+    former: []
+    aliases:
+      - 埃萨勒
+      - 热带部族联盟
+  classifications:
+    cultures:
+      - 齐黄文化圈
+    eras:
+      - 新历时代
+    regions: []
+    government_forms: []
+    topics:
+      - 政体
+      - 贸易
+      - 外交
+  relations: []
+---
 
 埃萨勒，Aiśāla/Esa'el。
 

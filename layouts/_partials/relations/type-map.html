@@ -16,8 +16,9 @@
 {{- end -}}
 
 {{- range $records -}}
-  {{- with index . "id" -}}
-    {{- $scratch.SetInMap "types" (printf "%v" .) $ -}}
+  {{- $record := . -}}
+  {{- with index $record "id" -}}
+    {{- $scratch.SetInMap "types" (printf "%v" .) $record -}}
   {{- end -}}
 {{- end -}}
 

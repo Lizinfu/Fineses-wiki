@@ -1,29 +1,50 @@
 ---
-title: "拉门斯"
-description: "RAMVS"
+title: 拉门斯
+description: RAMVS
 weight: 10
-keywords: 
-    - "拉门斯" 
-    - "文明古国"
-
-cultures: 
-    - "齐黄文化圈" 
-eras: 
-    - "新历时代"
-topics: 
-    - "政体" 
-    - "贸易" 
-    - "外交" 
-params: 
-    id: "nat.ram" 
-    entity_kind: "nation" 
-    library: 
-        catalog_no: "NAT-0001" 
-        access_level: "public" 
-        reliability: "verified" 
-        last_reviewed: "2026-07-21" 
-    
---- 
+keywords:
+  - 拉门斯
+  - 文明古国
+cultures:
+  - 齐黄文化圈
+eras:
+  - 新历时代
+topics:
+  - 政体
+  - 贸易
+  - 外交
+params:
+  id: nat.ram
+  entity_kind: nation
+  library:
+    catalog_no: NAT-0001
+    access_level: public
+    reliability: verified
+    last_reviewed: 2026-07-21
+  schema: nation.v1
+  canon_status: canon
+  names:
+    official: 拉门斯
+    short: ""
+    native: []
+    former: []
+    aliases:
+      - 拉门斯
+      - 文明古国
+  classifications:
+    cultures:
+      - 齐黄文化圈
+    eras:
+      - 新历时代
+    regions: []
+    government_forms: []
+    topics:
+      - 政体
+      - 贸易
+      - 外交
+  relations: []
+  allow_orphan: true
+---
 
 > 饮下拉基迪杜姆的水，日月便不会颠倒；
 教最虔勇的战士上前来，教王解他的惑。

@@ -1,29 +1,50 @@
 ---
-title: "尤拉卡萨"
-description: "Yuraqq'asa"
+title: 尤拉卡萨
+description: Yuraqq'asa
 weight: 10
-keywords: 
-    - "尤拉卡萨" 
-    - "文明古国"
-
-cultures: 
-    - "齐黄文化圈" 
-eras: 
-    - "新历时代"
-topics: 
-    - "政体" 
-    - "贸易" 
-    - "外交" 
-params: 
-    id: "nat.yur" 
-    entity_kind: "nation" 
-    library: 
-        catalog_no: "NAT-0007" 
-        access_level: "public" 
-        reliability: "verified" 
-        last_reviewed: "2026-07-21" 
-    
---- 
+keywords:
+  - 尤拉卡萨
+  - 文明古国
+cultures:
+  - 齐黄文化圈
+eras:
+  - 新历时代
+topics:
+  - 政体
+  - 贸易
+  - 外交
+params:
+  id: nat.yur
+  entity_kind: nation
+  library:
+    catalog_no: NAT-0007
+    access_level: public
+    reliability: verified
+    last_reviewed: 2026-07-21
+  schema: nation.v1
+  canon_status: canon
+  names:
+    official: 尤拉卡萨
+    short: ""
+    native: []
+    former: []
+    aliases:
+      - 尤拉卡萨
+      - 文明古国
+  classifications:
+    cultures:
+      - 齐黄文化圈
+    eras:
+      - 新历时代
+    regions: []
+    government_forms: []
+    topics:
+      - 政体
+      - 贸易
+      - 外交
+  relations: []
+  allow_orphan: true
+---
 
 “寒冷的雪境”，这是第一批流浪至此的开拓者对这片群山的第一印象。
 

@@ -1,0 +1,9 @@
+reliability_levels:
+  - id: "verified"
+    label: "已核验"
+  - id: "partially-verified"
+    label: "部分核验"
+  - id: "contested"
+    label: "存在争议"
+  - id: "unverified"
+    label: "未核验"

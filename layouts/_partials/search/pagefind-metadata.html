@@ -28,9 +28,10 @@ metadata and filters here while the visible element is ignored as body text.
   {{- end -}}
 {{- end -}}
 
-{{- with .Params.names -}}
+{{- $names := .Params.names -}}
+{{- with $names -}}
   {{- range $field := slice "official" "short" "native" "former" "aliases" -}}
-    {{- with index . $field -}}
+    {{- with index $names $field -}}
       {{- if reflect.IsSlice . -}}
         {{- range . -}}
           {{- $aliases = $aliases | append (printf "%v" .) -}}

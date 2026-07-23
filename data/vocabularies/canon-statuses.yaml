@@ -1,0 +1,7 @@
+canon_statuses:
+  - id: "canon"
+    label: "正式设定"
+  - id: "draft"
+    label: "待定设定"
+  - id: "deprecated"
+    label: "已废弃设定"

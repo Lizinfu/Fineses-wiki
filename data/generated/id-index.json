@@ -5,12 +5,13 @@
     "content_path": "concepts/con-tyn/index.md",
     "section": "concepts",
     "entity_kind": "concept",
-    "schema": "",
+    "schema": "concept.v1",
     "catalog_no": "CON-0042",
     "aliases": [
       "回响晶体",
       "信息矿物",
-      "晶体记录"
+      "晶体记录",
+      "拓云"
     ]
   },
   "evt.white-tide-0312": {
@@ -19,12 +20,13 @@
     "content_path": "history/events/evt-white-tide/index.md",
     "section": "history",
     "entity_kind": "event",
-    "schema": "",
+    "schema": "event.v1",
     "catalog_no": "EVT-0312-004",
     "aliases": [
       "白潮",
       "新历312年",
-      "海岸灾害"
+      "海岸灾害",
+      "白潮事件"
     ]
   },
   "nat.ama": {
@@ -33,7 +35,7 @@
     "content_path": "nations/nat-amaterasu/_index.md",
     "section": "nations",
     "entity_kind": "nation",
-    "schema": "",
+    "schema": "nation.v1",
     "catalog_no": "NAT-0009",
     "aliases": [
       "天照"
@@ -45,7 +47,7 @@
     "content_path": "nations/nat-crushmora/_index.md",
     "section": "nations",
     "entity_kind": "nation",
-    "schema": "",
+    "schema": "nation.v1",
     "catalog_no": "NAT-0011",
     "aliases": [
       "卡什莫兰"
@@ -57,11 +59,12 @@
     "content_path": "nations/nat-dunossai/_index.md",
     "section": "nations",
     "entity_kind": "nation",
-    "schema": "",
+    "schema": "nation.v1",
     "catalog_no": "NAT-0008",
     "aliases": [
       "殷",
-      "文明古国"
+      "文明古国",
+      "德诺尼塞"
     ]
   },
   "nat.esa": {
@@ -70,7 +73,7 @@
     "content_path": "nations/nat-esael/_index.md",
     "section": "nations",
     "entity_kind": "nation",
-    "schema": "",
+    "schema": "nation.v1",
     "catalog_no": "NAT-0003",
     "aliases": [
       "埃萨勒",
@@ -83,7 +86,7 @@
     "content_path": "nations/nat-havfrentyr/_index.md",
     "section": "nations",
     "entity_kind": "nation",
-    "schema": "",
+    "schema": "nation.v1",
     "catalog_no": "NAT-0012",
     "aliases": [
       "赫芙伦特"
@@ -95,11 +98,12 @@
     "content_path": "nations/nat-inibholc/_index.md",
     "section": "nations",
     "entity_kind": "nation",
-    "schema": "",
+    "schema": "nation.v1",
     "catalog_no": "NAT-0005",
     "aliases": [
       "埃萨勒",
-      "文明古国"
+      "文明古国",
+      "伊琳沃克"
     ]
   },
   "nat.kha": {
@@ -108,11 +112,12 @@
     "content_path": "nations/nat-khaos/_index.md",
     "section": "nations",
     "entity_kind": "nation",
-    "schema": "",
+    "schema": "nation.v1",
     "catalog_no": "NAT-0002",
     "aliases": [
       "殷",
-      "文明古国"
+      "文明古国",
+      "卡俄斯"
     ]
   },
   "nat.muo": {
@@ -121,11 +126,12 @@
     "content_path": "nations/nat-muocils/_index.md",
     "section": "nations",
     "entity_kind": "nation",
-    "schema": "",
+    "schema": "nation.v1",
     "catalog_no": "NAT-0006",
     "aliases": [
       "拉门斯",
-      "文明古国"
+      "文明古国",
+      "莫尔索斯"
     ]
   },
   "nat.neb": {
@@ -134,10 +140,11 @@
     "content_path": "nations/nat-nebregen/_index.md",
     "section": "nations",
     "entity_kind": "nation",
-    "schema": "",
+    "schema": "nation.v1",
     "catalog_no": "NAT-0016",
     "aliases": [
-      "天照"
+      "天照",
+      "奈布雷根"
     ]
   },
   "nat.ram": {
@@ -146,7 +153,7 @@
     "content_path": "nations/nat-ramus/_index.md",
     "section": "nations",
     "entity_kind": "nation",
-    "schema": "",
+    "schema": "nation.v1",
     "catalog_no": "NAT-0001",
     "aliases": [
       "拉门斯",
@@ -159,7 +166,7 @@
     "content_path": "nations/nat-siren/_index.md",
     "section": "nations",
     "entity_kind": "nation",
-    "schema": "",
+    "schema": "nation.v1",
     "catalog_no": "NAT-0010",
     "aliases": [
       "塞壬"
@@ -171,10 +178,11 @@
     "content_path": "nations/nat-sivlanzio/_index.md",
     "section": "nations",
     "entity_kind": "nation",
-    "schema": "",
+    "schema": "nation.v1",
     "catalog_no": "NAT-0013",
     "aliases": [
-      "天照"
+      "天照",
+      "斯兰缇亚"
     ]
   },
   "nat.tar": {
@@ -183,10 +191,11 @@
     "content_path": "nations/nat-tarusar/_index.md",
     "section": "nations",
     "entity_kind": "nation",
-    "schema": "",
+    "schema": "nation.v1",
     "catalog_no": "NAT-0014",
     "aliases": [
-      "天照"
+      "天照",
+      "塔罗萨尔"
     ]
   },
   "nat.ten": {
@@ -195,10 +204,11 @@
     "content_path": "nations/nat-tenum/_index.md",
     "section": "nations",
     "entity_kind": "nation",
-    "schema": "",
+    "schema": "nation.v1",
     "catalog_no": "NAT-0015",
     "aliases": [
-      "天照"
+      "天照",
+      "特洛恩"
     ]
   },
   "nat.yin": {
@@ -207,11 +217,12 @@
     "content_path": "nations/nat-yin/_index.md",
     "section": "nations",
     "entity_kind": "nation",
-    "schema": "",
+    "schema": "nation.v1",
     "catalog_no": "NAT-0004",
     "aliases": [
       "殷",
-      "文明古国"
+      "文明古国",
+      "殷国"
     ]
   },
   "nat.yur": {
@@ -220,7 +231,7 @@
     "content_path": "nations/nat-yuraqqasa/_index.md",
     "section": "nations",
     "entity_kind": "nation",
-    "schema": "",
+    "schema": "nation.v1",
     "catalog_no": "NAT-0007",
     "aliases": [
       "尤拉卡萨",
@@ -233,21 +244,22 @@
     "content_path": "organizations/org-FAS/index.md",
     "section": "organizations",
     "entity_kind": "organization",
-    "schema": "",
+    "schema": "organization.v1",
     "catalog_no": "ORG-cle01",
     "aliases": [
       "洛砚",
       "档案学者",
-      "白潮调查"
+      "白潮调查",
+      "联邦缉魔局"
     ]
   },
   "per.luo-yan": {
     "title": "洛砚",
-    "page_ref": "/people/per-luo-yan",
-    "content_path": "people/per-luo-yan/index.md",
-    "section": "people",
+    "page_ref": "/characters/per-luo-yan",
+    "content_path": "characters/per-luo-yan/index.md",
+    "section": "characters",
     "entity_kind": "person",
-    "schema": "",
+    "schema": "person.v1",
     "catalog_no": "PER-0001",
     "aliases": [
       "洛砚",
@@ -257,30 +269,32 @@
   },
   "per.reginae": {
     "title": "拉吉亚·萨曼拉玛",
-    "page_ref": "/people/esael/per-reginae",
-    "content_path": "people/esael/per-reginae/index.md",
-    "section": "people",
+    "page_ref": "/characters/esael/per-reginae",
+    "content_path": "characters/esael/per-reginae/index.md",
+    "section": "characters",
     "entity_kind": "person",
-    "schema": "",
+    "schema": "person.v1",
     "catalog_no": "PER-0301",
     "aliases": [
       "洛砚",
       "档案学者",
-      "白潮调查"
+      "白潮调查",
+      "拉吉亚·萨曼拉玛"
     ]
   },
   "per.transmundanus": {
     "title": "特兰蒙达努斯",
-    "page_ref": "/people/per-transmundanus",
-    "content_path": "people/per-transmundanus/index.md",
-    "section": "people",
+    "page_ref": "/characters/per-transmundanus",
+    "content_path": "characters/per-transmundanus/index.md",
+    "section": "characters",
     "entity_kind": "person",
-    "schema": "",
+    "schema": "person.v1",
     "catalog_no": "PER-0100",
     "aliases": [
       "洛砚",
       "档案学者",
-      "白潮调查"
+      "白潮调查",
+      "特兰蒙达努斯"
     ]
   },
   "reg.esa.sdv": {
@@ -289,9 +303,11 @@
     "content_path": "nations/nat-esael/region/Sand-Devoured-Valley.md",
     "section": "nations",
     "entity_kind": "subpage",
-    "schema": "",
+    "schema": "subpage.v1",
     "catalog_no": "NAT-0003",
-    "aliases": []
+    "aliases": [
+      "咽沙河谷"
+    ]
   },
   "reg.north-rift": {
     "title": "北境裂谷",
@@ -299,7 +315,7 @@
     "content_path": "regions/reg-north-rift/index.md",
     "section": "regions",
     "entity_kind": "region",
-    "schema": "",
+    "schema": "region.v1",
     "catalog_no": "REG-0001",
     "aliases": [
       "北境裂谷",

@@ -1,29 +1,50 @@
 ---
-title: "卡俄斯"
-description: "ΧΑΟΣ"
+title: 卡俄斯
+description: ΧΑΟΣ
 weight: 10
-keywords: 
-    - "殷" 
-    - "文明古国"
-
-cultures: 
-    - "齐黄文化圈" 
-eras: 
-    - "新历时代"
-topics: 
-    - "政体" 
-    - "贸易" 
-    - "外交" 
-params: 
-    id: "nat.kha" 
-    entity_kind: "nation" 
-    library: 
-        catalog_no: "NAT-0002" 
-        access_level: "public" 
-        reliability: "verified" 
-        last_reviewed: "2026-07-17" 
-    
---- 
+keywords:
+  - 殷
+  - 文明古国
+cultures:
+  - 齐黄文化圈
+eras:
+  - 新历时代
+topics:
+  - 政体
+  - 贸易
+  - 外交
+params:
+  id: nat.kha
+  entity_kind: nation
+  library:
+    catalog_no: NAT-0002
+    access_level: public
+    reliability: verified
+    last_reviewed: 2026-07-17
+  schema: nation.v1
+  canon_status: canon
+  names:
+    official: 卡俄斯
+    short: ""
+    native: []
+    former: []
+    aliases:
+      - 殷
+      - 文明古国
+  classifications:
+    cultures:
+      - 齐黄文化圈
+    eras:
+      - 新历时代
+    regions: []
+    government_forms: []
+    topics:
+      - 政体
+      - 贸易
+      - 外交
+  relations: []
+  allow_orphan: true
+---
 
 ## 概览 
 

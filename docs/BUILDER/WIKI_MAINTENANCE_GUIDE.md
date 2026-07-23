@@ -634,6 +634,30 @@ params:
 关系数据请优先填写在 Front Matter 的 `relations` 中。
 ```
 
+### 当前最小实体契约
+
+所有公开实体必须保留以下 `params` 字段：
+
+```text
+id、schema、entity_kind、canon_status、names、classifications、relations、library
+```
+
+其中 `library` 必须包含 `catalog_no`、`access_level`、`reliability` 和
+`last_reviewed`。`schema` 固定采用 `<entity_kind>.v1`，例如人物为
+`person.v1`、国家为 `nation.v1`。顶层的 `cultures`、`eras`、`topics` 保留
+给 Hugo Taxonomy，且必须与 `params.classifications` 中的同名数组一致。
+
+项目在提交与发布前会运行：
+
+```text
+npm run content:model:validate
+npm run wiki:validate
+```
+
+第一条命令检查最小契约与受控枚举；第二条会进一步检查稳定 ID、关系目标、
+关系类型与时间线。不要删除空数组：没有关系时写 `relations: []`；确实尚无
+语义关系的独立实体，写 `allow_orphan: true` 并在补充真实关联后移除它。
+
 新建时先保持：
 
 ```yaml

@@ -269,7 +269,7 @@ world-library-wiki/
 │   │           ├── map.webp
 │   │           └── cover.webp
 │   │
-│   ├── people/
+│   ├── character/
 │   │   ├── _index.md
 │   │   └── per-example/
 │   │       ├── index.md
@@ -350,7 +350,7 @@ world-library-wiki/
 │       ├── world-catalog.md
 │       ├── atlas.md
 │       ├── timeline.md
-│       ├── people-directory.md
+│       ├── character-directory.md
 │       ├── organization-directory.md
 │       └── taxonomy-browser.md
 │
@@ -398,7 +398,7 @@ world-library-wiki/
 │   ├── nations/
 │   │   ├── page.html
 │   │   └── section.html
-│   ├── people/
+│   ├── character/
 │   │   ├── page.html
 │   │   └── section.html
 │   ├── history/
@@ -528,7 +528,7 @@ content/nations/nat-example/_index.md
 表示一个 Leaf Bundle，适合人物、单个物种、单个事件、单件物品：
 
 ```text
-content/people/per-example/index.md
+content/character/per-example/index.md
 ```
 
 其目录中可以包含图片和附件，但不再包含其他独立内容页面。
@@ -1008,7 +1008,7 @@ Hugo 的 Archetype 可以作为新内容模板，通过 `hugo new content` 自�
 例如创建人物时：
 
 ```text
-hugo new content people/per-example/index.md
+hugo new content character/per-example/index.md
 ```
 
 应自动提供：

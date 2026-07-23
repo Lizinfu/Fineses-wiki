@@ -1,28 +1,48 @@
 ---
-title: "赫芙伦特"
-description: "Havfrentyr"
+title: 赫芙伦特
+description: Havfrentyr
 weight: 10
-keywords: 
-    - "赫芙伦特" 
-
-cultures: 
-    - "齐黄文化圈" 
-eras: 
-    - "新历时代"
-topics: 
-    - "政体" 
-    - "贸易" 
-    - "外交" 
-params: 
-    id: "nat.hav" 
-    entity_kind: "nation" 
-    library: 
-        catalog_no: "NAT-0012" 
-        access_level: "public" 
-        reliability: "verified" 
-        last_reviewed: "2026-07-21" 
-    
---- 
+keywords:
+  - 赫芙伦特
+cultures:
+  - 齐黄文化圈
+eras:
+  - 新历时代
+topics:
+  - 政体
+  - 贸易
+  - 外交
+params:
+  id: nat.hav
+  entity_kind: nation
+  library:
+    catalog_no: NAT-0012
+    access_level: public
+    reliability: verified
+    last_reviewed: 2026-07-21
+  schema: nation.v1
+  canon_status: canon
+  names:
+    official: 赫芙伦特
+    short: ""
+    native: []
+    former: []
+    aliases:
+      - 赫芙伦特
+  classifications:
+    cultures:
+      - 齐黄文化圈
+    eras:
+      - 新历时代
+    regions: []
+    government_forms: []
+    topics:
+      - 政体
+      - 贸易
+      - 外交
+  relations: []
+  allow_orphan: true
+---
 
 赫芙伦特，“人鱼的童话”，这是独立后的赫芙伦特为自己所取的名字。对于大部分人来说，这个国家往往充满了浪漫与美好。而随着现代化的不断推进，战后的赫芙伦特不断发展，也已经发展出了举世瞩目的旅游产业，吸引着各方的旅人。
 

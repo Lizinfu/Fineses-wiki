@@ -1,28 +1,48 @@
 ---
-title: "特洛恩"
+title: 特洛恩
 description: " ᠲᠡᠨᠦᠮ "
 weight: 10
-keywords: 
-    - "天照" 
-
-cultures: 
-    - "齐黄文化圈" 
-eras: 
-    - "新历时代"
-topics: 
-    - "政体" 
-    - "贸易" 
-    - "外交" 
-params: 
-    id: "nat.ten" 
-    entity_kind: "nation" 
-    library: 
-        catalog_no: "NAT-0015" 
-        access_level: "public" 
-        reliability: "verified" 
-        last_reviewed: "2026-07-21" 
-    
---- 
+keywords:
+  - 天照
+cultures:
+  - 齐黄文化圈
+eras:
+  - 新历时代
+topics:
+  - 政体
+  - 贸易
+  - 外交
+params:
+  id: nat.ten
+  entity_kind: nation
+  library:
+    catalog_no: NAT-0015
+    access_level: public
+    reliability: verified
+    last_reviewed: 2026-07-21
+  schema: nation.v1
+  canon_status: canon
+  names:
+    official: 特洛恩
+    short: ""
+    native: []
+    former: []
+    aliases:
+      - 天照
+  classifications:
+    cultures:
+      - 齐黄文化圈
+    eras:
+      - 新历时代
+    regions: []
+    government_forms: []
+    topics:
+      - 政体
+      - 贸易
+      - 外交
+  relations: []
+  allow_orphan: true
+---
 
 Tenüm
 
@@ -112,16 +132,13 @@ Tenüm
 
 历史上无数人都怀揣着这样的想法，为了探寻历史，更为了窥见将来，他们竭尽全力地想要复原萨满的咒印，想要化为己用。进入近代以来，随着现代科技的发展，他们甚至通过潜水器将实验环境设置在了深海之中，希望能够复原咒印的工作。
 
-<aside>
-<img src="/icons/chart_blue.svg" alt="/icons/chart_blue.svg" width="40px" /> 世界各国复原咒印尝试的记录
-
+{{< archive-note title="世界各国复原咒印尝试的记录" >}}
 - 莫尔索斯，拉兹梅什列涅实验室，于消滞海南部海域进行浅水实验，深度500米。是世界上第一个由官方主导进行的室外咒印实验。
 - 伊琳沃克，通界院，秘密对囚犯和危重病人进行活体实验。遭到媒体公开后，至今官方未对此作出正面回应。
 - 德诺尼塞，皇家科学院，传言曾成功复现咒印的基础功能，但样本迅速损毁。详情不明，日前项目已被叫停。
 
 ……
-
-</aside>
+{{< /archive-note >}}
 
 但事实上，如果真的能找到那些曾经生活在那个时代，并和特洛恩潮汐巫人有着密切联系的长生种（ 汐宫海音 ），他们也许会告诉你，潮汐巫人的咒印，从来不是他们看见未来的眼睛，而是他们伸向未来的手。
 
