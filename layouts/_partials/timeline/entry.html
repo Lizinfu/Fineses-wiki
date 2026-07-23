@@ -17,31 +17,24 @@
 {{- $sourceRefs := index $entry "source_refs" | default slice -}}
 {{- $variants := index $entry "variants" | default slice -}}
 {{- $note := index $entry "note" | default "" -}}
+{{- $presentation := index $entry "presentation" | default "standard" -}}
+{{- $summaryMode := index $entry "summary_mode" | default "full" -}}
 
 <li
   class="timeline-entry"
   id="timeline-{{ $id | urlize }}"
-  data-timeline-entry
-  data-timeline-calendar="{{ $calendar }}"
-  data-timeline-categories="{{ delimit $categories "|" }}"
-  data-timeline-kind="{{ $entityKind }}"
-  data-timeline-status="{{ $status }}"
-  data-timeline-search="{{ printf "%s %s %s %s %s"
-    (index $entry "title" | default "")
-    $id
-    $summary
-    (delimit $categoryLabels " ")
-    $calendarLabel
-  | plainify }}">
+  data-presentation="{{ $presentation }}"
+  data-status="{{ $status }}"
+  data-summary-mode="{{ $summaryMode }}">
 
   <div class="timeline-entry__date">
     <strong class="timeline-entry__date-primary">
       {{ partial "timeline/date-label.html" $entry }}
     </strong>
 
-    <span class="timeline-entry__calendar">
-      {{ $calendarLabel }}
-    </span>
+    {{ with $calendarLabel }}
+      <span class="timeline-entry__calendar">{{ . }}</span>
+    {{ end }}
 
     <span class="timeline-entry__index">
       ID / {{ $id }}
@@ -69,8 +62,8 @@
       <a href="{{ $href }}">{{ index $entry "title" }}</a>
     </h3>
 
-    {{ with $summary }}
-      <p class="timeline-entry__summary">{{ . }}</p>
+    {{ if and $summary (ne $summaryMode "title_only") }}
+      <p class="timeline-entry__summary">{{ $summary }}</p>
     {{ end }}
 
     {{ with $note }}

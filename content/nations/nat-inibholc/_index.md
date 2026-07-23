@@ -80,8 +80,10 @@ params:
     
     安塔兰戈
     
-
-高风原野
+{{< entity-ref
+  target="reg.ini.mg"
+  label="高风原野"
+>}}
 
 ## 历史沿革
 

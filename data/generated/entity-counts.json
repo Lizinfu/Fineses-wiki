@@ -1,19 +1,21 @@
 {
-  "total": 24,
+  "total": 33,
   "by_kind": {
+    "artifact": 1,
     "concept": 1,
-    "event": 1,
+    "event": 5,
     "nation": 16,
     "organization": 1,
-    "person": 3,
+    "person": 4,
     "region": 1,
-    "subpage": 1
+    "subpage": 4
   },
   "by_section": {
-    "characters": 3,
+    "artifacts": 1,
+    "characters": 4,
     "concepts": 1,
-    "history": 1,
-    "nations": 17,
+    "history": 5,
+    "nations": 20,
     "organizations": 1,
     "regions": 1
   }

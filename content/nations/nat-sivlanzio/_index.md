@@ -58,7 +58,10 @@ Sivlanzio
 
 特利亚
 
-斯诺西图
+{{< entity-ref
+  target="reg.siv.sc"
+  label="斯诺西图"
+>}}
 
 ## 圣堂与枯枝
 

@@ -1,4 +1,19 @@
 {
+  "art.maerhvan": {
+    "title": "人鱼",
+    "page_ref": "/artifacts/con-maerhvan",
+    "content_path": "artifacts/con-maerhvan/index.md",
+    "section": "artifacts",
+    "entity_kind": "artifact",
+    "schema": "artifact.v1",
+    "catalog_no": "CON-1201",
+    "aliases": [
+      "机械造物",
+      "亲切",
+      "“欢迎来到赫芙伦特”",
+      "人鱼"
+    ]
+  },
   "con.echo-crystal": {
     "title": "拓云",
     "page_ref": "/concepts/con-tyn",
@@ -12,6 +27,67 @@
       "信息矿物",
       "晶体记录",
       "拓云"
+    ]
+  },
+  "evt.la-guerre-des-cendres.480": {
+    "title": "灰烬战争",
+    "page_ref": "/history/events/evt-la-guerre-des-cendres",
+    "content_path": "history/events/evt-la-guerre-des-cendres/index.md",
+    "section": "history",
+    "entity_kind": "event",
+    "schema": "event.v1",
+    "catalog_no": "EVT-0480-001",
+    "aliases": [
+      "灰烬战争",
+      "480年",
+      "la-guerre-des-cendres"
+    ]
+  },
+  "evt.sivlanzio-peace-encyclical": {
+    "title": "和平通谕",
+    "page_ref": "/history/events/evt-sivlanzio-peace-encyclical",
+    "content_path": "history/events/evt-sivlanzio-peace-encyclical/index.md",
+    "section": "history",
+    "entity_kind": "event",
+    "schema": "event.v1",
+    "catalog_no": "EVT-0480-001",
+    "aliases": [
+      "灰烬战争",
+      "斯兰缇亚",
+      "耶路撒冷一世",
+      "和平通谕",
+      "Litterae Encyclicae de Pace",
+      "和平赦令"
+    ]
+  },
+  "evt.takamagahara-founding": {
+    "title": "高天原建立",
+    "page_ref": "/history/events/evt-takamagahara",
+    "content_path": "history/events/evt-takamagahara/index.md",
+    "section": "history",
+    "entity_kind": "event",
+    "schema": "event.v1",
+    "catalog_no": "EVT-0113-001",
+    "aliases": [
+      "天照",
+      "历史",
+      "神代之末",
+      "高天原建立"
+    ]
+  },
+  "evt.tarusa-tablet-discovery": {
+    "title": "塔罗萨尔占星泥版",
+    "page_ref": "/history/events/evt-tarusa-record",
+    "content_path": "history/events/evt-tarusa-record/index.md",
+    "section": "history",
+    "entity_kind": "event",
+    "schema": "event.v1",
+    "catalog_no": "EVT-0881-001",
+    "aliases": [
+      "塔罗萨尔",
+      "考古发现",
+      "占星术",
+      "塔罗萨尔占星泥版"
     ]
   },
   "evt.white-tide-0312": {
@@ -129,9 +205,10 @@
     "schema": "nation.v1",
     "catalog_no": "NAT-0006",
     "aliases": [
+      "莫尔索斯",
+      "莫尔索斯大公国",
       "拉门斯",
-      "文明古国",
-      "莫尔索斯"
+      "文明古国"
     ]
   },
   "nat.neb": {
@@ -253,6 +330,21 @@
       "联邦缉魔局"
     ]
   },
+  "per.camhain": {
+    "title": "可门",
+    "page_ref": "/characters/inibholc/per-camhain",
+    "content_path": "characters/inibholc/per-camhain/index.md",
+    "section": "characters",
+    "entity_kind": "person",
+    "schema": "person.v1",
+    "catalog_no": "PER-0501",
+    "aliases": [
+      "可门",
+      "人形兵器",
+      "通界院",
+      "“赐福”"
+    ]
+  },
   "per.luo-yan": {
     "title": "洛砚",
     "page_ref": "/characters/per-luo-yan",
@@ -309,6 +401,30 @@
       "咽沙河谷"
     ]
   },
+  "reg.hav.mh": {
+    "title": "莫里哈温",
+    "page_ref": "/nations/nat-havfrentyr/region/Moryhavn",
+    "content_path": "nations/nat-havfrentyr/region/Moryhavn.md",
+    "section": "nations",
+    "entity_kind": "subpage",
+    "schema": "subpage.v1",
+    "catalog_no": "NAT-0012",
+    "aliases": [
+      "莫里哈温"
+    ]
+  },
+  "reg.ini.mg": {
+    "title": "高风原野",
+    "page_ref": "/nations/nat-inibholc/region/Machaire-Gaoithe",
+    "content_path": "nations/nat-inibholc/region/Machaire-Gaoithe.md",
+    "section": "nations",
+    "entity_kind": "subpage",
+    "schema": "subpage.v1",
+    "catalog_no": "NAT-0005",
+    "aliases": [
+      "高风原野"
+    ]
+  },
   "reg.north-rift": {
     "title": "北境裂谷",
     "page_ref": "/regions/reg-north-rift",
@@ -321,6 +437,18 @@
       "北境裂谷",
       "高寒地区",
       "封闭湖"
+    ]
+  },
+  "reg.siv.sc": {
+    "title": "斯诺西图",
+    "page_ref": "/nations/nat-sivlanzio/region/Snosciuto",
+    "content_path": "nations/nat-sivlanzio/region/Snosciuto.md",
+    "section": "nations",
+    "entity_kind": "subpage",
+    "schema": "subpage.v1",
+    "catalog_no": "NAT-0013",
+    "aliases": [
+      "斯诺西图"
     ]
   }
 }

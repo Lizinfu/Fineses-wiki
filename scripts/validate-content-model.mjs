@@ -58,6 +58,8 @@ for (const filePath of await walkMarkdown(path.join(projectRoot, "content"))) {
 
   const params = parsed.params;
   const library = params.library ?? {};
+  const names = params.names ?? {};
+  const classifications = params.classifications ?? {};
   for (const field of requiredParams) {
     if (params[field] === undefined || params[field] === null || params[field] === "") {
       errors.push(`${relativePath}: params.${field} is required for entity ${params.id}.`);
@@ -83,11 +85,11 @@ for (const filePath of await walkMarkdown(path.join(projectRoot, "content"))) {
   if (!reliabilityLevels.has(library.reliability)) {
     errors.push(`${relativePath}: unregistered reliability ${library.reliability}.`);
   }
-  if (!params.names.official) {
+  if (!names.official) {
     errors.push(`${relativePath}: params.names.official is required.`);
   }
   for (const field of ["cultures", "eras", "regions", "government_forms", "topics"]) {
-    if (!Array.isArray(params.classifications?.[field])) {
+    if (!Array.isArray(classifications[field])) {
       errors.push(`${relativePath}: params.classifications.${field} must be an array.`);
     }
   }
@@ -99,7 +101,7 @@ for (const filePath of await walkMarkdown(path.join(projectRoot, "content"))) {
     ["eras", parsed.eras],
     ["topics", parsed.topics],
   ]) {
-    if (JSON.stringify(asArray(legacy)) !== JSON.stringify(params.classifications?.[field] ?? [])) {
+    if (JSON.stringify(asArray(legacy)) !== JSON.stringify(classifications[field] ?? [])) {
       errors.push(`${relativePath}: ${field} must match params.classifications.${field}.`);
     }
   }

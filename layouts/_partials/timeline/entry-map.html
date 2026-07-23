@@ -3,14 +3,16 @@
 
 {{- with $timeline -}}
   {{- range index . "entries" -}}
-    {{- with index . "id" -}}
-      {{- $scratch.SetInMap "entries" (printf "%v" .) $ -}}
+    {{- $entry := . -}}
+    {{- with index $entry "id" -}}
+      {{- $scratch.SetInMap "entries" (printf "%v" .) $entry -}}
     {{- end -}}
   {{- end -}}
 
   {{- range index . "undated" -}}
-    {{- with index . "id" -}}
-      {{- $scratch.SetInMap "entries" (printf "%v" .) $ -}}
+    {{- $entry := . -}}
+    {{- with index $entry "id" -}}
+      {{- $scratch.SetInMap "entries" (printf "%v" .) $entry -}}
     {{- end -}}
   {{- end -}}
 {{- end -}}

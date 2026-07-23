@@ -9,6 +9,7 @@
   {{- $entry := index $entryMap $entityID -}}
 
   {{- with $entry -}}
+  {{- $timelineEntry := . -}}
 <section
   class="entity-appendix__section"
   aria-labelledby="entity-timeline-title">
@@ -20,7 +21,7 @@
 
   <div class="entity-timeline-record">
     <strong class="entity-timeline-record__date">
-      {{ partial "timeline/date-label.html" . }}
+      {{ partial "timeline/date-label.html" $timelineEntry }}
     </strong>
 
     <div class="entity-timeline-record__body">

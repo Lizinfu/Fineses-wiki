@@ -3,10 +3,10 @@ title: 莫尔索斯
 description: Муоцилс
 weight: 10
 keywords:
-  - 拉门斯
-  - 文明古国
+  - 莫尔索斯
+  - 莫尔索斯大公国
 cultures:
-  - 齐黄文化圈
+  - 泛斯塔兰文化圈
 eras:
   - 新历时代
 topics:
@@ -33,7 +33,7 @@ params:
       - 文明古国
   classifications:
     cultures:
-      - 齐黄文化圈
+      - 泛斯塔兰文化圈
     eras:
       - 新历时代
     regions: []

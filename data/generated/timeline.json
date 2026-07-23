@@ -1,11 +1,199 @@
 {
   "schema_version": 1,
-  "entries": [],
+  "entries": [
+    {
+      "id": "evt.takamagahara-founding",
+      "title": "高天原建立",
+      "page_ref": "/history/events/evt-takamagahara",
+      "content_path": "history/events/evt-takamagahara/index.md",
+      "section": "history",
+      "entity_kind": "event",
+      "summary": "大地漂浮，天空落下。",
+      "start": {
+        "display": "前113年",
+        "sort_value": 11300,
+        "calendar": "default",
+        "precision": "season",
+        "circa": false,
+        "calendar_label": "主历法"
+      },
+      "end": null,
+      "undated": false,
+      "undated_label": "日期不详",
+      "order_hint": 0,
+      "calendar": "default",
+      "calendar_label": "主历法",
+      "categories": [
+        "other"
+      ],
+      "category_labels": [
+        "其他"
+      ],
+      "status": "verified",
+      "status_label": "已核实",
+      "presentation": "standard",
+      "summary_mode": "full",
+      "era_label": "神代 · 消亡期",
+      "source_refs": [],
+      "note": "",
+      "variants": []
+    },
+    {
+      "id": "evt.la-guerre-des-cendres.480",
+      "title": "灰烬战争",
+      "page_ref": "/history/events/evt-la-guerre-des-cendres",
+      "content_path": "history/events/evt-la-guerre-des-cendres/index.md",
+      "section": "history",
+      "entity_kind": "event",
+      "summary": "在拉门斯的遗骸之上，战争从未结束。",
+      "start": {
+        "display": "480年",
+        "sort_value": 148001,
+        "calendar": "default",
+        "precision": "season",
+        "circa": false,
+        "calendar_label": "主历法"
+      },
+      "end": null,
+      "undated": false,
+      "undated_label": "日期不详",
+      "order_hint": 0,
+      "calendar": "default",
+      "calendar_label": "主历法",
+      "categories": [
+        "war"
+      ],
+      "category_labels": [
+        "战争与冲突"
+      ],
+      "status": "verified",
+      "status_label": "已核实",
+      "presentation": "major",
+      "summary_mode": "full",
+      "era_label": "近代 · 扩张期",
+      "source_refs": [],
+      "note": "",
+      "variants": []
+    },
+    {
+      "id": "evt.sivlanzio-peace-encyclical",
+      "title": "和平通谕",
+      "page_ref": "/history/events/evt-sivlanzio-peace-encyclical",
+      "content_path": "history/events/evt-sivlanzio-peace-encyclical/index.md",
+      "section": "history",
+      "entity_kind": "event",
+      "summary": "“凡有放下刀剑，以手抚膺，诚然忏悔；便舍了他的罪。”",
+      "start": {
+        "display": "480年",
+        "sort_value": 148002,
+        "calendar": "default",
+        "precision": "season",
+        "circa": false,
+        "calendar_label": "主历法"
+      },
+      "end": null,
+      "undated": false,
+      "undated_label": "日期不详",
+      "order_hint": 0,
+      "calendar": "default",
+      "calendar_label": "主历法",
+      "categories": [
+        "politics"
+      ],
+      "category_labels": [
+        "政治与制度"
+      ],
+      "status": "verified",
+      "status_label": "已核实",
+      "presentation": "document",
+      "summary_mode": "full",
+      "era_label": "近代 · 扩张期",
+      "source_refs": [],
+      "note": "",
+      "variants": []
+    },
+    {
+      "id": "evt.tarusa-tablet-discovery",
+      "title": "塔罗萨尔占星泥版",
+      "page_ref": "/history/events/evt-tarusa-record",
+      "content_path": "history/events/evt-tarusa-record/index.md",
+      "section": "history",
+      "entity_kind": "event",
+      "summary": "“人类发现了文明”",
+      "start": {
+        "display": "881年",
+        "sort_value": 188101,
+        "calendar": "default",
+        "precision": "season",
+        "circa": false,
+        "calendar_label": "主历法"
+      },
+      "end": null,
+      "undated": false,
+      "undated_label": "日期不详",
+      "order_hint": 0,
+      "calendar": "default",
+      "calendar_label": "主历法",
+      "categories": [
+        "discovery"
+      ],
+      "category_labels": [
+        "发现与考古"
+      ],
+      "status": "verified",
+      "status_label": "已核实",
+      "presentation": "minor",
+      "summary_mode": "full",
+      "era_label": "近代 · 扩张期",
+      "source_refs": [],
+      "note": "",
+      "variants": []
+    }
+  ],
   "undated": [],
   "filters": {
-    "calendars": [],
-    "categories": [],
-    "entity_kinds": [],
-    "statuses": []
+    "calendars": [
+      {
+        "id": "default",
+        "label": "主历法",
+        "count": 4
+      }
+    ],
+    "categories": [
+      {
+        "id": "discovery",
+        "label": "发现与考古",
+        "count": 1
+      },
+      {
+        "id": "other",
+        "label": "其他",
+        "count": 1
+      },
+      {
+        "id": "war",
+        "label": "战争与冲突",
+        "count": 1
+      },
+      {
+        "id": "politics",
+        "label": "政治与制度",
+        "count": 1
+      }
+    ],
+    "entity_kinds": [
+      {
+        "id": "event",
+        "label": "event",
+        "count": 4
+      }
+    ],
+    "statuses": [
+      {
+        "id": "verified",
+        "label": "已核实",
+        "count": 4
+      }
+    ]
   }
 }

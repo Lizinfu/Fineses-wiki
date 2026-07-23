@@ -5,7 +5,7 @@ weight: 10
 keywords:
   - 赫芙伦特
 cultures:
-  - 齐黄文化圈
+  - 泛斯塔兰文化圈
 eras:
   - 新历时代
 topics:
@@ -19,7 +19,7 @@ params:
     catalog_no: NAT-0012
     access_level: public
     reliability: verified
-    last_reviewed: 2026-07-21
+    last_reviewed: 2026-07-23
   schema: nation.v1
   canon_status: canon
   names:
@@ -31,7 +31,7 @@ params:
       - 赫芙伦特
   classifications:
     cultures:
-      - 齐黄文化圈
+      - 泛斯塔兰文化圈
     eras:
       - 新历时代
     regions: []
@@ -54,7 +54,10 @@ params:
 
 ---
 
-莫里哈温
+{{< entity-ref
+  target="reg.hav.mh"
+  label="莫里哈温"
+>}}
 
 ## 历史沿革
 

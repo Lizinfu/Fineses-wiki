@@ -11,6 +11,8 @@ const STATUS_LABELS = {
   legendary: "传说记录",
   unknown: "可信度未知",
 };
+const PRESENTATIONS = new Set(["major", "standard", "minor", "document"]);
+const SUMMARY_MODES = new Set(["full", "compact", "title_only"]);
 
 function toPosix(value) {
   return value.split(path.sep).join("/");
@@ -594,8 +596,8 @@ export async function buildTimeline({
     }
 
     if (
-      start?.sort_value !== null &&
-      end?.sort_value !== null &&
+      start?.sort_value != null &&
+      end?.sort_value != null &&
       end.sort_value < start.sort_value
     ) {
       issue({
@@ -646,6 +648,33 @@ export async function buildTimeline({
     }
 
     const status = stringValue(timeline.status) || "verified";
+    const presentation = stringValue(timeline.presentation) || "standard";
+    const summaryMode = stringValue(timeline.summary_mode) || "full";
+    const eraLabel = stringValue(timeline.era_label);
+
+    if (!PRESENTATIONS.has(presentation)) {
+      issue({
+        collection: errors,
+        severity: "error",
+        code: "TIMELINE_PRESENTATION_INVALID",
+        file: relativePath,
+        entityId,
+        value: presentation,
+        message: `timeline.presentation must be one of: ${[...PRESENTATIONS].join(", ")}.`,
+      });
+    }
+
+    if (!SUMMARY_MODES.has(summaryMode)) {
+      issue({
+        collection: errors,
+        severity: "error",
+        code: "TIMELINE_SUMMARY_MODE_INVALID",
+        file: relativePath,
+        entityId,
+        value: summaryMode,
+        message: `timeline.summary_mode must be one of: ${[...SUMMARY_MODES].join(", ")}.`,
+      });
+    }
 
     if (!Object.hasOwn(STATUS_LABELS, status)) {
       issue({
@@ -806,6 +835,9 @@ export async function buildTimeline({
       ),
       status,
       status_label: STATUS_LABELS[status] ?? status,
+      presentation,
+      summary_mode: summaryMode,
+      era_label: eraLabel,
       source_refs: sourceRefs,
       note: stringValue(timeline.note),
       variants: variants.filter((variant) => !variant.invalidShape),

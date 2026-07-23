@@ -64,7 +64,7 @@ portals:
         page_ref: "/artifacts"
         description: "材料、武器、载具、遗物、艺术品与技术实体。"
       - key: "records"
-        label: "原始文献"
+        label: "文献与档案"
         page_ref: "/records"
         description: "报告、信件、法令、访谈、新闻与残片。"
     featured_ids: []

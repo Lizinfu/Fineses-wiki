@@ -22,5 +22,61 @@
       "reliability": "",
       "source_refs": []
     }
+  ],
+  "nat.hav": [
+    {
+      "source_id": "art.maerhvan",
+      "source_title": "人鱼",
+      "source_page_ref": "/artifacts/con-maerhvan",
+      "type": "part_of",
+      "note": "",
+      "period": null,
+      "reliability": "",
+      "source_refs": []
+    },
+    {
+      "source_id": "reg.hav.mh",
+      "source_title": "莫里哈温",
+      "source_page_ref": "/nations/nat-havfrentyr/region/Moryhavn",
+      "type": "part_of",
+      "note": "",
+      "period": null,
+      "reliability": "",
+      "source_refs": []
+    }
+  ],
+  "nat.ini": [
+    {
+      "source_id": "per.camhain",
+      "source_title": "可门",
+      "source_page_ref": "/characters/inibholc/per-camhain",
+      "type": "part_of",
+      "note": "",
+      "period": null,
+      "reliability": "",
+      "source_refs": []
+    },
+    {
+      "source_id": "reg.ini.mg",
+      "source_title": "高风原野",
+      "source_page_ref": "/nations/nat-inibholc/region/Machaire-Gaoithe",
+      "type": "part_of",
+      "note": "",
+      "period": null,
+      "reliability": "",
+      "source_refs": []
+    }
+  ],
+  "nat.siv": [
+    {
+      "source_id": "reg.siv.sc",
+      "source_title": "斯诺西图",
+      "source_page_ref": "/nations/nat-sivlanzio/region/Snosciuto",
+      "type": "part_of",
+      "note": "",
+      "period": null,
+      "reliability": "",
+      "source_refs": []
+    }
   ]
 }

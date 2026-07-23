@@ -1,9 +1,9 @@
 ---
 title: "组织"
-description: "组织发展、纪年、关系、活动记录与历史评价。"
+description: "Organizations"
 weight: 20
 params: 
     featured: true
 ---
 
-人物条目应独立保存，不要因为人物效忠国家或组织发生变化而移动文件。
+愚昧的生灵为了抱团取暖而创造的坟墓。
