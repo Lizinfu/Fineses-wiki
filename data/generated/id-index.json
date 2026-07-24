@@ -29,6 +29,20 @@
       "拓云"
     ]
   },
+  "eco.ajatar": {
+    "title": "龙",
+    "page_ref": "/ecology/eco-ajatar",
+    "content_path": "ecology/eco-ajatar/index.md",
+    "section": "ecology",
+    "entity_kind": "species",
+    "schema": "species.v1",
+    "catalog_no": "eco-0042",
+    "aliases": [
+      "造物",
+      "龙",
+      "Ajatar"
+    ]
+  },
   "evt.la-guerre-des-cendres.480": {
     "title": "灰烬战争",
     "page_ref": "/history/events/evt-la-guerre-des-cendres",
@@ -330,6 +344,21 @@
       "联邦缉魔局"
     ]
   },
+  "org.palermita": {
+    "title": "巴勒莫人",
+    "page_ref": "/organizations/org-palermita",
+    "content_path": "organizations/org-palermita/index.md",
+    "section": "organizations",
+    "entity_kind": "organization",
+    "schema": "organization.v1",
+    "catalog_no": "ORG-cle01",
+    "aliases": [
+      "晚祷战争",
+      "家族",
+      "斯诺西图",
+      "巴勒莫人"
+    ]
+  },
   "per.camhain": {
     "title": "可门",
     "page_ref": "/characters/inibholc/per-camhain",
@@ -357,6 +386,19 @@
       "洛砚",
       "档案学者",
       "白潮调查"
+    ]
+  },
+  "per.mafia": {
+    "title": "玛菲娅",
+    "page_ref": "/characters/sivlanzio",
+    "content_path": "characters/sivlanzio/index.md",
+    "section": "characters",
+    "entity_kind": "person",
+    "schema": "person.v1",
+    "catalog_no": "PER-1301",
+    "aliases": [
+      "？？？",
+      "玛菲娅"
     ]
   },
   "per.reginae": {
@@ -425,6 +467,30 @@
       "高风原野"
     ]
   },
+  "reg.muo.bop": {
+    "title": "沃罗柏勒",
+    "page_ref": "/nations/nat-muocils/region/bopobolo",
+    "content_path": "nations/nat-muocils/region/bopobolo.md",
+    "section": "nations",
+    "entity_kind": "subpage",
+    "schema": "subpage.v1",
+    "catalog_no": "NAT-0602",
+    "aliases": [
+      "沃罗柏勒"
+    ]
+  },
+  "reg.muo.snv": {
+    "title": "斯涅日内维尔什尼",
+    "page_ref": "/nations/nat-muocils/region/Snézhnyye-vershíny",
+    "content_path": "nations/nat-muocils/region/Snézhnyye-vershíny.md",
+    "section": "nations",
+    "entity_kind": "subpage",
+    "schema": "subpage.v1",
+    "catalog_no": "NAT-0601",
+    "aliases": [
+      "斯涅日内维尔什尼"
+    ]
+  },
   "reg.north-rift": {
     "title": "北境裂谷",
     "page_ref": "/regions/reg-north-rift",
@@ -449,6 +515,57 @@
     "catalog_no": "NAT-0013",
     "aliases": [
       "斯诺西图"
+    ]
+  },
+  "reg.yin.anx": {
+    "title": "安夏河",
+    "page_ref": "/nations/nat-yin/region/anxia-river",
+    "content_path": "nations/nat-yin/region/anxia-river.md",
+    "section": "nations",
+    "entity_kind": "subpage",
+    "schema": "subpage.v1",
+    "catalog_no": "NAT-0404",
+    "aliases": [
+      "安夏河",
+      "长河"
+    ]
+  },
+  "reg.yin.kuf": {
+    "title": "夸父",
+    "page_ref": "/nations/nat-yin/region/kuafu",
+    "content_path": "nations/nat-yin/region/kuafu.md",
+    "section": "nations",
+    "entity_kind": "subpage",
+    "schema": "subpage.v1",
+    "catalog_no": "NAT-0402",
+    "aliases": [
+      "夸父"
+    ]
+  },
+  "reg.yin.qiy": {
+    "title": "堑渊",
+    "page_ref": "/nations/nat-yin/region/qianyuan",
+    "content_path": "nations/nat-yin/region/qianyuan.md",
+    "section": "nations",
+    "entity_kind": "subpage",
+    "schema": "subpage.v1",
+    "catalog_no": "NAT-0403",
+    "aliases": [
+      "堑渊",
+      "长城/塞垣"
+    ]
+  },
+  "reg.yin.yol": {
+    "title": "永乐",
+    "page_ref": "/nations/nat-yin/region/yongle",
+    "content_path": "nations/nat-yin/region/yongle.md",
+    "section": "nations",
+    "entity_kind": "subpage",
+    "schema": "subpage.v1",
+    "catalog_no": "NAT-0401",
+    "aliases": [
+      "永乐",
+      "京城"
     ]
   }
 }

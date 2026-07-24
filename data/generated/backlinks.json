@@ -67,12 +67,100 @@
       "source_refs": []
     }
   ],
+  "nat.muo": [
+    {
+      "source_id": "reg.muo.bop",
+      "source_title": "沃罗柏勒",
+      "source_page_ref": "/nations/nat-muocils/region/bopobolo",
+      "type": "part_of",
+      "note": "",
+      "period": null,
+      "reliability": "",
+      "source_refs": []
+    },
+    {
+      "source_id": "reg.muo.snv",
+      "source_title": "斯涅日内维尔什尼",
+      "source_page_ref": "/nations/nat-muocils/region/Snézhnyye-vershíny",
+      "type": "part_of",
+      "note": "",
+      "period": null,
+      "reliability": "",
+      "source_refs": []
+    }
+  ],
   "nat.siv": [
     {
       "source_id": "reg.siv.sc",
       "source_title": "斯诺西图",
       "source_page_ref": "/nations/nat-sivlanzio/region/Snosciuto",
       "type": "part_of",
+      "note": "",
+      "period": null,
+      "reliability": "",
+      "source_refs": []
+    }
+  ],
+  "nat.yin": [
+    {
+      "source_id": "reg.yin.anx",
+      "source_title": "安夏河",
+      "source_page_ref": "/nations/nat-yin/region/anxia-river",
+      "type": "part_of",
+      "note": "",
+      "period": null,
+      "reliability": "",
+      "source_refs": []
+    },
+    {
+      "source_id": "reg.yin.kuf",
+      "source_title": "夸父",
+      "source_page_ref": "/nations/nat-yin/region/kuafu",
+      "type": "part_of",
+      "note": "",
+      "period": null,
+      "reliability": "",
+      "source_refs": []
+    },
+    {
+      "source_id": "reg.yin.qiy",
+      "source_title": "堑渊",
+      "source_page_ref": "/nations/nat-yin/region/qianyuan",
+      "type": "part_of",
+      "note": "",
+      "period": null,
+      "reliability": "",
+      "source_refs": []
+    },
+    {
+      "source_id": "reg.yin.yol",
+      "source_title": "永乐",
+      "source_page_ref": "/nations/nat-yin/region/yongle",
+      "type": "part_of",
+      "note": "",
+      "period": null,
+      "reliability": "",
+      "source_refs": []
+    }
+  ],
+  "org.palermita": [
+    {
+      "source_id": "per.mafia",
+      "source_title": "玛菲娅",
+      "source_page_ref": "/characters/sivlanzio",
+      "type": "related_to",
+      "note": "",
+      "period": null,
+      "reliability": "",
+      "source_refs": []
+    }
+  ],
+  "per.mafia": [
+    {
+      "source_id": "org.palermita",
+      "source_title": "巴勒莫人",
+      "source_page_ref": "/organizations/org-palermita",
+      "type": "ruled_by",
       "note": "",
       "period": null,
       "reliability": "",
