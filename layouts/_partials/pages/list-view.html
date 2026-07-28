@@ -63,9 +63,9 @@
       </span>
     </header>
 
-    {{ with .RegularPages }}
+      {{ with .RegularPages }}
       <div class="auto-grid list-grid">
-        {{ range .ByTitle }}
+        {{ range .ByWeight }}
           {{ partial "ui/catalog-card.html" (dict
             "Page" .
             "Variant" "compact"

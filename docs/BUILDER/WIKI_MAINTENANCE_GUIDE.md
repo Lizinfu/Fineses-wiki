@@ -245,6 +245,8 @@ Front Matter 中没有填写的字段会自动隐藏，不需要填入“无”�
 - `warning`：警告、剧透或风险提示；
 - `redaction`：遮蔽文字；
 - `gallery`：页面图片画廊；
+- `figure`、`media-pair`、`map-plate`：有版式的图片、对照图和地图图版；
+- `document-excerpt`：世界内文献摘录；
 - `infobox`：手动信息框；
 - `relation-list`：手动关系列表。
 
@@ -395,6 +397,36 @@ content/nations/nat-lanyuan/
 需要多个独立章节     → _index.md
 Section 或目录根页    → _index.md
 ```
+
+### 全站层级与排序约定
+
+为保证门户、目录、实体根页和子页面采用一致的阅读结构，使用以下固定层级：
+
+```text
+门户（content/portals/<key>/_index.md）
+→ 内容 Section（例如 content/nations/_index.md）
+→ 实体根页（例如 content/nations/nat-example/_index.md）
+→ 实体分组目录（例如 region/_index.md，可选）
+→ 普通章节或地区条目（.md）
+```
+
+不要用空的 `overview.md`、`history.md` 等文件预占位置。尚未开始写的章节应当
+不存在；需要时再创建带有完整 Front Matter 的页面。实体根页已经承担“概览”功能，
+只有概览确实需要独立长文时才额外建立 `overview.md`。
+
+所有同级页面使用 `weight` 排序，数值越小越靠前。建议采用每 10 一档的固定槽位：
+
+| 层级/页面 | 推荐 `weight` |
+|---|---:|
+| 一级门户 | 10、20、30… |
+| 内容 Section | 10、20、30… |
+| 同一 Section 的实体根页 | 10、20、30… |
+| 实体专题章节 | 10 概览、20 历史、30 政体、40 社会文化、50 经济、60 军事、70 外交 |
+| 实体下的分组目录（如 `region/_index.md`） | 80 |
+| 未指定专属顺序的同级地区/城市条目 | 全部 `weight: 10`，再按标题稳定排序 |
+
+目录、子档案清单和相邻页面导航均按这一顺序输出。不要让一个实体的同级章节混用
+`10`、`20` 与未设置 `weight`；需要手工排序时，给每页分配唯一的 10 倍数。
 
 ---
 
@@ -1243,7 +1275,83 @@ content/nations/nat-lanyuan/government/
 
 ---
 
-## 41. `static/` 图片
+## 41. 可控制版式的单图
+
+普通 Markdown 图片适合大多数情况。需要肖像环绕、档案相框或全宽地图时，使用
+`figure`：
+
+```go-html-template
+{{< figure
+  src="media/portrait.webp"
+  alt="洛砚的正式肖像，身着深色档案制服"
+  caption="新历 316 年档案室登记肖像。"
+  credit="FAS 视觉档案室"
+  layout="float-end"
+  size="medium"
+  frame="portrait"
+>}}
+```
+
+常用值：
+
+| 参数 | 可用值 | 作用 |
+|---|---|---|
+| `layout` | `block`、`float-start`、`float-end`、`bleed` | 正文位置；手机会自动改为整行图片 |
+| `size` | `small`、`medium`、`large`、`full` | 图片最大宽度 |
+| `frame` | `plain`、`archive`、`document`、`map`、`portrait` | 图片外框样式 |
+
+`alt` 必填，用文字描述图片本身；`caption` 和 `credit` 推荐填写。点击图片会打开
+原图。实体图片仍优先放入当前或父级 Page Bundle。
+
+---
+
+## 42. 双图对照
+
+用于旧图与新图、两种地图、原件与复原等需要并列阅读的内容：
+
+```go-html-template
+{{< media-pair title="北岸边界变化" layout="wide-start" >}}
+  {{< media-item
+    src="media/border-0280.webp"
+    alt="新历 280 年的北岸边界地图"
+    label="旧制边界"
+    caption="新历 280 年"
+  >}}
+  {{< media-item
+    src="media/border-0316.webp"
+    alt="新历 316 年的北岸边界地图"
+    label="现行边界"
+    caption="新历 316 年"
+  >}}
+{{< /media-pair >}}
+```
+
+`layout="equal"` 为两张等宽图片，`layout="wide-start"` 使左图更宽。小屏幕会
+自动转为单列。每张 `media-item` 都必须有独立的 `alt`。
+
+---
+
+## 43. 地图图版
+
+地图应说明适用年代、图例和来源；不要只放一张没有上下文的图片：
+
+```go-html-template
+{{< map-plate
+  src="media/political-map-0312.webp"
+  alt="新历 312 年北部海岸各政权、港口与主航道地图"
+  title="北部海岸行政图"
+  caption="边界按白潮事件发生时的行政区划绘制。"
+  legend="实线：国界；圆点：首府；虚线：主要航道"
+  scale="约 1 : 2,000,000"
+  source="北海岸测绘院，第七次修订"
+>}}
+```
+
+地图推荐使用 SVG；位图推荐宽度至少 2400px。点击可查看原始尺寸，便于阅读细节。
+
+---
+
+## 44. `static/` 图片
 
 也可以使用：
 
@@ -1264,7 +1372,7 @@ Markdown：
 
 # 第九部分：正文组件
 
-## 42. 实体引用
+## 45. 实体引用
 
 ```go-html-template
 {{< entity-ref target="nat.lanyuan" >}}
@@ -1332,6 +1440,37 @@ Markdown：
 
 不要使用前端遮蔽保护真正不能公开的内容。网页源码和生成文件仍可能包含这些文字。
 未公开设定应留在私有仓库或不进入公开构建。
+
+---
+
+## 49. 世界内文献摘录
+
+用于法令、书信、报告、新闻、日记或铭文。它是可阅读的正文组件，不应用来隐藏
+真正机密的设定：
+
+```go-html-template
+{{< document-excerpt
+  type="decree"
+  title="关于北岸航道管制的临时告示"
+  date="新历 312 年 7 月"
+  issuer="北海岸联合港务局"
+  source="REC-NORTH-0312"
+  condition="partial"
+>}}
+第一条：自即日起，所有离岸船只必须在日落前完成登记。
+
+第二条：未经许可的航线变更，将移交港务审查庭处理。
+{{< /document-excerpt >}}
+```
+
+| 参数 | 说明 |
+|---|---|
+| `type` | 如 `decree`、`letter`、`report`、`newspaper`、`diary`、`inscription` |
+| `condition` | `complete`、`partial`、`damaged`、`translated`、`disputed` |
+| `title` | 文献标题，推荐填写 |
+| `date`、`issuer`、`source` | 日期、发布者和来源编号，可选但推荐填写 |
+
+文献中的段落、列表、强调和实体引用仍可使用正常 Markdown 与已有 Shortcode。
 
 ---
 

@@ -62,6 +62,16 @@ params:
 
 战争断断续续持续了一百年，即现在历史中所提到的“永夜时代”。直到最后，夏哈人将因纳人反抗军彻底消灭驱逐，在高风原野上建下炼金仪式“淬金石柱”，将此地命名为“卡夏·欧尔莱特”，伊琳沃克第三帝国正式建立。
 
+{{< figure
+  src="media/cuijin.png"
+  alt="淬金石柱"
+  caption=""
+  credit="淬金石柱，摄于981年"
+  layout="bleed"
+  size="full"
+  frame="document"
+>}}
+
 ## 经济与政治
 
 ### 官方货币
@@ -74,7 +84,10 @@ params:
 
 ---
 
-卡夏·欧尔莱特
+{{< entity-ref
+  target="reg.ini.col"
+  label="卡夏·欧尔莱特"
+>}}
 
 - 昆兰郡Kunlan
     

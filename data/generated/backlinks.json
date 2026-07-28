@@ -1,16 +1,4 @@
 {
-  "evt.white-tide-0312": [
-    {
-      "source_id": "per.luo-yan",
-      "source_title": "洛砚",
-      "source_page_ref": "/characters/per-luo-yan",
-      "type": "participated_in",
-      "note": "",
-      "period": null,
-      "reliability": "",
-      "source_refs": []
-    }
-  ],
   "nat.esa": [
     {
       "source_id": "reg.esa.sdv",
@@ -57,10 +45,30 @@
       "source_refs": []
     },
     {
+      "source_id": "reg.ini.col",
+      "source_title": "卡夏·欧尔莱特",
+      "source_page_ref": "/nations/nat-inibholc/region/cathair",
+      "type": "part_of",
+      "note": "",
+      "period": null,
+      "reliability": "",
+      "source_refs": []
+    },
+    {
       "source_id": "reg.ini.mg",
       "source_title": "高风原野",
       "source_page_ref": "/nations/nat-inibholc/region/Machaire-Gaoithe",
       "type": "part_of",
+      "note": "",
+      "period": null,
+      "reliability": "",
+      "source_refs": []
+    },
+    {
+      "source_id": "per.fhlaimeal",
+      "source_title": "特利斯·弗拉梅尔",
+      "source_page_ref": "/characters/inibholc/per-flamel",
+      "type": "related_to",
       "note": "",
       "period": null,
       "reliability": "",
@@ -147,7 +155,7 @@
     {
       "source_id": "per.mafia",
       "source_title": "玛菲娅",
-      "source_page_ref": "/characters/sivlanzio",
+      "source_page_ref": "/characters/sivlanzio/per-mafia",
       "type": "related_to",
       "note": "",
       "period": null,
@@ -161,6 +169,18 @@
       "source_title": "巴勒莫人",
       "source_page_ref": "/organizations/org-palermita",
       "type": "ruled_by",
+      "note": "",
+      "period": null,
+      "reliability": "",
+      "source_refs": []
+    }
+  ],
+  "reg.muo.snv": [
+    {
+      "source_id": "per.rayapens",
+      "source_title": "拉雅彭斯",
+      "source_page_ref": "/characters/muocils/per-rayapens",
+      "type": "related_to",
       "note": "",
       "period": null,
       "reliability": "",

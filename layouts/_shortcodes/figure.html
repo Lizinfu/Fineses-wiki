@@ -1,0 +1,39 @@
+{{- $src := .Get "src" -}}
+{{- $alt := .Get "alt" -}}
+{{- $caption := .Get "caption" -}}
+{{- $credit := .Get "credit" -}}
+{{- $layout := .Get "layout" | default "block" -}}
+{{- $size := .Get "size" | default "large" -}}
+{{- $frame := .Get "frame" | default "plain" -}}
+{{- $link := .Get "link" -}}
+{{- $resource := .Page.Resources.GetMatch $src -}}
+
+{{- if not $resource -}}
+  {{- with .Page.Parent -}}
+    {{- $resource = .Resources.GetMatch $src -}}
+  {{- end -}}
+{{- end -}}
+
+{{- if not $src -}}
+  {{- errorf "figure shortcode requires src in %s" .Page.File.Path -}}
+{{- else -}}
+  {{- $href := $link | default $src -}}
+  {{- with $resource }}{{- $href = .RelPermalink -}}{{- end -}}
+  <figure class="media-figure" data-layout="{{ $layout }}" data-size="{{ $size }}" data-frame="{{ $frame }}">
+    <a class="media-figure__media" href="{{ $href | safeURL }}">
+      {{ partial "media/responsive-image.html" (dict
+        "Resource" $resource
+        "Src" $src
+        "Alt" $alt
+        "Loading" "lazy"
+        "Sizes" "(max-width: 48rem) 100vw, (max-width: 70rem) 50vw, 72ch"
+      ) }}
+    </a>
+    {{ if or $caption $credit }}
+      <figcaption class="media-figure__caption">
+        {{ with $caption }}<span>{{ . }}</span>{{ end }}
+        {{ with $credit }}<cite>{{ . }}</cite>{{ end }}
+      </figcaption>
+    {{ end }}
+  </figure>
+{{- end -}}

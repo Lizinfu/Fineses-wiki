@@ -1,6 +1,5 @@
-{{- $children := .RegularPages.ByWeight -}}
-{{- $sections := .Sections.ByWeight -}}
-{{- $count := add (len $children) (len $sections) -}}
+{{- $pages := .Pages.ByWeight -}}
+{{- $count := len $pages -}}
 
 {{- if gt $count 0 -}}
 <section class="entity-children" aria-labelledby="entity-children-title">
@@ -12,7 +11,7 @@
   </header>
 
   <ol class="entity-child-list">
-    {{- range $index, $child := $sections -}}
+    {{- range $index, $child := $pages -}}
       <li>
         <a class="entity-child-link" href="{{ $child.RelPermalink }}">
           <span class="entity-child-link__index">
@@ -21,26 +20,14 @@
           <span class="entity-child-link__title">
             {{ $child.LinkTitle }}
           </span>
-          <span class="entity-child-link__kind">SECTION</span>
-        </a>
-      </li>
-    {{- end -}}
-
-    {{- $offset := len $sections -}}
-
-    {{- range $index, $child := $children -}}
-      <li>
-        <a class="entity-child-link" href="{{ $child.RelPermalink }}">
-          <span class="entity-child-link__index">
-            {{ printf "%02d" (add (add $index 1) $offset) }}
-          </span>
-          <span class="entity-child-link__title">
-            {{ $child.LinkTitle }}
-          </span>
           <span class="entity-child-link__kind">
-            {{ $child.Params.entity_kind
-              | default $child.Kind
-              | upper }}
+            {{ if eq $child.Kind "section" }}
+              SECTION
+            {{ else }}
+              {{ $child.Params.entity_kind
+                | default $child.Kind
+                | upper }}
+            {{ end }}
           </span>
         </a>
       </li>

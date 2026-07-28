@@ -1,23 +1,23 @@
 {
-  "total": 42,
+  "total": 46,
   "by_kind": {
     "artifact": 1,
     "concept": 1,
-    "event": 5,
+    "event": 4,
     "nation": 16,
     "organization": 2,
-    "person": 5,
+    "person": 9,
     "region": 1,
     "species": 1,
-    "subpage": 10
+    "subpage": 11
   },
   "by_section": {
     "artifacts": 1,
-    "characters": 5,
+    "characters": 9,
     "concepts": 1,
     "ecology": 1,
-    "history": 5,
-    "nations": 26,
+    "history": 4,
+    "nations": 27,
     "organizations": 2,
     "regions": 1
   }

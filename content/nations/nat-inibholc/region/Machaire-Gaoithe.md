@@ -6,7 +6,7 @@ params:
   id: reg.ini.mg
   entity_kind: subpage
   library:
-    catalog_no: NAT-0005
+    catalog_no: NAT-0502
     access_level: public
     reliability: verified
     last_reviewed: 2026-07-23

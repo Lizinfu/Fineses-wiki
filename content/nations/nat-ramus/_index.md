@@ -67,6 +67,16 @@ params:
 可悬停或聚焦查看的内容
 {{< /redaction >}}
 
+{{< figure
+  src="media/ramus.png"
+  alt="拉基迪杜姆"
+  caption="拉基迪杜姆想象还原图"
+  credit=""
+  layout="bleed"
+  size="full"
+  frame="document"
+>}}
+
 ## 神境革命：“再见，吾主。”
 
 ---

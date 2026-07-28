@@ -11,12 +11,15 @@
 {{- with $resource -}}
   {{- $src = .RelPermalink -}}
 
-  {{- if reflect.IsImageResourceWithMeta . -}}
+  {{- if eq .MediaType.MainType "image" -}}
     {{- $width = .Width -}}
     {{- $height = .Height -}}
   {{- end -}}
 
-  {{- if reflect.IsImageResourceProcessable . -}}
+  {{- if and
+    (eq .MediaType.MainType "image")
+    (ne .MediaType.SubType "svg")
+  -}}
     {{- $original := . -}}
 
     {{- range slice 480 768 1200 1600 -}}

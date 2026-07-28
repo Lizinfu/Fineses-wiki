@@ -104,21 +104,6 @@
       "塔罗萨尔占星泥版"
     ]
   },
-  "evt.white-tide-0312": {
-    "title": "白潮事件",
-    "page_ref": "/history/events/evt-white-tide",
-    "content_path": "history/events/evt-white-tide/index.md",
-    "section": "history",
-    "entity_kind": "event",
-    "schema": "event.v1",
-    "catalog_no": "EVT-0312-004",
-    "aliases": [
-      "白潮",
-      "新历312年",
-      "海岸灾害",
-      "白潮事件"
-    ]
-  },
   "nat.ama": {
     "title": "天照",
     "page_ref": "/nations/nat-amaterasu",
@@ -253,8 +238,8 @@
   },
   "nat.sir": {
     "title": "塞壬",
-    "page_ref": "/nations/nat-siren",
-    "content_path": "nations/nat-siren/_index.md",
+    "page_ref": "/nations/nat-sirena",
+    "content_path": "nations/nat-sirena/_index.md",
     "section": "nations",
     "entity_kind": "nation",
     "schema": "nation.v1",
@@ -374,24 +359,54 @@
       "“赐福”"
     ]
   },
-  "per.luo-yan": {
-    "title": "洛砚",
-    "page_ref": "/characters/per-luo-yan",
-    "content_path": "characters/per-luo-yan/index.md",
+  "per.duxiang": {
+    "title": "杜庠",
+    "page_ref": "/characters/yin/per-duxiang",
+    "content_path": "characters/yin/per-duxiang/index.md",
     "section": "characters",
     "entity_kind": "person",
     "schema": "person.v1",
-    "catalog_no": "PER-0001",
+    "catalog_no": "PER-0402",
     "aliases": [
-      "洛砚",
-      "档案学者",
-      "白潮调查"
+      "户部尚书",
+      "杜庠",
+      "杜澈言"
+    ]
+  },
+  "per.fhlaimeal": {
+    "title": "特利斯·弗拉梅尔",
+    "page_ref": "/characters/inibholc/per-flamel",
+    "content_path": "characters/inibholc/per-flamel/index.md",
+    "section": "characters",
+    "entity_kind": "person",
+    "schema": "person.v1",
+    "catalog_no": "PER-0500",
+    "aliases": [
+      "皇帝",
+      "炼金术的天才",
+      "特利斯·弗拉梅尔"
+    ]
+  },
+  "per.lapla": {
+    "title": "拉普拉·楚亚·维拉克",
+    "page_ref": "/characters/yuraqqasa/per-lapla",
+    "content_path": "characters/yuraqqasa/per-lapla/index.md",
+    "section": "characters",
+    "entity_kind": "person",
+    "schema": "person.v1",
+    "catalog_no": "PER-0700",
+    "aliases": [
+      "？？？",
+      "圣女",
+      "拉普拉·楚亚·维拉克",
+      "拉普拉",
+      "圣女大人"
     ]
   },
   "per.mafia": {
     "title": "玛菲娅",
-    "page_ref": "/characters/sivlanzio",
-    "content_path": "characters/sivlanzio/index.md",
+    "page_ref": "/characters/sivlanzio/per-mafia",
+    "content_path": "characters/sivlanzio/per-mafia/index.md",
     "section": "characters",
     "entity_kind": "person",
     "schema": "person.v1",
@@ -399,6 +414,20 @@
     "aliases": [
       "？？？",
       "玛菲娅"
+    ]
+  },
+  "per.rayapens": {
+    "title": "拉雅彭斯",
+    "page_ref": "/characters/muocils/per-rayapens",
+    "content_path": "characters/muocils/per-rayapens/index.md",
+    "section": "characters",
+    "entity_kind": "person",
+    "schema": "person.v1",
+    "catalog_no": "PER-0601",
+    "aliases": [
+      "火流灵",
+      "凛冬",
+      "拉雅彭斯"
     ]
   },
   "per.reginae": {
@@ -418,8 +447,8 @@
   },
   "per.transmundanus": {
     "title": "特兰蒙达努斯",
-    "page_ref": "/characters/per-transmundanus",
-    "content_path": "characters/per-transmundanus/index.md",
+    "page_ref": "/characters/ramus/per-transmundanus",
+    "content_path": "characters/ramus/per-transmundanus/index.md",
     "section": "characters",
     "entity_kind": "person",
     "schema": "person.v1",
@@ -429,6 +458,20 @@
       "档案学者",
       "白潮调查",
       "特兰蒙达努斯"
+    ]
+  },
+  "per.xianpo": {
+    "title": "仙婆",
+    "page_ref": "/characters/yin/per-xianpo",
+    "content_path": "characters/yin/per-xianpo/index.md",
+    "section": "characters",
+    "entity_kind": "person",
+    "schema": "person.v1",
+    "catalog_no": "PER-0404",
+    "aliases": [
+      "半仙",
+      "长生种",
+      "仙婆"
     ]
   },
   "reg.esa.sdv": {
@@ -455,6 +498,18 @@
       "莫里哈温"
     ]
   },
+  "reg.ini.col": {
+    "title": "卡夏·欧尔莱特",
+    "page_ref": "/nations/nat-inibholc/region/cathair",
+    "content_path": "nations/nat-inibholc/region/cathair.md",
+    "section": "nations",
+    "entity_kind": "subpage",
+    "schema": "subpage.v1",
+    "catalog_no": "NAT-0501",
+    "aliases": [
+      "卡夏·欧尔莱特"
+    ]
+  },
   "reg.ini.mg": {
     "title": "高风原野",
     "page_ref": "/nations/nat-inibholc/region/Machaire-Gaoithe",
@@ -462,7 +517,7 @@
     "section": "nations",
     "entity_kind": "subpage",
     "schema": "subpage.v1",
-    "catalog_no": "NAT-0005",
+    "catalog_no": "NAT-0502",
     "aliases": [
       "高风原野"
     ]

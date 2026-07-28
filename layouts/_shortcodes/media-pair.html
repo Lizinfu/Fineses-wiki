@@ -1,0 +1,6 @@
+{{- $layout := .Get "layout" | default "equal" -}}
+{{- $title := .Get "title" -}}
+<section class="media-pair" data-layout="{{ $layout }}">
+  {{ with $title }}<h3 class="media-pair__title">{{ . }}</h3>{{ end }}
+  <div class="media-pair__items">{{ .Inner }}</div>
+</section>

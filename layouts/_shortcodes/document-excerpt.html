@@ -1,0 +1,21 @@
+{{- $type := .Get "type" | default "record" -}}
+{{- $title := .Get "title" | default "档案摘录" -}}
+{{- $date := .Get "date" -}}
+{{- $issuer := .Get "issuer" -}}
+{{- $source := .Get "source" -}}
+{{- $condition := .Get "condition" | default "complete" -}}
+<article class="document-excerpt" data-type="{{ $type }}" data-condition="{{ $condition }}">
+  <header class="document-excerpt__header">
+    <span class="document-excerpt__type">{{ $type | upper }}</span>
+    <strong>{{ $title }}</strong>
+    <span class="document-excerpt__condition">{{ $condition | upper }}</span>
+  </header>
+  {{ if or $date $issuer }}
+    <div class="document-excerpt__meta">
+      {{ with $date }}<span>{{ . }}</span>{{ end }}
+      {{ with $issuer }}<span>{{ . }}</span>{{ end }}
+    </div>
+  {{ end }}
+  <div class="document-excerpt__body prose">{{ .Inner | markdownify }}</div>
+  {{ with $source }}<footer class="document-excerpt__source">SOURCE / {{ . }}</footer>{{ end }}
+</article>

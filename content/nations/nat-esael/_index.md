@@ -51,6 +51,16 @@ params:
 
 曾散落诸多热带古国，如今名义上统一隶属于埃萨勒塔莫安王庭。实际上是由许多割据政权组成的松散部族联盟，被塔莫安王庭以强硬的手腕控制，收束为我们如今所说的，“天城”，埃萨勒。
 
+{{< figure
+  src="media/overview1.png"
+  alt="埃萨勒overview1"
+  caption="埃萨勒中北部。摄于923年。"
+  credit=""
+  layout="bleed"
+  size="full"
+  frame="document"
+>}}
+
 ## 邦国与地区
 
 ### 曼哈特महान्हस्तिन्
