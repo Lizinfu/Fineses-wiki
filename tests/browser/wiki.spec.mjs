@@ -25,10 +25,19 @@ test("mobile navigation can be opened and closed", async ({ page }, testInfo) =>
   test.skip(testInfo.project.name !== "mobile", "Mobile-only interaction.");
   await page.goto("/");
   const toggle = page.locator("[data-nav-toggle]");
+  const drawer = page.locator("[data-mobile-nav]");
+  const close = drawer.locator("[data-nav-close]").last();
+
   await expect(toggle).toBeVisible();
+  await expect(drawer).toHaveAttribute("data-state", "closed");
+
   await toggle.click();
+  await expect(drawer).toHaveAttribute("data-state", "open");
   await expect(toggle).toHaveAttribute("aria-expanded", "true");
-  await toggle.click();
+
+  await close.click();
+  await expect(drawer).toHaveAttribute("data-state", "closed");
+  await expect(drawer).toHaveAttribute("aria-hidden", "true");
   await expect(toggle).toHaveAttribute("aria-expanded", "false");
 });
 

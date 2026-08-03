@@ -40,6 +40,10 @@ export function initNavigation(): void {
 
     openButtons.forEach((button) => {
       button.setAttribute("aria-expanded", String(open));
+      button.setAttribute(
+        "aria-label",
+        open ? "关闭导航菜单" : "打开导航菜单",
+      );
     });
 
     if (open) {
