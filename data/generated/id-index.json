@@ -89,6 +89,21 @@
       "历史"
     ]
   },
+  "evt.000000": {
+    "title": "瀹為獙鎴愬姛",
+    "page_ref": "/history/events/evt-begin",
+    "content_path": "history/events/evt-begin/index.md",
+    "section": "history",
+    "entity_kind": "event",
+    "schema": "event.v1",
+    "catalog_no": "EVT-0000-000",
+    "aliases": [
+      "鍙傛暟閿欒锛�0",
+      "璀﹀憡锛�9",
+      "鍗冲皢閲嶇疆鍙傛暟锛屽紑濮嬩笅涓€杞�",
+      "瀹為獙鎴愬姛"
+    ]
+  },
   "evt.falsetide": {
     "title": "乱潮年代",
     "page_ref": "/history/events/evt-falsetide",

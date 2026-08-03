@@ -208,12 +208,12 @@
       "variants": [
         {
           "index": 0,
-          "display": "前30年",
+          "display": "前23年",
           "sort_value": -23000,
           "calendar": "default",
           "precision": "unknown",
           "circa": false,
-          "note": "先行历史教材大多采用的版本",
+          "note": "现行历史教材大多采用的版本",
           "source_refs": []
         },
         {
@@ -377,9 +377,45 @@
       "variants": []
     }
   ],
-  "undated": [],
+  "undated": [
+    {
+      "id": "evt.000000",
+      "title": "瀹為獙鎴愬姛",
+      "page_ref": "/history/events/evt-begin",
+      "content_path": "history/events/evt-begin/index.md",
+      "section": "history",
+      "entity_kind": "event",
+      "summary": "鍋滄鏌ラ槄鏌ラ槄鏌ラ槄鏌ラ槄鏌ラ槄鏌ラ槄鏌ラ槄鏌ラ槄鏌ラ槄鏌ラ槄鏌ラ槄",
+      "start": null,
+      "end": null,
+      "undated": true,
+      "undated_label": "鏃ュ織鎹熷潖",
+      "order_hint": 20,
+      "calendar": "relative",
+      "calendar_label": "相对年代",
+      "categories": [
+        "other"
+      ],
+      "category_labels": [
+        "其他"
+      ],
+      "status": "unknown",
+      "status_label": "可信度未知",
+      "presentation": "major",
+      "summary_mode": "full",
+      "era_label": "",
+      "source_refs": [],
+      "note": "这到底……是什么？",
+      "variants": []
+    }
+  ],
   "filters": {
     "calendars": [
+      {
+        "id": "relative",
+        "label": "相对年代",
+        "count": 1
+      },
       {
         "id": "default",
         "label": "主历法",
@@ -395,7 +431,7 @@
       {
         "id": "other",
         "label": "其他",
-        "count": 1
+        "count": 2
       },
       {
         "id": "ecology",
@@ -417,7 +453,7 @@
       {
         "id": "event",
         "label": "event",
-        "count": 9
+        "count": 10
       }
     ],
     "statuses": [
@@ -439,7 +475,7 @@
       {
         "id": "unknown",
         "label": "可信度未知",
-        "count": 1
+        "count": 2
       },
       {
         "id": "verified",

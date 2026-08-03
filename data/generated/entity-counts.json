@@ -1,9 +1,9 @@
 {
-  "total": 56,
+  "total": 57,
   "by_kind": {
     "artifact": 1,
     "concept": 1,
-    "event": 9,
+    "event": 10,
     "nation": 16,
     "organization": 2,
     "person": 10,
@@ -16,7 +16,7 @@
     "characters": 10,
     "concepts": 1,
     "ecology": 2,
-    "history": 11,
+    "history": 12,
     "nations": 27,
     "organizations": 2,
     "regions": 2

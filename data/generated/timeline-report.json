@@ -1,9 +1,9 @@
 {
   "schema_version": 1,
   "totals": {
-    "entries": 9,
+    "entries": 10,
     "dated": 9,
-    "undated": 0,
+    "undated": 1,
     "errors": 0,
     "warnings": 0
   },
