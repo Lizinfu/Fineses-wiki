@@ -1,7 +1,13 @@
 import AxeBuilder from "@axe-core/playwright";
 import { expect, test } from "@playwright/test";
 
-const routes = ["/", "/search/", "/timeline/", "/nations/nat-ramus/", "/404.html"];
+const routes = [
+  "/",
+  "/search/",
+  "/timeline/",
+  "/nations/nat-ramus/",
+  "/404.html",
+];
 
 for (const route of routes) {
   test(`${route} renders a usable document`, async ({ page }) => {
@@ -13,7 +19,9 @@ for (const route of routes) {
   });
 }
 
-test("keyboard users can reach and activate the skip link", async ({ page }) => {
+test("keyboard users can reach and activate the skip link", async ({
+  page,
+}) => {
   await page.goto("/");
   await page.keyboard.press("Tab");
   await expect(page.locator("a.skip-link")).toBeFocused();
@@ -21,13 +29,16 @@ test("keyboard users can reach and activate the skip link", async ({ page }) => 
   await expect(page.locator("#main-content")).toBeFocused();
 });
 
-test("mobile navigation can be opened and closed", async ({ page }, testInfo) => {
+test("mobile navigation can be opened and closed", async ({
+  page,
+}, testInfo) => {
   test.skip(testInfo.project.name !== "mobile", "Mobile-only interaction.");
   await page.goto("/");
   const toggle = page.locator("[data-nav-toggle]");
   const drawer = page.locator("[data-mobile-nav]");
   const close = drawer.locator("[data-nav-close]").last();
 
+  await expect(page.locator("html")).toHaveClass(/\bjs\b/);
   await expect(toggle).toBeVisible();
   await expect(drawer).toHaveAttribute("data-state", "closed");
 
@@ -41,7 +52,9 @@ test("mobile navigation can be opened and closed", async ({ page }, testInfo) =>
   await expect(toggle).toHaveAttribute("aria-expanded", "false");
 });
 
-test("home page has no serious automated accessibility violations", async ({ page }) => {
+test("home page has no serious automated accessibility violations", async ({
+  page,
+}) => {
   await page.goto("/");
   const results = await new AxeBuilder({ page })
     .withTags(["wcag2a", "wcag2aa"])

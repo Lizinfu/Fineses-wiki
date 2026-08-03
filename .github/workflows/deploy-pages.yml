@@ -98,6 +98,8 @@ jobs:
         run: npm run quality:site
 
       - name: Run browser accessibility and navigation checks
+        env:
+          SITE_BASE_PATH: ${{ steps.pages.outputs.base_path }}
         run: npm run test:browser
 
       - name: Write build summary
