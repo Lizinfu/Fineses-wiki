@@ -1,13 +1,14 @@
 ---
 title: 斯兰缇亚
 description: Sivlanzio
-weight: 10
+weight: 13
 keywords:
-  - 天照
+  - 宗座
+  - “人间天国”
 cultures:
-  - 齐黄文化圈
+  - 克里希达核心圈
 eras:
-  - 新历时代
+  - 现代
 topics:
   - 政体
   - 贸易
@@ -28,12 +29,12 @@ params:
     native: []
     former: []
     aliases:
-      - 天照
+      - 人间天国
   classifications:
     cultures:
-      - 齐黄文化圈
+      - 克里希达核心圈
     eras:
-      - 新历时代
+      - 现代
     regions: []
     government_forms: []
     topics:

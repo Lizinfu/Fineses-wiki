@@ -1,13 +1,14 @@
 ---
 title: 奈布雷根
 description: Nebregen
-weight: 10
+weight: 16
 keywords:
-  - 天照
+  - 强权
+  - 帝国黄昏
 cultures:
-  - 齐黄文化圈
+  - 克里希达核心圈
 eras:
-  - 新历时代
+  - 现代
 topics:
   - 政体
   - 贸易
@@ -27,13 +28,12 @@ params:
     short: ""
     native: []
     former: []
-    aliases:
-      - 天照
+    aliases: []
   classifications:
     cultures:
-      - 齐黄文化圈
+      - 克里希达核心圈
     eras:
-      - 新历时代
+      - 现代
     regions: []
     government_forms: []
     topics:

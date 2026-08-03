@@ -2,6 +2,138 @@
   "schema_version": 1,
   "entries": [
     {
+      "id": "evt.radicium",
+      "title": "拉基迪杜姆建立",
+      "page_ref": "/history/events/evt-radicium",
+      "content_path": "history/events/evt-radicium/index.md",
+      "section": "history",
+      "entity_kind": "event",
+      "summary": "有人说历史从此开始。",
+      "start": {
+        "display": "前448年",
+        "sort_value": -448000,
+        "calendar": "default",
+        "precision": "season",
+        "circa": false,
+        "calendar_label": "主历法"
+      },
+      "end": null,
+      "undated": false,
+      "undated_label": "日期不详",
+      "order_hint": 0,
+      "calendar": "default",
+      "calendar_label": "主历法",
+      "categories": [
+        "politics"
+      ],
+      "category_labels": [
+        "政治与制度"
+      ],
+      "status": "disputed",
+      "status_label": "存在争议",
+      "presentation": "major",
+      "summary_mode": "full",
+      "era_label": "神代 · 消亡期",
+      "source_refs": [],
+      "note": "",
+      "variants": [
+        {
+          "index": 0,
+          "display": "前489年",
+          "sort_value": -450000,
+          "calendar": "default",
+          "precision": "unknown",
+          "circa": false,
+          "note": "有人声称特兰蒙达努斯在“大征服”之前就已经建立了拉门斯。",
+          "source_refs": []
+        },
+        {
+          "index": 1,
+          "display": "前448年",
+          "sort_value": -448000,
+          "calendar": "default",
+          "precision": "unknown",
+          "circa": false,
+          "note": "另一种广为克里希达核心圈国家接受的记载。",
+          "source_refs": []
+        }
+      ]
+    },
+    {
+      "id": "evt.zhaocheng",
+      "title": "“殷兆”",
+      "page_ref": "/history/events/evt-zhaocheng",
+      "content_path": "history/events/evt-zhaocheng/index.md",
+      "section": "history",
+      "entity_kind": "event",
+      "summary": "“天命煌煌，殷土茫茫。”",
+      "start": {
+        "display": "前345年",
+        "sort_value": -345000,
+        "calendar": "default",
+        "precision": "season",
+        "circa": false,
+        "calendar_label": "主历法"
+      },
+      "end": null,
+      "undated": false,
+      "undated_label": "日期不详",
+      "order_hint": 0,
+      "calendar": "default",
+      "calendar_label": "主历法",
+      "categories": [
+        "politics"
+      ],
+      "category_labels": [
+        "政治与制度"
+      ],
+      "status": "probable",
+      "status_label": "较可信",
+      "presentation": "standard",
+      "summary_mode": "full",
+      "era_label": "神代 · 消亡期",
+      "source_refs": [],
+      "note": "",
+      "variants": []
+    },
+    {
+      "id": "evt.falsetide",
+      "title": "乱潮年代",
+      "page_ref": "/history/events/evt-falsetide",
+      "content_path": "history/events/evt-falsetide/index.md",
+      "section": "history",
+      "entity_kind": "event",
+      "summary": "海水再也无法平静。",
+      "start": {
+        "display": "前139年",
+        "sort_value": -139000,
+        "calendar": "default",
+        "precision": "season",
+        "circa": false,
+        "calendar_label": "主历法"
+      },
+      "end": null,
+      "undated": false,
+      "undated_label": "日期不详",
+      "order_hint": 0,
+      "calendar": "default",
+      "calendar_label": "主历法",
+      "categories": [
+        "war"
+      ],
+      "category_labels": [
+        "战争与冲突"
+      ],
+      "status": "unknown",
+      "status_label": "可信度未知",
+      "presentation": "standard",
+      "summary_mode": "full",
+      "era_label": "神代 · 消亡期",
+      "source_refs": [],
+      "note": "",
+      "variants": []
+    },
+    {
       "id": "evt.takamagahara-founding",
       "title": "高天原建立",
       "page_ref": "/history/events/evt-takamagahara",
@@ -11,7 +143,7 @@
       "summary": "大地漂浮，天空落下。",
       "start": {
         "display": "前113年",
-        "sort_value": 11300,
+        "sort_value": -113000,
         "calendar": "default",
         "precision": "season",
         "circa": false,
@@ -29,11 +161,106 @@
       "category_labels": [
         "其他"
       ],
-      "status": "verified",
-      "status_label": "已核实",
+      "status": "legendary",
+      "status_label": "传说记录",
       "presentation": "standard",
       "summary_mode": "full",
       "era_label": "神代 · 消亡期",
+      "source_refs": [],
+      "note": "",
+      "variants": []
+    },
+    {
+      "id": "evt.tenum",
+      "title": "特洛恩汗国建立",
+      "page_ref": "/history/events/evt-tenum",
+      "content_path": "history/events/evt-tenum/index.md",
+      "section": "history",
+      "entity_kind": "event",
+      "summary": "这只是海水上涨之前。",
+      "start": {
+        "display": "前23年",
+        "sort_value": -23000,
+        "calendar": "default",
+        "precision": "season",
+        "circa": false,
+        "calendar_label": "主历法"
+      },
+      "end": null,
+      "undated": false,
+      "undated_label": "日期不详",
+      "order_hint": 0,
+      "calendar": "default",
+      "calendar_label": "主历法",
+      "categories": [
+        "politics"
+      ],
+      "category_labels": [
+        "政治与制度"
+      ],
+      "status": "disputed",
+      "status_label": "存在争议",
+      "presentation": "major",
+      "summary_mode": "full",
+      "era_label": "神代 · 消亡期",
+      "source_refs": [],
+      "note": "",
+      "variants": [
+        {
+          "index": 0,
+          "display": "前30年",
+          "sort_value": -23000,
+          "calendar": "default",
+          "precision": "unknown",
+          "circa": false,
+          "note": "先行历史教材大多采用的版本",
+          "source_refs": []
+        },
+        {
+          "index": 1,
+          "display": "前10年",
+          "sort_value": -11000,
+          "calendar": "default",
+          "precision": "unknown",
+          "circa": false,
+          "note": "另一种编年说法。",
+          "source_refs": []
+        }
+      ]
+    },
+    {
+      "id": "evt.ortus-autelaisi",
+      "title": "湮灭区，“奥特莱斯”出现",
+      "page_ref": "/history/events/evt-aotelaisi",
+      "content_path": "history/events/evt-aotelaisi/index.md",
+      "section": "history",
+      "entity_kind": "event",
+      "summary": "“灭亡之初”",
+      "start": {
+        "display": "0年",
+        "sort_value": 1,
+        "calendar": "default",
+        "precision": "season",
+        "circa": false,
+        "calendar_label": "主历法"
+      },
+      "end": null,
+      "undated": false,
+      "undated_label": "日期不详",
+      "order_hint": 0,
+      "calendar": "default",
+      "calendar_label": "主历法",
+      "categories": [
+        "ecology"
+      ],
+      "category_labels": [
+        "生态与灾害"
+      ],
+      "status": "probable",
+      "status_label": "较可信",
+      "presentation": "major",
+      "summary_mode": "full",
+      "era_label": "古代 · 建立期",
       "source_refs": [],
       "note": "",
       "variants": []
@@ -144,7 +371,7 @@
       "status_label": "已核实",
       "presentation": "minor",
       "summary_mode": "full",
-      "era_label": "近代 · 扩张期",
+      "era_label": "近代 · 稳定期",
       "source_refs": [],
       "note": "",
       "variants": []
@@ -156,7 +383,7 @@
       {
         "id": "default",
         "label": "主历法",
-        "count": 4
+        "count": 9
       }
     ],
     "categories": [
@@ -171,28 +398,53 @@
         "count": 1
       },
       {
+        "id": "ecology",
+        "label": "生态与灾害",
+        "count": 1
+      },
+      {
         "id": "war",
         "label": "战争与冲突",
-        "count": 1
+        "count": 2
       },
       {
         "id": "politics",
         "label": "政治与制度",
-        "count": 1
+        "count": 4
       }
     ],
     "entity_kinds": [
       {
         "id": "event",
         "label": "event",
-        "count": 4
+        "count": 9
       }
     ],
     "statuses": [
       {
+        "id": "legendary",
+        "label": "传说记录",
+        "count": 1
+      },
+      {
+        "id": "disputed",
+        "label": "存在争议",
+        "count": 2
+      },
+      {
+        "id": "probable",
+        "label": "较可信",
+        "count": 2
+      },
+      {
+        "id": "unknown",
+        "label": "可信度未知",
+        "count": 1
+      },
+      {
         "id": "verified",
         "label": "已核实",
-        "count": 4
+        "count": 3
       }
     ]
   }

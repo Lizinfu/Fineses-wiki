@@ -1,4 +1,16 @@
 {
+  "nat.ama": [
+    {
+      "source_id": "per.jonin",
+      "source_title": "上仁日月",
+      "source_page_ref": "/characters/amaterasu/per-flamel",
+      "type": "related_to",
+      "note": "",
+      "period": null,
+      "reliability": "",
+      "source_refs": []
+    }
+  ],
   "nat.esa": [
     {
       "source_id": "reg.esa.sdv",
@@ -157,6 +169,30 @@
       "source_title": "玛菲娅",
       "source_page_ref": "/characters/sivlanzio/per-mafia",
       "type": "related_to",
+      "note": "",
+      "period": null,
+      "reliability": "",
+      "source_refs": []
+    }
+  ],
+  "per.fhlaimeal": [
+    {
+      "source_id": "nat.ini",
+      "source_title": "伊琳沃克",
+      "source_page_ref": "/nations/nat-inibholc",
+      "type": "ruled_by",
+      "note": "",
+      "period": null,
+      "reliability": "",
+      "source_refs": []
+    }
+  ],
+  "per.jonin": [
+    {
+      "source_id": "nat.ama",
+      "source_title": "天照",
+      "source_page_ref": "/nations/nat-amaterasu",
+      "type": "ruled_by",
       "note": "",
       "period": null,
       "reliability": "",

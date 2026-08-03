@@ -1,7 +1,7 @@
 ---
 title: 殷国
 description: 殷
-weight: 10
+weight: 04
 keywords:
   - 殷
   - 文明古国

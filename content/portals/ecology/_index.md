@@ -1,6 +1,6 @@
 ---
 title: "生态与物种"
-description: "生态区、物种、疾病、环境与自然现象。"
+description: "人类与它们的仇敌"
 portal_key: "ecology"
 weight: 50
 draft: false

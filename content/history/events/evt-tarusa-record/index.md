@@ -1,6 +1,6 @@
 ---
 title: 塔罗萨尔占星泥版
-description: la-guerre-des-cendres
+description: 𒁾𒅆𒀯
 keywords:
   - 塔罗萨尔
   - 考古发现
@@ -52,7 +52,7 @@ params:
       precision: "season"
     summary: "“人类发现了文明”"
     presentation: "minor"
-    era_label: "近代 · 扩张期"
+    era_label: "近代 · 稳定期"
 
 ---
 

@@ -220,6 +220,25 @@ function finiteNumber(value) {
   return null;
 }
 
+function inferBceSortValue(display) {
+  const normalized = stringValue(display);
+  const prefixMatch = normalized.match(
+    /^(?:公元\s*前|前)\s*(\d+(?:\.\d+)?)\s*年?/u,
+  );
+  const suffixMatch = normalized.match(
+    /^(\d+(?:\.\d+)?)\s*(?:BCE|BC)\b/ui,
+  );
+  const year = finiteNumber(prefixMatch?.[1] ?? suffixMatch?.[1]);
+
+  // A negative value makes earlier BCE years sort before later BCE years and
+  // every CE value. Do not infer a value for an invalid/ambiguous year zero.
+  return year !== null && year > 0 ? -year * 1000 : null;
+}
+
+function isBceDisplay(display) {
+  return inferBceSortValue(display) !== null;
+}
+
 function normalizePoint(raw, fallback = {}) {
   if (raw === undefined || raw === null || raw === "") return null;
 
@@ -234,9 +253,11 @@ function normalizePoint(raw, fallback = {}) {
   }
 
   if (typeof raw === "string") {
+    const display = raw.trim();
     return {
-      display: raw.trim(),
-      sort_value: finiteNumber(fallback.sort_value),
+      display,
+      sort_value:
+        finiteNumber(fallback.sort_value) ?? inferBceSortValue(display),
       calendar: fallback.calendar ?? "default",
       precision: fallback.precision ?? "unknown",
       circa: Boolean(fallback.circa),
@@ -245,14 +266,17 @@ function normalizePoint(raw, fallback = {}) {
 
   if (!isObject(raw)) return { invalidShape: true };
 
+  const display =
+    stringValue(raw.display) ||
+    stringValue(raw.label) ||
+    stringValue(fallback.display);
+  const sortValue = finiteNumber(
+    raw.sort_value ?? raw.sort ?? fallback.sort_value,
+  );
+
   return {
-    display:
-      stringValue(raw.display) ||
-      stringValue(raw.label) ||
-      stringValue(fallback.display),
-    sort_value: finiteNumber(
-      raw.sort_value ?? raw.sort ?? fallback.sort_value,
-    ),
+    display,
+    sort_value: sortValue ?? inferBceSortValue(display),
     calendar:
       stringValue(raw.calendar) ||
       stringValue(fallback.calendar) ||
@@ -559,6 +583,24 @@ export async function buildTimeline({
       });
     }
 
+    if (
+      start &&
+      start.sort_value !== null &&
+      isBceDisplay(start.display) &&
+      start.sort_value >= 0
+    ) {
+      issue({
+        collection: errors,
+        severity: "error",
+        code: "TIMELINE_BCE_SORT_VALUE_INVALID",
+        file: relativePath,
+        entityId,
+        value: start.sort_value,
+        message:
+          "A BCE display date must use a negative sort_value; for example, \"前139年\" uses -139000.",
+      });
+    }
+
     if (end && !end.display) {
       issue({
         collection: errors,
@@ -579,6 +621,24 @@ export async function buildTimeline({
         entityId,
         message:
           "timeline.end needs a numeric sort_value for stable ordering.",
+      });
+    }
+
+    if (
+      end &&
+      end.sort_value !== null &&
+      isBceDisplay(end.display) &&
+      end.sort_value >= 0
+    ) {
+      issue({
+        collection: errors,
+        severity: "error",
+        code: "TIMELINE_BCE_SORT_VALUE_INVALID",
+        file: relativePath,
+        entityId,
+        value: end.sort_value,
+        message:
+          "A BCE display date must use a negative sort_value; for example, \"前139年\" uses -139000.",
       });
     }
 
@@ -745,6 +805,23 @@ export async function buildTimeline({
           entityId,
           message:
             `Timeline variant ${variant.index + 1} needs display text.`,
+        });
+      }
+
+      if (
+        variant.sort_value !== null &&
+        isBceDisplay(variant.display) &&
+        variant.sort_value >= 0
+      ) {
+        issue({
+          collection: errors,
+          severity: "error",
+          code: "TIMELINE_BCE_SORT_VALUE_INVALID",
+          file: relativePath,
+          entityId,
+          value: variant.sort_value,
+          message:
+            `Timeline variant ${variant.index + 1} has a BCE display date but a non-negative sort_value.`,
         });
       }
 

@@ -1,14 +1,13 @@
 ---
 title: 卡俄斯
 description: ΧΑΟΣ
-weight: 10
+weight: 02
 keywords:
-  - 殷
   - 文明古国
 cultures:
-  - 齐黄文化圈
+  - 克里希达核心圈
 eras:
-  - 新历时代
+  - 现代
 topics:
   - 政体
   - 贸易
@@ -28,14 +27,12 @@ params:
     short: ""
     native: []
     former: []
-    aliases:
-      - 殷
-      - 文明古国
+    aliases: []
   classifications:
     cultures:
-      - 齐黄文化圈
+      - 克里希达核心圈
     eras:
-      - 新历时代
+      - 现代
     regions: []
     government_forms: []
     topics:

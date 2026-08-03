@@ -1,14 +1,14 @@
 ---
 title: 莫尔索斯
 description: Муоцилс
-weight: 10
+weight: 06
 keywords:
   - 莫尔索斯
   - 莫尔索斯大公国
 cultures:
   - 泛斯塔兰文化圈
 eras:
-  - 新历时代
+  - 现代
 topics:
   - 政体
   - 贸易
@@ -28,14 +28,12 @@ params:
     short: ""
     native: []
     former: []
-    aliases:
-      - 拉门斯
-      - 文明古国
+    aliases: []
   classifications:
     cultures:
       - 泛斯塔兰文化圈
     eras:
-      - 新历时代
+      - 现代
     regions: []
     government_forms: []
     topics:

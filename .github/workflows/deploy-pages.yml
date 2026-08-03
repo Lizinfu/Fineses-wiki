@@ -65,8 +65,14 @@ jobs:
       - name: Install Wiki dependencies
         run: npm ci
 
+      - name: Install Chromium for browser checks
+        run: npx playwright install --with-deps chromium
+
       - name: Validate content data
         run: npm run wiki:validate
+
+      - name: Check source quality budget
+        run: npm run quality:source
 
       - name: Generate relationship and timeline data
         run: npm run wiki:prepare
@@ -77,6 +83,7 @@ jobs:
           HUGO_ENV: production
         run: |
           hugo \
+            --cleanDestinationDir \
             --gc \
             --minify \
             --baseURL "${{ steps.pages.outputs.base_url }}/"
@@ -86,6 +93,12 @@ jobs:
 
       - name: Verify Pagefind bundle
         run: node scripts/verify-search-index.mjs
+
+      - name: Check rendered site quality
+        run: npm run quality:site
+
+      - name: Run browser accessibility and navigation checks
+        run: npm run test:browser
 
       - name: Write build summary
         shell: bash

@@ -12,7 +12,7 @@ params:
   id: eco.ajatar
   entity_kind: species
   library:
-    catalog_no: eco-0042
+    catalog_no: eco-0501
     access_level: public
     reliability: verified
     last_reviewed: 2026-07-16

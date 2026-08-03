@@ -1,9 +1,8 @@
 ---
 title: "世界时间线"
-description: "按世界内年代浏览公开事件、人物生平、国家变迁、发现与灾害记录。"
+description: "欢迎任何人尝试对历史进行编排。如果你愿意。"
 weight: 70
 draft: false
 ---
 
-时间线只收录在 Front Matter 中明确启用 `params.timeline` 的实体。
-显示日期用于阅读，数值排序字段仅用于稳定排列，不必与现实历法对应。
+“为什么你们会觉得时间是{{< redaction >}}线性{{< /redaction >}}的？”

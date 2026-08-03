@@ -12,34 +12,21 @@
     "dev": "npm run wiki:preview",
     "build": "npm run wiki:build",
     "check": "npm run wiki:validate",
-
-    "content:generate": "node scripts/generate-content-graph.mjs",
-    "content:validate": "node scripts/generate-content-graph.mjs --check",
-    "content:report": "node scripts/print-content-report.mjs",
     "content:migrate-v1": "node scripts/migrate-frontmatter-v1.mjs --write",
-    "content:model:validate": "node scripts/validate-content-model.mjs",
-
-    "timeline:generate": "node scripts/generate-timeline.mjs",
-    "timeline:validate": "node scripts/generate-timeline.mjs --check",
-    "timeline:report": "node scripts/print-timeline-report.mjs",
-
     "wiki:prepare": "node scripts/prepare-wiki.mjs",
     "wiki:validate": "node scripts/validate-content-model.mjs && node scripts/prepare-wiki.mjs --check",
+    "wiki:report": "node scripts/print-content-report.mjs && node scripts/print-timeline-report.mjs",
+    "quality:source": "node scripts/check-media-budget.mjs",
+    "quality:site": "node scripts/check-site-output.mjs",
+    "quality:all": "npm run wiki:validate && npm run quality:source && npm run quality:site",
+    "test:browser": "playwright test",
     "wiki:preview": "node scripts/prepare-wiki.mjs --check --include-drafts && node scripts/prepare-wiki.mjs --include-drafts && hugo server -D",
     "wiki:preview-search": "node scripts/prepare-wiki.mjs --check --include-drafts && node scripts/prepare-wiki.mjs --include-drafts && hugo --buildDrafts --gc --minify && pagefind --site public --serve",
-    "wiki:build": "npm run wiki:validate && npm run wiki:prepare && hugo --gc --minify && pagefind --site public && node scripts/verify-search-index.mjs",
-
-    "hugo:server": "hugo server -D",
-    "hugo:build": "hugo --gc --minify",
-    "build:hugo": "npm run hugo:build",
-
-    "search:index": "pagefind --site public",
-    "search:serve": "pagefind --site public --serve",
-    "search:verify": "node scripts/verify-search-index.mjs",
-    "preview:search": "npm run wiki:preview-search",
-    "verify:search": "npm run search:verify"
+    "wiki:build": "npm run wiki:validate && npm run quality:source && npm run wiki:prepare && hugo --cleanDestinationDir --gc --minify && pagefind --site public && node scripts/verify-search-index.mjs && npm run quality:site"
   },
   "devDependencies": {
+    "@axe-core/playwright": "^4.10.2",
+    "@playwright/test": "^1.55.1",
     "pagefind": "1.5.2",
     "yaml": "2.9.0"
   }

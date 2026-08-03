@@ -5,9 +5,9 @@ weight: 10
 keywords:
   - 塞壬
 cultures:
-  - 齐黄文化圈
+  - 泛斯塔兰文化圈
 eras:
-  - 新历时代
+  - 现代
 topics:
   - 政体
   - 贸易
@@ -31,9 +31,9 @@ params:
       - 塞壬
   classifications:
     cultures:
-      - 齐黄文化圈
+      - 泛斯塔兰文化圈
     eras:
-      - 新历时代
+      - 现代
     regions: []
     government_forms: []
     topics:

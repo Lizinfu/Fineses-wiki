@@ -31,51 +31,41 @@
     {{ end }}
   </header>
 
-  {{ with .Sections }}
-    <section
-      class="list-section"
-      aria-labelledby="subsections-title"
-      data-pagefind-ignore>
-      <header class="list-section__header">
-        <h2 id="subsections-title">下级目录</h2>
-        <span class="list-section__count">{{ len . }} SECTIONS</span>
-      </header>
+  <section
+    class="list-section"
+    aria-labelledby="subsections-title"
+    data-pagefind-ignore>
+    <header class="list-section__header">
+      <h2 id="subsections-title">馆藏页面</h2>
+      <span class="list-section__count">
+        {{ add (len .Sections) (len .RegularPages) }} PAGES
+      </span>
+    </header>
 
-      <div class="auto-grid list-grid">
+    <div class="auto-grid list-grid">
+      {{ with .Sections }}
         {{ range .ByWeight }}
           {{ partial "ui/catalog-card.html" (dict
             "Page" .
             "Variant" "portal"
           ) }}
         {{ end }}
-      </div>
-    </section>
-  {{ end }}
-
-  <section
-    class="list-section"
-    aria-labelledby="records-title"
-    data-pagefind-ignore>
-    <header class="list-section__header">
-      <h2 id="records-title">馆藏条目</h2>
-      <span class="list-section__count">
-        {{ len .RegularPages }} RECORDS
-      </span>
-    </header>
+      {{ end }}
 
       {{ with .RegularPages }}
-      <div class="auto-grid list-grid">
         {{ range .ByWeight }}
           {{ partial "ui/catalog-card.html" (dict
             "Page" .
             "Variant" "compact"
           ) }}
         {{ end }}
-      </div>
-    {{ else }}
+      {{ end }}
+    </div>
+
+    {{ if and (not .Sections) (not .RegularPages) }}
       {{ partial "ui/empty-state.html" (dict
-        "Title" "当前目录暂无普通条目"
-        "Text" "新增 Markdown 页面后，条目会自动出现在这里。"
+        "Title" "当前目录暂无馆藏页面"
+        "Text" "新增 Markdown 页面后，页面会自动出现在这里。"
       ) }}
     {{ end }}
   </section>

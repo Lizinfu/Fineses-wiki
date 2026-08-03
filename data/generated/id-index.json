@@ -36,11 +36,72 @@
     "section": "ecology",
     "entity_kind": "species",
     "schema": "species.v1",
-    "catalog_no": "eco-0042",
+    "catalog_no": "eco-0501",
     "aliases": [
       "造物",
       "龙",
       "Ajatar"
+    ]
+  },
+  "eco.argstran": {
+    "title": "姑渡鸟",
+    "page_ref": "/ecology/eco-argstran",
+    "content_path": "ecology/eco-argstran/index.md",
+    "section": "ecology",
+    "entity_kind": "species",
+    "schema": "species.v1",
+    "catalog_no": "eco-0502",
+    "aliases": [
+      "伊琳沃克联邦",
+      "《旗帜》",
+      "Argstran"
+    ]
+  },
+  "era.example": {
+    "title": "神代",
+    "page_ref": "/history/eras/era-ancient",
+    "content_path": "history/eras/era-ancient/_index.md",
+    "section": "history",
+    "entity_kind": "subpage",
+    "schema": "subpage.v1",
+    "catalog_no": "ERA-0001",
+    "aliases": [
+      "时代",
+      "神代",
+      "过渡",
+      "历史",
+      "神代晚期",
+      "神代末"
+    ]
+  },
+  "era.gods": {
+    "title": "古代",
+    "page_ref": "/history/eras/era-gods",
+    "content_path": "history/eras/era-gods/_index.md",
+    "section": "history",
+    "entity_kind": "subpage",
+    "schema": "subpage.v1",
+    "catalog_no": "ERA-0001",
+    "aliases": [
+      "时代",
+      "神代",
+      "过渡",
+      "历史"
+    ]
+  },
+  "evt.falsetide": {
+    "title": "乱潮年代",
+    "page_ref": "/history/events/evt-falsetide",
+    "content_path": "history/events/evt-falsetide/index.md",
+    "section": "history",
+    "entity_kind": "event",
+    "schema": "event.v1",
+    "catalog_no": "EVT-0139-001",
+    "aliases": [
+      "特洛恩",
+      "历史",
+      "神代之末",
+      "乱潮年代"
     ]
   },
   "evt.la-guerre-des-cendres.480": {
@@ -55,6 +116,37 @@
       "灰烬战争",
       "480年",
       "la-guerre-des-cendres"
+    ]
+  },
+  "evt.ortus-autelaisi": {
+    "title": "湮灭区，“奥特莱斯”出现",
+    "page_ref": "/history/events/evt-aotelaisi",
+    "content_path": "history/events/evt-aotelaisi/index.md",
+    "section": "history",
+    "entity_kind": "event",
+    "schema": "event.v1",
+    "catalog_no": "EVT-0000-001",
+    "aliases": [
+      "奥特莱斯",
+      "湮灭区",
+      "“奥特莱斯”出现",
+      "Ortus Autelaisi",
+      "湮灭"
+    ]
+  },
+  "evt.radicium": {
+    "title": "拉基迪杜姆建立",
+    "page_ref": "/history/events/evt-radicium",
+    "content_path": "history/events/evt-radicium/index.md",
+    "section": "history",
+    "entity_kind": "event",
+    "schema": "event.v1",
+    "catalog_no": "EVT-0448-001",
+    "aliases": [
+      "拉门斯",
+      "历史",
+      "神代之末",
+      "拉基迪杜姆建立"
     ]
   },
   "evt.sivlanzio-peace-encyclical": {
@@ -104,6 +196,36 @@
       "塔罗萨尔占星泥版"
     ]
   },
+  "evt.tenum": {
+    "title": "特洛恩汗国建立",
+    "page_ref": "/history/events/evt-tenum",
+    "content_path": "history/events/evt-tenum/index.md",
+    "section": "history",
+    "entity_kind": "event",
+    "schema": "event.v1",
+    "catalog_no": "EVT-0023-001",
+    "aliases": [
+      "特洛恩",
+      "历史",
+      "神代之末",
+      "特洛恩汗国"
+    ]
+  },
+  "evt.zhaocheng": {
+    "title": "“殷兆”",
+    "page_ref": "/history/events/evt-zhaocheng",
+    "content_path": "history/events/evt-zhaocheng/index.md",
+    "section": "history",
+    "entity_kind": "event",
+    "schema": "event.v1",
+    "catalog_no": "EVT-0345-001",
+    "aliases": [
+      "殷",
+      "历史",
+      "神代之末",
+      "兆城建立"
+    ]
+  },
   "nat.ama": {
     "title": "天照",
     "page_ref": "/nations/nat-amaterasu",
@@ -137,9 +259,9 @@
     "schema": "nation.v1",
     "catalog_no": "NAT-0008",
     "aliases": [
+      "德诺尼塞",
       "殷",
-      "文明古国",
-      "德诺尼塞"
+      "文明古国"
     ]
   },
   "nat.esa": {
@@ -176,8 +298,8 @@
     "schema": "nation.v1",
     "catalog_no": "NAT-0005",
     "aliases": [
-      "埃萨勒",
-      "文明古国",
+      "德诺尼塞",
+      "炼金之国",
       "伊琳沃克"
     ]
   },
@@ -190,7 +312,6 @@
     "schema": "nation.v1",
     "catalog_no": "NAT-0002",
     "aliases": [
-      "殷",
       "文明古国",
       "卡俄斯"
     ]
@@ -205,9 +326,7 @@
     "catalog_no": "NAT-0006",
     "aliases": [
       "莫尔索斯",
-      "莫尔索斯大公国",
-      "拉门斯",
-      "文明古国"
+      "莫尔索斯大公国"
     ]
   },
   "nat.neb": {
@@ -219,7 +338,8 @@
     "schema": "nation.v1",
     "catalog_no": "NAT-0016",
     "aliases": [
-      "天照",
+      "强权",
+      "帝国黄昏",
       "奈布雷根"
     ]
   },
@@ -257,8 +377,10 @@
     "schema": "nation.v1",
     "catalog_no": "NAT-0013",
     "aliases": [
-      "天照",
-      "斯兰缇亚"
+      "宗座",
+      "“人间天国”",
+      "斯兰缇亚",
+      "人间天国"
     ]
   },
   "nat.tar": {
@@ -270,7 +392,7 @@
     "schema": "nation.v1",
     "catalog_no": "NAT-0014",
     "aliases": [
-      "天照",
+      "灭亡的国土",
       "塔罗萨尔"
     ]
   },
@@ -283,7 +405,7 @@
     "schema": "nation.v1",
     "catalog_no": "NAT-0015",
     "aliases": [
-      "天照",
+      "游牧民族",
       "特洛恩"
     ]
   },
@@ -387,6 +509,21 @@
       "特利斯·弗拉梅尔"
     ]
   },
+  "per.jonin": {
+    "title": "上仁日月",
+    "page_ref": "/characters/amaterasu/per-flamel",
+    "content_path": "characters/amaterasu/per-flamel/index.md",
+    "section": "characters",
+    "entity_kind": "person",
+    "schema": "person.v1",
+    "catalog_no": "PER-0500",
+    "aliases": [
+      "神皇",
+      "“万世一系”",
+      "上仁 日月",
+      "？"
+    ]
+  },
   "per.lapla": {
     "title": "拉普拉·楚亚·维拉克",
     "page_ref": "/characters/yuraqqasa/per-lapla",
@@ -474,6 +611,20 @@
       "仙婆"
     ]
   },
+  "reg.cressida": {
+    "title": "克里希达大陆",
+    "page_ref": "/regions/reg-cressida",
+    "content_path": "regions/reg-cressida/index.md",
+    "section": "regions",
+    "entity_kind": "region",
+    "schema": "region.v1",
+    "catalog_no": "REG-0001",
+    "aliases": [
+      "克里希达",
+      "“广袤的大地”",
+      "“原初之境”"
+    ]
+  },
   "reg.esa.sdv": {
     "title": "咽沙河谷",
     "page_ref": "/nations/nat-esael/region/Sand-Devoured-Valley",
@@ -546,18 +697,18 @@
       "斯涅日内维尔什尼"
     ]
   },
-  "reg.north-rift": {
-    "title": "北境裂谷",
-    "page_ref": "/regions/reg-north-rift",
-    "content_path": "regions/reg-north-rift/index.md",
+  "reg.qihuang": {
+    "title": "齐黄大地",
+    "page_ref": "/regions/reg-qihuang",
+    "content_path": "regions/reg-qihuang/index.md",
     "section": "regions",
     "entity_kind": "region",
     "schema": "region.v1",
-    "catalog_no": "REG-0001",
+    "catalog_no": "REG-0002",
     "aliases": [
-      "北境裂谷",
-      "高寒地区",
-      "封闭湖"
+      "齐黄大地",
+      "黄色的土地",
+      "“普天之下”"
     ]
   },
   "reg.siv.sc": {

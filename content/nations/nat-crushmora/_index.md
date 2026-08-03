@@ -1,13 +1,13 @@
 ---
 title: 卡什莫兰
 description: Crushmora
-weight: 10
+weight: 11
 keywords:
   - 卡什莫兰
 cultures:
-  - 齐黄文化圈
+  - 库库尔坎文化圈
 eras:
-  - 新历时代
+  - 现代
 topics:
   - 政体
   - 贸易
@@ -31,9 +31,9 @@ params:
       - 卡什莫兰
   classifications:
     cultures:
-      - 齐黄文化圈
+      - 库库尔坎文化圈
     eras:
-      - 新历时代
+      - 现代
     regions: []
     government_forms: []
     topics:

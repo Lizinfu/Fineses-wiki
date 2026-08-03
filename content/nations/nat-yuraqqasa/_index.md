@@ -1,14 +1,14 @@
 ---
 title: 尤拉卡萨
 description: Yuraqq'asa
-weight: 10
+weight: 07
 keywords:
   - 尤拉卡萨
   - 文明古国
 cultures:
   - 齐黄文化圈
 eras:
-  - 新历时代
+  - 现代
 topics:
   - 政体
   - 贸易
@@ -35,7 +35,7 @@ params:
     cultures:
       - 齐黄文化圈
     eras:
-      - 新历时代
+      - 现代
     regions: []
     government_forms: []
     topics:

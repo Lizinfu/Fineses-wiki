@@ -1,13 +1,13 @@
 ---
 title: 特洛恩
-description: " ᠲᠡᠨᠦᠮ "
-weight: 10
+description: ᠲᠡᠨᠦᠮ ᠤᠨ ᠬᠠᠭᠠᠨᠯᠢᠭ ᠪᠠᠶᠠᠭᠰᠠᠨ
+weight: 15
 keywords:
-  - 天照
+  - 游牧民族
 cultures:
-  - 齐黄文化圈
+  - ？？？
 eras:
-  - 新历时代
+  - 古代
 topics:
   - 政体
   - 贸易
@@ -27,13 +27,12 @@ params:
     short: ""
     native: []
     former: []
-    aliases:
-      - 天照
+    aliases: []
   classifications:
     cultures:
-      - 齐黄文化圈
+      - ？？？
     eras:
-      - 新历时代
+      - 古代
     regions: []
     government_forms: []
     topics:

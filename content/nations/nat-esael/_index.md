@@ -1,14 +1,14 @@
 ---
 title: 埃萨勒
 description: ऐशाल
-weight: 10
+weight: 03
 keywords:
   - 埃萨勒
   - 热带部族联盟
 cultures:
-  - 齐黄文化圈
+  - 库库尔坎文化圈
 eras:
-  - 新历时代
+  - 现代
 topics:
   - 政体
   - 贸易
@@ -33,9 +33,9 @@ params:
       - 热带部族联盟
   classifications:
     cultures:
-      - 齐黄文化圈
+      - 库库尔坎文化圈
     eras:
-      - 新历时代
+      - 现代
     regions: []
     government_forms: []
     topics:

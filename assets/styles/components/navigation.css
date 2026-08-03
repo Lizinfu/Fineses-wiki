@@ -41,31 +41,11 @@
 }
 
 .site-brand__mark {
-  position: relative;
   flex: 0 0 auto;
   width: 2rem;
-  aspect-ratio: 1;
-  border: 2px solid currentColor;
-  transform: rotate(45deg);
-}
-
-.site-brand__mark::before,
-.site-brand__mark::after {
-  position: absolute;
-  content: "";
-  background: var(--accent);
-}
-
-.site-brand__mark::before {
-  inset: 0.32rem;
-}
-
-.site-brand__mark::after {
-  inset-block-start: -0.25rem;
-  inset-inline-end: -0.25rem;
-  width: 0.55rem;
-  height: 0.55rem;
-  border: 2px solid var(--surface-inverse);
+  height: 2rem;
+  object-fit: contain;
+  border-radius: 0.15rem;
 }
 
 .site-brand__copy {

@@ -1,7 +1,7 @@
 ---
 title: 天照
 description: 天照
-weight: 10
+weight: 09
 keywords:
   - 天照
 cultures:
@@ -40,8 +40,9 @@ params:
       - 政体
       - 贸易
       - 外交
-  relations: []
-  allow_orphan: true
+  relations: 
+    - type: ruled_by
+      target: per.jonin
 ---
 
 ## 地区与城市

@@ -1,6 +1,6 @@
 ---
 title: 高天原建立
-description: la-guerre-des-cendres
+description: 高天原の肇造
 keywords:
   - 天照
   - 历史
@@ -47,10 +47,10 @@ params:
     include: true
     calendar: "default"
     categories: ["other"]
-    status: "verified"
+    status: "legendary"
     start:
       display: "前113年"
-      sort_value: 011300
+      sort_value: -113000
       precision: "season"
     summary: "大地漂浮，天空落下。"
     presentation: "standard"
@@ -58,8 +58,4 @@ params:
 
 ---
 
-塔罗萨尔第一块占星泥板被镌刻。
-
-## 大地的裂解
-
-881年，被誉为“人类文明的第一行”的塔罗萨尔占星泥板在如今的卡什莫兰以南，荒乱焦土以西的荒原中被卡什莫兰第三“考古”先遣队发现。
+日月大神率领天照众神抵达大地之东的“日升之处”，建造**高天原**。

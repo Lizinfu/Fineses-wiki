@@ -1,14 +1,14 @@
 ---
 title: 伊琳沃克
 description: Inibholc
-weight: 10
+weight: 05
 keywords:
-  - 埃萨勒
-  - 文明古国
+  - 德诺尼塞
+  - 炼金之国
 cultures:
-  - 齐黄文化圈
+  - 克里希达核心圈
 eras:
-  - 新历时代
+  - 现代
 topics:
   - 政体
   - 贸易
@@ -29,21 +29,21 @@ params:
     native: []
     former: []
     aliases:
-      - 埃萨勒
-      - 文明古国
+      - 炼金之国
   classifications:
     cultures:
-      - 齐黄文化圈
+      - 克里希达核心圈
     eras:
-      - 新历时代
+      - 现代
     regions: []
     government_forms: []
     topics:
       - 政体
       - 贸易
       - 外交
-  relations: []
-  allow_orphan: true
+  relations: 
+    - type: ruled_by
+      target: per.fhlaimeal
 ---
 
 现在国际所指的“伊琳沃克”，全称为“伊琳沃克第三帝国”，与诸多国家相比，仍然算得上是一个年轻的国家。

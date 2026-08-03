@@ -1,13 +1,13 @@
 ---
 title: 塔罗萨尔
 description: " 𒋫𒊒𒊬 "
-weight: 10
+weight: 14
 keywords:
-  - 天照
+  - 灭亡的国土
 cultures:
-  - 齐黄文化圈
+  - 库库尔坎文化圈
 eras:
-  - 新历时代
+  - 古代
 topics:
   - 政体
   - 贸易
@@ -27,13 +27,12 @@ params:
     short: ""
     native: []
     former: []
-    aliases:
-      - 天照
+    aliases: []
   classifications:
     cultures:
-      - 齐黄文化圈
+      - 库库尔坎文化圈
     eras:
-      - 新历时代
+      - 古代
     regions: []
     government_forms: []
     topics:
