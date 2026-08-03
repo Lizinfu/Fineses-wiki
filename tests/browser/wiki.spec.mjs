@@ -1,6 +1,18 @@
 import AxeBuilder from "@axe-core/playwright";
 import { expect, test } from "@playwright/test";
 
+function accessibilityViolationSummary(violations) {
+  return violations.map(({ id, impact, help, nodes }) => ({
+    id,
+    impact,
+    help,
+    nodes: nodes.map(({ target, failureSummary }) => ({
+      target,
+      failureSummary,
+    })),
+  }));
+}
+
 const routes = [
   "/",
   "/search/",
@@ -60,5 +72,5 @@ test("home page has no serious automated accessibility violations", async ({
     .withTags(["wcag2a", "wcag2aa"])
     .analyze();
 
-  expect(results.violations).toEqual([]);
+  expect(accessibilityViolationSummary(results.violations)).toEqual([]);
 });
