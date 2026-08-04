@@ -50,7 +50,7 @@ params:
     status: "verified"
     start:
       display: "480年"
-      sort_value: 148001
+      sort_value: 480001
       precision: "season"
     summary: "在拉门斯的遗骸之上，战争从未结束。"
     presentation: "major"

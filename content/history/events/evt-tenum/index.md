@@ -27,7 +27,7 @@ params:
     former: []
     aliases: []
   library:
-    catalog_no: EVT-0023-001
+    catalog_no: EVT-1023-001
     access_level: public
     reliability: verified
     last_reviewed: 2026-08-03

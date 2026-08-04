@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "totals": {
-    "entities": 57,
+    "entities": 61,
     "relations": 20,
     "backlinks": 20,
     "errors": 0,

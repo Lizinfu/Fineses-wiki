@@ -133,6 +133,49 @@
       "la-guerre-des-cendres"
     ]
   },
+  "evt.muocils": {
+    "title": "莫尔索斯大公国建立",
+    "page_ref": "/history/events/evt-muocils",
+    "content_path": "history/events/evt-muocils/index.md",
+    "section": "history",
+    "entity_kind": "event",
+    "schema": "event.v1",
+    "catalog_no": "EVT-0289-001",
+    "aliases": [
+      "莫尔索斯",
+      "历史",
+      "莫尔索斯大公国建立"
+    ]
+  },
+  "evt.nebregen-founding": {
+    "title": "奈布雷根王国出现",
+    "page_ref": "/history/events/evt-nebregen",
+    "content_path": "history/events/evt-nebregen/index.md",
+    "section": "history",
+    "entity_kind": "event",
+    "schema": "event.v1",
+    "catalog_no": "EVT-0134-001",
+    "aliases": [
+      "奈布雷根",
+      "“分裂的开端”",
+      "奈布雷根建立"
+    ]
+  },
+  "evt.novae-res-in-terra-deorum": {
+    "title": "神境革命",
+    "page_ref": "/history/events/evt-novae-res-in-terra-deorum",
+    "content_path": "history/events/evt-novae-res-in-terra-deorum/index.md",
+    "section": "history",
+    "entity_kind": "event",
+    "schema": "event.v1",
+    "catalog_no": "EVT-0474-001",
+    "aliases": [
+      "克里希达",
+      "历史",
+      "神代的终结",
+      "神境革命"
+    ]
+  },
   "evt.ortus-autelaisi": {
     "title": "湮灭区，“奥特莱斯”出现",
     "page_ref": "/history/events/evt-aotelaisi",
@@ -181,6 +224,21 @@
       "和平赦令"
     ]
   },
+  "evt.stofnun-sirena": {
+    "title": "塞壬建立",
+    "page_ref": "/history/events/evt-sirena",
+    "content_path": "history/events/evt-sirena/index.md",
+    "section": "history",
+    "entity_kind": "event",
+    "schema": "event.v1",
+    "catalog_no": "EVT-0360-001",
+    "aliases": [
+      "塞壬",
+      "历史",
+      "伊诺菈",
+      "塞壬建立"
+    ]
+  },
   "evt.takamagahara-founding": {
     "title": "高天原建立",
     "page_ref": "/history/events/evt-takamagahara",
@@ -218,7 +276,7 @@
     "section": "history",
     "entity_kind": "event",
     "schema": "event.v1",
-    "catalog_no": "EVT-0023-001",
+    "catalog_no": "EVT-1023-001",
     "aliases": [
       "特洛恩",
       "历史",
@@ -233,7 +291,7 @@
     "section": "history",
     "entity_kind": "event",
     "schema": "event.v1",
-    "catalog_no": "EVT-0345-001",
+    "catalog_no": "EVT-1345-001",
     "aliases": [
       "殷",
       "历史",

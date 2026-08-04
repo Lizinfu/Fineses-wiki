@@ -48,7 +48,7 @@ params:
     status: "verified"
     start:
       display: "881年"
-      sort_value: 188101
+      sort_value: 881001
       precision: "season"
     summary: "“人类发现了文明”"
     presentation: "minor"

@@ -266,6 +266,154 @@
       "variants": []
     },
     {
+      "id": "evt.nebregen-founding",
+      "title": "奈布雷根王国出现",
+      "page_ref": "/history/events/evt-nebregen",
+      "content_path": "history/events/evt-nebregen/index.md",
+      "section": "history",
+      "entity_kind": "event",
+      "summary": "小麦不够吃了，孩子死了，追兵永无止境。来自大海，来自大陆，来自脏器深处的阴影里。",
+      "start": {
+        "display": "134年",
+        "sort_value": 134000,
+        "calendar": "default",
+        "precision": "season",
+        "circa": false,
+        "calendar_label": "主历法"
+      },
+      "end": null,
+      "undated": false,
+      "undated_label": "日期不详",
+      "order_hint": 0,
+      "calendar": "default",
+      "calendar_label": "主历法",
+      "categories": [
+        "politics"
+      ],
+      "category_labels": [
+        "政治与制度"
+      ],
+      "status": "verified",
+      "status_label": "已核实",
+      "presentation": "standard",
+      "summary_mode": "full",
+      "era_label": "古代 · 终结期",
+      "source_refs": [],
+      "note": "",
+      "variants": []
+    },
+    {
+      "id": "evt.muocils",
+      "title": "莫尔索斯大公国建立",
+      "page_ref": "/history/events/evt-muocils",
+      "content_path": "history/events/evt-muocils/index.md",
+      "section": "history",
+      "entity_kind": "event",
+      "summary": "伊万一直向北走，走到了雪原尽头，走到了世界被融化的海洋之中。",
+      "start": {
+        "display": "289年",
+        "sort_value": 289000,
+        "calendar": "default",
+        "precision": "season",
+        "circa": false,
+        "calendar_label": "主历法"
+      },
+      "end": null,
+      "undated": false,
+      "undated_label": "日期不详",
+      "order_hint": 0,
+      "calendar": "default",
+      "calendar_label": "主历法",
+      "categories": [
+        "politics"
+      ],
+      "category_labels": [
+        "政治与制度"
+      ],
+      "status": "verified",
+      "status_label": "已核实",
+      "presentation": "standard",
+      "summary_mode": "full",
+      "era_label": "古代 · 终结期",
+      "source_refs": [],
+      "note": "",
+      "variants": []
+    },
+    {
+      "id": "evt.stofnun-sirena",
+      "title": "塞壬建立",
+      "page_ref": "/history/events/evt-sirena",
+      "content_path": "history/events/evt-sirena/index.md",
+      "section": "history",
+      "entity_kind": "event",
+      "summary": "“好啦，还给你们啦。”",
+      "start": {
+        "display": "360年",
+        "sort_value": 360000,
+        "calendar": "default",
+        "precision": "season",
+        "circa": false,
+        "calendar_label": "主历法"
+      },
+      "end": null,
+      "undated": false,
+      "undated_label": "日期不详",
+      "order_hint": 0,
+      "calendar": "default",
+      "calendar_label": "主历法",
+      "categories": [
+        "war"
+      ],
+      "category_labels": [
+        "战争与冲突"
+      ],
+      "status": "verified",
+      "status_label": "已核实",
+      "presentation": "standard",
+      "summary_mode": "full",
+      "era_label": "古代 · 终结期",
+      "source_refs": [],
+      "note": "",
+      "variants": []
+    },
+    {
+      "id": "evt.novae-res-in-terra-deorum",
+      "title": "神境革命",
+      "page_ref": "/history/events/evt-novae-res-in-terra-deorum",
+      "content_path": "history/events/evt-novae-res-in-terra-deorum/index.md",
+      "section": "history",
+      "entity_kind": "event",
+      "summary": "再也不会有神明的国度。",
+      "start": {
+        "display": "474年",
+        "sort_value": 474000,
+        "calendar": "default",
+        "precision": "season",
+        "circa": false,
+        "calendar_label": "主历法"
+      },
+      "end": null,
+      "undated": false,
+      "undated_label": "日期不详",
+      "order_hint": 0,
+      "calendar": "default",
+      "calendar_label": "主历法",
+      "categories": [
+        "war"
+      ],
+      "category_labels": [
+        "战争与冲突"
+      ],
+      "status": "verified",
+      "status_label": "已核实",
+      "presentation": "major",
+      "summary_mode": "full",
+      "era_label": "古代 · 终结期",
+      "source_refs": [],
+      "note": "",
+      "variants": []
+    },
+    {
       "id": "evt.la-guerre-des-cendres.480",
       "title": "灰烬战争",
       "page_ref": "/history/events/evt-la-guerre-des-cendres",
@@ -275,7 +423,7 @@
       "summary": "在拉门斯的遗骸之上，战争从未结束。",
       "start": {
         "display": "480年",
-        "sort_value": 148001,
+        "sort_value": 480001,
         "calendar": "default",
         "precision": "season",
         "circa": false,
@@ -312,7 +460,7 @@
       "summary": "“凡有放下刀剑，以手抚膺，诚然忏悔；便舍了他的罪。”",
       "start": {
         "display": "480年",
-        "sort_value": 148002,
+        "sort_value": 480002,
         "calendar": "default",
         "precision": "season",
         "circa": false,
@@ -349,7 +497,7 @@
       "summary": "“人类发现了文明”",
       "start": {
         "display": "881年",
-        "sort_value": 188101,
+        "sort_value": 881001,
         "calendar": "default",
         "precision": "season",
         "circa": false,
@@ -419,7 +567,7 @@
       {
         "id": "default",
         "label": "主历法",
-        "count": 9
+        "count": 13
       }
     ],
     "categories": [
@@ -441,19 +589,19 @@
       {
         "id": "war",
         "label": "战争与冲突",
-        "count": 2
+        "count": 4
       },
       {
         "id": "politics",
         "label": "政治与制度",
-        "count": 4
+        "count": 6
       }
     ],
     "entity_kinds": [
       {
         "id": "event",
         "label": "event",
-        "count": 10
+        "count": 14
       }
     ],
     "statuses": [
@@ -480,7 +628,7 @@
       {
         "id": "verified",
         "label": "已核实",
-        "count": 3
+        "count": 7
       }
     ]
   }

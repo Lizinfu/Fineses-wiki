@@ -1,36 +1,35 @@
 ---
-title: “殷兆”
-description: 兆城
+title: 莫尔索斯大公国建立
+description: Основание Великого герцогства Муоцилс
 keywords:
-  - 殷
+  - 莫尔索斯
   - 历史
-  - 神代之末
 
 eras:
   - 古代
 
 topics:
   - 历史
-  - 神代
+  - 古代
 
 cultures: []
 
 params:
-  id: evt.zhaocheng
+  id: evt.muocils
   entity_kind: event
   schema: event.v1
   canon_status: canon
   names:
-    official: 兆城建立
+    official: 莫尔索斯大公国建立
     short: ""
     native: []
     former: []
     aliases: []
   library:
-    catalog_no: EVT-1345-001
+    catalog_no: EVT-0289-001
     access_level: public
     reliability: verified
-    last_reviewed: 2026-08-03
+    last_reviewed: 2026-08-04
     source_refs: []
   classifications:
     cultures: []
@@ -40,22 +39,22 @@ params:
     government_forms: []
     topics:
       - 历史
-      - 神代
+      - 古代
   relations: []
   allow_orphan: true
   timeline:
     include: true
     calendar: "default"
     categories: ["politics"]
-    status: "probable"
+    status: "verified"
     start:
-      display: "前345年"
-      sort_value: -345000
+      display: "289年"
+      sort_value: 289000
       precision: "season"
-    summary: "“天命煌煌，殷土茫茫。”"
+    summary: "伊万一直向北走，走到了雪原尽头，走到了世界被融化的海洋之中。"
     presentation: "standard"
-    era_label: "神代 · 消亡期"
+    era_label: "古代 · 终结期"
 
 ---
 
-殷国安夏河流域，兆城建立。殷的第一位皇帝出现，殷史上第一个大一统王朝出现。
+克里希达北部，拉门斯领土之外，莫尔索斯公国出现。
