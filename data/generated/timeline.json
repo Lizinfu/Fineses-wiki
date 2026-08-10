@@ -488,6 +488,80 @@
       "variants": []
     },
     {
+      "id": "evt.achevez-la-guerre-des-cendres",
+      "title": "灰烬战争结束",
+      "page_ref": "/history/events/evt-achevez-la-guerre-des-cendres",
+      "content_path": "history/events/evt-achevez-la-guerre-des-cendres/index.md",
+      "section": "history",
+      "entity_kind": "event",
+      "summary": "请结束这场战争。",
+      "start": {
+        "display": "503年",
+        "sort_value": 503001,
+        "calendar": "default",
+        "precision": "season",
+        "circa": false,
+        "calendar_label": "主历法"
+      },
+      "end": null,
+      "undated": false,
+      "undated_label": "日期不详",
+      "order_hint": 0,
+      "calendar": "default",
+      "calendar_label": "主历法",
+      "categories": [
+        "war"
+      ],
+      "category_labels": [
+        "战争与冲突"
+      ],
+      "status": "verified",
+      "status_label": "已核实",
+      "presentation": "standard",
+      "summary_mode": "full",
+      "era_label": "近代 · 扩张期",
+      "source_refs": [],
+      "note": "",
+      "variants": []
+    },
+    {
+      "id": "evt.yuraqqasa",
+      "title": "尤拉卡萨史诗",
+      "page_ref": "/history/events/evt-yuraqqasa",
+      "content_path": "history/events/evt-yuraqqasa/index.md",
+      "section": "history",
+      "entity_kind": "event",
+      "summary": "高山呵，你看见一切，为什么却什么都不说。",
+      "start": {
+        "display": "646年",
+        "sort_value": 646001,
+        "calendar": "default",
+        "precision": "season",
+        "circa": false,
+        "calendar_label": "主历法"
+      },
+      "end": null,
+      "undated": false,
+      "undated_label": "日期不详",
+      "order_hint": 0,
+      "calendar": "default",
+      "calendar_label": "主历法",
+      "categories": [
+        "politics"
+      ],
+      "category_labels": [
+        "政治与制度"
+      ],
+      "status": "legendary",
+      "status_label": "传说记录",
+      "presentation": "document",
+      "summary_mode": "full",
+      "era_label": "近代 · 扩张期",
+      "source_refs": [],
+      "note": "",
+      "variants": []
+    },
+    {
       "id": "evt.tarusa-tablet-discovery",
       "title": "塔罗萨尔占星泥版",
       "page_ref": "/history/events/evt-tarusa-record",
@@ -567,7 +641,7 @@
       {
         "id": "default",
         "label": "主历法",
-        "count": 13
+        "count": 15
       }
     ],
     "categories": [
@@ -589,26 +663,26 @@
       {
         "id": "war",
         "label": "战争与冲突",
-        "count": 4
+        "count": 5
       },
       {
         "id": "politics",
         "label": "政治与制度",
-        "count": 6
+        "count": 7
       }
     ],
     "entity_kinds": [
       {
         "id": "event",
         "label": "event",
-        "count": 14
+        "count": 16
       }
     ],
     "statuses": [
       {
         "id": "legendary",
         "label": "传说记录",
-        "count": 1
+        "count": 2
       },
       {
         "id": "disputed",
@@ -628,7 +702,7 @@
       {
         "id": "verified",
         "label": "已核实",
-        "count": 7
+        "count": 8
       }
     ]
   }

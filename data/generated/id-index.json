@@ -104,6 +104,20 @@
       "瀹為獙鎴愬姛"
     ]
   },
+  "evt.achevez-la-guerre-des-cendres": {
+    "title": "灰烬战争结束",
+    "page_ref": "/history/events/evt-achevez-la-guerre-des-cendres",
+    "content_path": "history/events/evt-achevez-la-guerre-des-cendres/index.md",
+    "section": "history",
+    "entity_kind": "event",
+    "schema": "event.v1",
+    "catalog_no": "EVT-0503-001",
+    "aliases": [
+      "灰烬战争",
+      "因纳人与夏哈人",
+      "la-guerre-des-cendres"
+    ]
+  },
   "evt.falsetide": {
     "title": "乱潮年代",
     "page_ref": "/history/events/evt-falsetide",
@@ -282,6 +296,20 @@
       "历史",
       "神代之末",
       "特洛恩汗国"
+    ]
+  },
+  "evt.yuraqqasa": {
+    "title": "尤拉卡萨史诗",
+    "page_ref": "/history/events/evt-yuraqqasa",
+    "content_path": "history/events/evt-yuraqqasa/index.md",
+    "section": "history",
+    "entity_kind": "event",
+    "schema": "event.v1",
+    "catalog_no": "EVT-0646-001",
+    "aliases": [
+      "尤拉卡萨",
+      "“圣山”",
+      "尤拉卡萨建立"
     ]
   },
   "evt.zhaocheng": {
