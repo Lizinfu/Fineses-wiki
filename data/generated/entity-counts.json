@@ -1,8 +1,8 @@
 {
-  "total": 63,
+  "total": 64,
   "by_kind": {
     "artifact": 1,
-    "concept": 1,
+    "concept": 2,
     "event": 16,
     "nation": 16,
     "organization": 2,
@@ -14,7 +14,7 @@
   "by_section": {
     "artifacts": 1,
     "characters": 10,
-    "concepts": 1,
+    "concepts": 2,
     "ecology": 2,
     "history": 18,
     "nations": 27,

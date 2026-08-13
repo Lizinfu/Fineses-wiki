@@ -6,16 +6,16 @@ keywords:
   - 信息矿物
   - 晶体记录
 eras:
-  - 新历时代
+  - 现代
 topics:
   - 技术
   - 材料
   - 信息存储
 params:
-  id: con.echo-crystal
+  id: con.tyn
   entity_kind: concept
   library:
-    catalog_no: CON-0042
+    catalog_no: CON-0001
     access_level: public
     reliability: verified
     last_reviewed: 2026-07-16
@@ -33,7 +33,7 @@ params:
   classifications:
     cultures: []
     eras:
-      - 新历时代
+      - 现代
     regions: []
     government_forms: []
     topics:

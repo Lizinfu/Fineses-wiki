@@ -14,14 +14,30 @@
       "人鱼"
     ]
   },
-  "con.echo-crystal": {
+  "con.astronomy": {
+    "title": "天文学概述",
+    "page_ref": "/concepts/con-astronomy",
+    "content_path": "concepts/con-astronomy/index.md",
+    "section": "concepts",
+    "entity_kind": "concept",
+    "schema": "concept.v1",
+    "catalog_no": "CON-0002",
+    "aliases": [
+      "基本概念",
+      "世界的构成",
+      "拓云",
+      "星相学",
+      "“穹顶”"
+    ]
+  },
+  "con.tyn": {
     "title": "拓云",
     "page_ref": "/concepts/con-tyn",
     "content_path": "concepts/con-tyn/index.md",
     "section": "concepts",
     "entity_kind": "concept",
     "schema": "concept.v1",
-    "catalog_no": "CON-0042",
+    "catalog_no": "CON-0001",
     "aliases": [
       "回响晶体",
       "信息矿物",
