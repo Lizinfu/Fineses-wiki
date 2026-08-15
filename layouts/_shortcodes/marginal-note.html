@@ -1,0 +1,40 @@
+{{- $id := .Get "id" | default (printf "%s-note-%d" .Page.File.UniqueID
+.Ordinal) -}} {{- $term := .Get "term" | default "批注" -}} {{- $author := .Get
+"author" | default "未署名馆员" -}} {{- $tone := .Get "tone" | default "ink" -}}
+{{- $source := .Get "source" -}} {{- $label := printf "%s的批注" $term -}}
+
+<span
+  class="marginal-note"
+  data-marginal-note
+  data-state="closed"
+  data-tone="{{ $tone | urlize }}"
+>
+  <button
+    class="marginal-note__trigger"
+    type="button"
+    aria-controls="{{ $id }}"
+    aria-expanded="false"
+    data-marginal-note-trigger
+  >
+    <span class="marginal-note__term">{{ $term }}</span>
+    <sup class="marginal-note__marker" aria-hidden="true">注</sup>
+    <span class="visually-hidden">显示{{ $label }}</span>
+  </button>
+
+  <span
+    class="marginal-note__panel"
+    id="{{ $id }}"
+    role="note"
+    aria-label="{{ $label }}"
+    data-marginal-note-panel
+  >
+    <span class="marginal-note__heading">
+      <span class="marginal-note__code" aria-hidden="true">ANNOTATION</span>
+      <span class="marginal-note__author">{{ $author }}</span>
+    </span>
+    <span class="marginal-note__body">{{ .Inner | plainify }}</span>
+    {{ with $source }}
+    <span class="marginal-note__source">来源：{{ . }}</span>
+    {{ end }}
+  </span>
+</span>

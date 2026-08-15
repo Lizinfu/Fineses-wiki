@@ -12,11 +12,11 @@
     Inter, "Noto Sans SC", "Source Han Sans SC", "PingFang SC",
     "Microsoft YaHei", system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
   --font-display:
-    "Arial Narrow", "Roboto Condensed", Inter, "Noto Sans SC",
-    "PingFang SC", system-ui, sans-serif;
+    "Arial Narrow", "Roboto Condensed", Inter, "Noto Sans SC", "PingFang SC",
+    system-ui, sans-serif;
   --font-mono:
-    "JetBrains Mono", "SFMono-Regular", Consolas, "Liberation Mono",
-    monospace;
+    "JetBrains Mono", "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+  --font-annotation: "PingFang ChangAnTi", "Kaiti SC", KaiTi, STKaiti, serif;
 
   --text-2xs: 0.6875rem;
   --text-xs: 0.75rem;

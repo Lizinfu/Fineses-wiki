@@ -18,6 +18,7 @@ Every listed file is required. Missing resources stop the Hugo build.
   "styles/components/relation-advanced.css"
   "styles/components/timeline.css"
   "styles/components/archive-note.css"
+  "styles/components/marginal-note.css"
   "styles/components/markdown.css"
   "styles/components/media.css"
   "styles/components/search.css"
@@ -53,3 +54,16 @@ Every listed file is required. Missing resources stop the Hugo build.
   href="{{ $bundle.RelPermalink }}"
   integrity="{{ $bundle.Data.Integrity }}"
   crossorigin="anonymous">
+
+{{- $annotationFont := resources.Get "fonts/PingFangChangAnTi-2.ttf" -}}
+{{- if not $annotationFont -}}
+  {{- errorf "Required annotation font not found: assets/fonts/PingFangChangAnTi-2.ttf" -}}
+{{- end -}}
+{{- $annotationFont = $annotationFont | fingerprint "sha384" -}}
+<style>
+  @font-face {
+    font-family: "PingFang ChangAnTi";
+    src: url("{{ $annotationFont.RelPermalink }}") format("truetype");
+    font-display: swap;
+  }
+</style>

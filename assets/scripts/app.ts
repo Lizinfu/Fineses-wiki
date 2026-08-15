@@ -1,4 +1,5 @@
 import { initNavigation } from "./navigation";
+import { initMarginalNotes } from "./marginal-notes";
 import { initSearch } from "./search";
 import { initThemeToggle } from "./theme";
 import { initTableOfContents } from "./table-of-contents";
@@ -9,6 +10,7 @@ function boot(): void {
 
   initThemeToggle();
   initNavigation();
+  initMarginalNotes();
   initTableOfContents();
   initSearch();
 }

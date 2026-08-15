@@ -9,6 +9,8 @@ eras:
 topics:
   - 天文
   - 星象
+date: 2026-08-13
+lastmod: 2026-08-15
 params:
   id: con.astronomy
   entity_kind: concept
@@ -16,7 +18,7 @@ params:
     catalog_no: CON-0002
     access_level: public
     reliability: unverified
-    last_reviewed: 2026-08-13
+    last_reviewed: 2026-08-15
   schema: concept.v1
   canon_status: canon
   names:
@@ -57,7 +59,7 @@ params:
 
 哪怕如此，还是从一些必要的基础教育开始吧。比如，这个世界是怎么组成的？
 
-我们脚下这片被称为“世界”（Orbis）的土地，由另一片位于我们头顶的“天穹”（Firmamentum）覆盖。而在天穹之上，散布着被你们称为“天体”（celestial body）的发光体。而根据时间节律、昼夜物候的变化，我们又可以将天穹划分为“白昼”与“黑夜”。
+我们脚下这片被称为“世界”（Orbis）的土地，由另一片位于我们头顶的{{< marginal-note id="firmament-term" term="“天穹”（Firmamentum）" author="赫卡缇娜" tone="amber" source="馆长手稿，未归档" >}}这个词同时指向可观测的天幕与某种尚未被证实的解释框架。或许你不应该将这个词视为一种天文学术语。{{< /marginal-note >}}覆盖。而在天穹之上，散布着被你们称为“天体”（celestial body）的发光体。而根据时间节律、昼夜物候的变化，我们又可以将天穹划分为“白昼”与“黑夜”。
 
 在{{< redaction reveal="true" >}}当前已知可考的{{< /redaction >}}历史上，人类从未离开这片束缚他们长达千万年的土地，因此，人类对于这片“天穹”的了解，几乎完全依靠他们的观测和臆断。
 

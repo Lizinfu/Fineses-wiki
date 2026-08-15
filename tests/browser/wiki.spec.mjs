@@ -64,6 +64,26 @@ test("mobile navigation can be opened and closed", async ({
   await expect(toggle).toHaveAttribute("aria-expanded", "false");
 });
 
+test("marginal notes support pointer, keyboard, and mobile reading", async ({
+  page,
+}) => {
+  await page.goto("/concepts/con-astronomy/");
+  const trigger = page.locator("[data-marginal-note-trigger]").first();
+  const panel = page.locator("[data-marginal-note-panel]").first();
+
+  await expect(trigger).toBeVisible();
+  await trigger.focus();
+  await expect(trigger).toHaveAttribute("aria-expanded", "true");
+  await expect(panel).toBeVisible();
+
+  await page.keyboard.press("Escape");
+  await expect(trigger).toHaveAttribute("aria-expanded", "false");
+
+  await trigger.click();
+  await expect(trigger).toHaveAttribute("aria-expanded", "true");
+  await expect(panel).toContainText("尚未被证实的解释框架");
+});
+
 test("home page has no serious automated accessibility violations", async ({
   page,
 }) => {

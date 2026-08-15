@@ -144,6 +144,7 @@ name: "示例"
 | 普通信息框 | `{{< infobox title="标题" code="INFO" >}}内容支持 **Markdown**。{{< /infobox >}}`。`title` 默认“档案信息”，`code` 默认 `INFO`。 |
 | 馆藏批注 | `{{< archive-note title="编者按" status="info" source="档案号" >}}内容{{< /archive-note >}}`。可选 `title`、`status`、`source`；`status` 是显示标识，可使用 `info`、`warning`、`restricted` 等项目约定词。 |
 | 馆员注释 | `{{< librarian-note title="注释" author="馆员姓名" status="info" >}}内容{{< /librarian-note >}}`。可选 `title`、`author`、`status`。 |
+| 行内边注   | `{{< marginal-note id="firmament" term="天穹" author="赫卡缇娜" tone="amber" source="馆长手稿" >}}批注内容{{< /marginal-note >}}`。`term` 为页面中显示并触发批注的词语；`id` 建议稳定且同页唯一，用于深层链接与测试；可选 `author`、`tone`（`ink`、`amber`、`danger`、`verified`）及 `source`。批注只用于简短译注、质疑或馆员手记，不能承载正文不可缺失的事实。 |
 | 警告框 | `{{< warning title="注意" level="warning" >}}内容{{< /warning >}}`。可选 `title`、`level`。 |
 | 文献摘录 | `{{< document-excerpt type="record" title="档案摘录" date="第三纪元187年" issuer="发布机构" source="来源" condition="complete" >}}摘录正文{{< /document-excerpt >}}`。可选 `type`、`title`、`date`、`issuer`、`source`、`condition`。 |
 | 遮蔽文本 | `{{< redaction >}}不可公开的文字{{< /redaction >}}`；添加 `reveal="true"` 后可聚焦查看，默认不可展开。短代码内只保留纯文本。 |
