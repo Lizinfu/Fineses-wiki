@@ -1,0 +1,35 @@
+.library-comments {
+  margin-block-start: var(--space-12);
+  padding-block-start: var(--space-7);
+  border-block-start: 1px solid var(--line-default);
+}
+
+.library-comments__notice {
+  max-width: 66ch;
+  color: var(--text-muted);
+  font-size: var(--text-sm);
+  line-height: 1.75;
+}
+
+.library-comments__pending {
+  margin-block-start: var(--space-5);
+  padding: var(--space-5);
+  background: var(--surface-1);
+  border: 1px solid var(--line-default);
+}
+
+.library-comments__pending p {
+  margin-block: var(--space-2) 0;
+  color: var(--text-muted);
+  font-size: var(--text-sm);
+}
+
+.library-comments__pending a {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+}
+
+.library-comments .giscus {
+  width: 100%;
+  margin-block-start: var(--space-6);
+}

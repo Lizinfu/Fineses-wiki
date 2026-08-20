@@ -39,6 +39,27 @@
   line-height: 0.86;
 }
 
+.home-hero__library-link {
+  width: fit-content;
+  color: var(--text-muted);
+  border-block-end: 1px solid var(--line-default);
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  letter-spacing: 0.03em;
+  line-height: 1.6;
+  text-decoration: none;
+}
+
+.home-hero__library-link:hover,
+.home-hero__library-link:focus-visible {
+  color: var(--text-strong);
+  border-color: var(--accent);
+}
+
+.home-hero__library-link span {
+  color: var(--accent);
+}
+
 .home-hero__description {
   max-width: 52ch;
   color: var(--text-body);

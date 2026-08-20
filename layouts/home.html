@@ -18,6 +18,11 @@
           {{ site.Title }}
         </h1>
 
+        <a class="home-hero__library-link" href="{{ "library/" | relLangURL }}">
+          <span aria-hidden="true">↗</span>
+          图书馆概述：馆务、馆员与访问说明
+        </a>
+
         <p class="home-hero__description">
           {{ site.Params.description
             | default "面向公众开放的世界观馆藏、实体档案与交叉索引系统。" }}
@@ -115,7 +120,8 @@
         </span>
       </header>
 
-      {{ $recent := site.RegularPages.ByLastmod.Reverse | first 6 }}
+      {{ $recent := where site.RegularPages "Section" "ne" "library" }}
+      {{ $recent = $recent.ByLastmod.Reverse | first 6 }}
 
       {{ with $recent }}
         <div class="auto-grid home-recent">

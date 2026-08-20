@@ -1,0 +1,43 @@
+{{- $comments := site.Data.library.comments | default dict -}}
+{{- $enabled := $comments.enabled | default false -}}
+{{- $ready := and
+  $enabled
+  $comments.repo
+  $comments.repo_id
+  $comments.category_id
+-}}
+
+<section class="library-comments" aria-labelledby="library-comments-title" data-pagefind-ignore>
+  <h2 id="library-comments-title">留言区</h2>
+  <p class="library-comments__notice">
+    留言需要使用 GitHub 账号登录。请勿发布个人隐私、未公开材料、攻击性内容、广告或与本站无关的推广信息；留言不等同于正式设定或已核验资料。
+  </p>
+
+  {{ if $ready }}
+    <script
+      src="https://giscus.app/client.js"
+      data-repo="{{ $comments.repo }}"
+      data-repo-id="{{ $comments.repo_id }}"
+      data-category="{{ $comments.category }}"
+      data-category-id="{{ $comments.category_id }}"
+      data-mapping="{{ $comments.mapping | default "specific" }}"
+      data-term="{{ $comments.term | default "library-reader-messages" }}"
+      data-strict="1"
+      data-reactions-enabled="1"
+      data-emit-metadata="0"
+      data-input-position="bottom"
+      data-theme="{{ $comments.theme | default "preferred_color_scheme" }}"
+      data-lang="{{ $comments.lang | default "zh-CN" }}"
+      data-loading="lazy"
+      crossorigin="anonymous"
+      async></script>
+  {{ else }}
+    <div class="library-comments__pending" role="status">
+      <strong>留言系统正在准备中。</strong>
+      <p>维护者完成 GitHub Discussions 与 Giscus 配置后，评论会显示在这里。</p>
+      {{ with $comments.discussions_url }}
+        <a href="{{ . }}">前往 GitHub Discussions</a>
+      {{ end }}
+    </div>
+  {{ end }}
+</section>

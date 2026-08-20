@@ -1,0 +1,19 @@
+{{- with site.Data.library.institution.staff -}}
+  <section class="library-staff" aria-labelledby="library-staff-title">
+    <h2 id="library-staff-title">公开馆员名录</h2>
+    <div class="library-staff__grid">
+      {{- range . -}}
+        <article class="library-staff-card">
+          <img class="library-staff-card__portrait" src="{{ .image | relURL }}" alt="{{ .image_alt }}" loading="lazy" decoding="async">
+          <div class="library-staff-card__body">
+            <p class="library-staff-card__role">{{ .role }}</p>
+            <h3>{{ .name }}</h3>
+            <p>{{ .description }}</p>
+            {{ with .message }}<blockquote>{{ . }}</blockquote>{{ end }}
+            <a class="library-staff-card__email" href="mailto:{{ .email }}">{{ .email }}</a>
+          </div>
+        </article>
+      {{- end -}}
+    </div>
+  </section>
+{{- end -}}

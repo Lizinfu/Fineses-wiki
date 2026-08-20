@@ -1,0 +1,21 @@
+identity:
+  official_name: "菲恩尼斯图书馆"
+  short_name: "本馆"
+  subtitle: "互联档案检索系统"
+  mission: "保存、整理并向读者开放可追溯的世界资料。"
+
+staff:
+  - name: "赫卡缇娜"
+    role: "馆长"
+    image: "images/library/staff/hekateena-placeholder.svg"
+    image_alt: "赫卡缇娜馆长的肖像占位图"
+    email: "director@finesses-library.example"
+    description: "负责馆藏编审、开放政策与异常资料的最终核验。"
+    message: "请先确认材料的来源与上下文；一份可追溯的记录比一段令人信服的传闻更有价值。"
+  - name: "索引室"
+    role: "读者服务"
+    image: "images/library/staff/reader-services-placeholder.svg"
+    image_alt: "读者服务馆员的肖像占位图"
+    email: "reader@finesses-library.example"
+    description: "受理检索建议、访问问题、断链与公开条目的勘误反馈。"
+    message: "来信请附上页面链接、条目标题和问题描述，方便我们定位资料。"

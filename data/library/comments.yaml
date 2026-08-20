@@ -1,0 +1,11 @@
+# Giscus stores comments in GitHub Discussions. Fill repo_id and category_id after setup.
+enabled: true
+repo: "Lizinfu/Fineses-wiki"
+repo_id: "R_kgDOTY3DMg"
+category: "读者留言"
+category_id: "DIC_kwDOTY3DMs4DDzpy"
+mapping: "specific"
+term: "library-reader-messages"
+theme: "preferred_color_scheme"
+lang: "zh-CN"
+discussions_url: "https://github.com/Lizinfu/Fineses-wiki/discussions"

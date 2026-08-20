@@ -1,0 +1,18 @@
+{{- $links := slice
+  (dict "Label" "概述" "Path" "/library")
+  (dict "Label" "馆史" "Path" "/library/about")
+  (dict "Label" "访问须知" "Path" "/library/access-policy")
+  (dict "Label" "编目规则" "Path" "/library/catalog-rules")
+  (dict "Label" "馆员" "Path" "/library/staff")
+  (dict "Label" "联系方式" "Path" "/library/contact")
+  (dict "Label" "公告" "Path" "/library/notices")
+  (dict "Label" "读者留言" "Path" "/library/messages")
+-}}
+<nav class="library-nav" aria-label="图书馆导航">
+  {{- range $links -}}
+    {{- $page := site.GetPage .Path -}}
+    {{- if $page -}}
+      <a href="{{ $page.RelPermalink }}"{{ if eq $page.RelPermalink $.RelPermalink }} aria-current="page"{{ end }}>{{ .Label }}</a>
+    {{- end -}}
+  {{- end -}}
+</nav>

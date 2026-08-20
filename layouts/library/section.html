@@ -1,0 +1,19 @@
+{{ define "main" }}
+  <div class="library-page">
+    {{ partial "library/header.html" . }}
+    {{ partial "library/nav.html" . }}
+    <main class="library-content" data-pagefind-body>
+      {{ .Content }}
+      {{ with .Pages.ByWeight }}
+        <section class="library-directory" aria-labelledby="library-directory-title">
+          <h2 id="library-directory-title">图书馆导览</h2>
+          <ul>
+            {{ range . }}
+              <li><a href="{{ .RelPermalink }}"><strong>{{ .LinkTitle }}</strong><span>{{ .Description }}</span></a></li>
+            {{ end }}
+          </ul>
+        </section>
+      {{ end }}
+    </main>
+  </div>
+{{ end }}

@@ -1,0 +1,15 @@
+{{ define "main" }}
+  <div class="library-page">
+    {{ partial "library/header.html" . }}
+    {{ partial "library/nav.html" . }}
+    <main class="library-content" data-pagefind-body>
+      {{ .Content }}
+      {{ if eq .File.BaseFileName "staff" }}
+        {{ partial "library/staff-cards.html" . }}
+      {{ end }}
+      {{ if eq .File.BaseFileName "messages" }}
+        {{ partial "library/comments.html" . }}
+      {{ end }}
+    </main>
+  </div>
+{{ end }}

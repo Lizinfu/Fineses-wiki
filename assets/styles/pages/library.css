@@ -1,0 +1,87 @@
+/* A calm, self-contained reading surface for library administration pages. */
+
+.library-page {
+  width: min(100%, 76rem);
+  margin-inline: auto;
+  padding-block: clamp(2.5rem, 6vw, 5rem);
+}
+
+.library-header {
+  max-width: 46rem;
+  padding-block-end: var(--space-7);
+  border-block-end: 1px solid var(--line-default);
+}
+
+.library-header__home,
+.library-nav a {
+  color: var(--text-muted);
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  text-decoration: none;
+}
+
+.library-header__home:hover,
+.library-header__home:focus-visible,
+.library-nav a:hover,
+.library-nav a:focus-visible {
+  color: var(--text-strong);
+  text-decoration: underline;
+  text-underline-offset: 0.25rem;
+}
+
+.library-header__eyebrow {
+  margin: var(--space-7) 0 var(--space-2);
+  color: var(--accent);
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  letter-spacing: var(--tracking-wide);
+}
+
+.library-header h1 {
+  margin: 0;
+  font-size: clamp(2.3rem, 5vw, 4.5rem);
+  line-height: 1.05;
+}
+
+.library-header > p:last-child {
+  margin: var(--space-4) 0 0;
+  color: var(--text-muted);
+  font-size: var(--text-lg);
+  line-height: 1.65;
+}
+
+.library-nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2) var(--space-5);
+  padding-block: var(--space-5);
+  border-block-end: 1px solid var(--line-default);
+}
+
+.library-nav a[aria-current="page"] {
+  color: var(--text-strong);
+  font-weight: 700;
+}
+
+.library-content {
+  max-width: 46rem;
+  padding-block: clamp(2.5rem, 5vw, 4rem);
+  color: var(--text-body);
+  line-height: 1.8;
+}
+
+.library-content > :first-child { margin-block-start: 0; }
+.library-content h2 { margin-block-start: 2.7em; }
+.library-content a { color: inherit; text-decoration-color: var(--accent); text-underline-offset: 0.2rem; }
+
+.library-directory { margin-block-start: var(--space-10); }
+.library-directory ul { display: grid; gap: 0; padding: 0; list-style: none; border-block-start: 1px solid var(--line-default); }
+.library-directory li { border-block-end: 1px solid var(--line-default); }
+.library-directory a { display: grid; gap: var(--space-1); padding: var(--space-4) 0; text-decoration: none; }
+.library-directory a:hover strong { color: var(--accent); }
+.library-directory strong { color: var(--text-strong); }
+.library-directory span { color: var(--text-muted); font-size: var(--text-sm); }
+
+@media (max-width: 48rem) {
+  .library-page { padding-block-start: var(--space-7); }
+}

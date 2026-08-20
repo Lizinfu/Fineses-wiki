@@ -1,0 +1,10 @@
+.library-staff { max-width: 70rem; margin-block-start: var(--space-12); }
+.library-staff__grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr)); gap: var(--space-5); }
+.library-staff-card { overflow: hidden; background: var(--surface-1); border: 1px solid var(--line-default); }
+.library-staff-card__portrait { display: block; width: 100%; aspect-ratio: 4 / 3; object-fit: cover; background: var(--surface-2); }
+.library-staff-card__body { padding: var(--space-5); }
+.library-staff-card__role { margin: 0; color: var(--accent); font-family: var(--font-mono); font-size: var(--text-xs); letter-spacing: var(--tracking-wide); }
+.library-staff-card h3 { margin: var(--space-2) 0; color: var(--text-strong); font-size: var(--text-xl); }
+.library-staff-card__body > p:not(.library-staff-card__role) { margin: 0; color: var(--text-muted); font-size: var(--text-sm); line-height: 1.7; }
+.library-staff-card blockquote { margin: var(--space-4) 0; padding-inline-start: var(--space-3); border-inline-start: 2px solid var(--accent); color: var(--text-body); font-size: var(--text-sm); line-height: 1.7; }
+.library-staff-card__email { display: inline-block; margin-block-start: var(--space-4); color: var(--text-strong); font-family: var(--font-mono); font-size: var(--text-xs); overflow-wrap: anywhere; }

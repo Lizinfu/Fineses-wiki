@@ -1,0 +1,6 @@
+<header class="library-header">
+  <a class="library-header__home" href="{{ site.Home.RelPermalink }}">← 返回阅览大厅</a>
+  <p class="library-header__eyebrow">菲恩尼斯图书馆</p>
+  <h1>{{ .Title }}</h1>
+  {{ with .Description }}<p>{{ . }}</p>{{ end }}
+</header>
