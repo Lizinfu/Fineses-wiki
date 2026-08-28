@@ -1,0 +1,10 @@
+# 首页弹窗公告。修改 id 可让已关闭的读者再次看到新公告。
+enabled: true
+id: "2026-08-service-notice"
+kind: "notice"                 # notice | warning | info
+title: "图书馆公告"
+date: "2026-08-20"
+summary: "馆务与读者服务的最新说明。"
+body: "图书馆现已开放 **读者留言**，欢迎反馈阅读感受、检索建议与公开资料勘误。详细内容见馆务公告。"
+cta_label: "查看馆务公告"
+cta_url: "/library/notices/"

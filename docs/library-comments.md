@@ -24,3 +24,11 @@
 2. 使用非维护者 GitHub 账号发布一条测试留言，刷新页面后仍可读取。
 3. 在 Discussions 后台删除或锁定测试留言，确认网页同步反映。
 4. 确认其他页面未加载 `giscus.app/client.js`，且 Pagefind 不索引动态评论。
+
+## 主题同步
+
+留言区外框已套用站点的工业档案风（切角面板、accent 色条、等宽标签），并随站内主题切换自动保持浅色/深色一致。`assets/scripts/library-comments.ts` 会在 giscus 挂载后及站内主题切换时，通过 giscus 的 `setConfig` 消息把 `light`/`dark` 同步到 iframe。`data/library/comments.yaml` 中的 `theme` 仅作为无 JavaScript 时的静态降级值。
+
+## 首页公告弹窗
+
+首页（`/`）会展示一条来自 `data/library/announcement.yaml` 的公告弹窗，使用原生 `<dialog>` 实现：可关闭、按公告 `id` 记录（`localStorage`），修改 `id` 即可让已关闭的读者再次看到新公告。将 `enabled` 设为 `false` 可关闭弹窗；无 JavaScript 时会降级为页面内静态提示条。

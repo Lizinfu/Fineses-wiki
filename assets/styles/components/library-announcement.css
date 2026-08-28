@@ -1,0 +1,107 @@
+.library-announcement {
+  width: min(34rem, calc(100vw - 2rem));
+  max-height: calc(100vh - 2rem);
+  margin: auto;
+  padding: 0;
+  overflow: auto;
+  color: var(--text-body);
+  background: transparent;
+  border: 0;
+  outline: none;
+}
+
+.library-announcement::backdrop {
+  background: rgb(7 8 9 / 66%);
+  backdrop-filter: blur(2px);
+}
+
+.library-announcement__header {
+  display: grid;
+  gap: var(--space-2);
+  padding: var(--space-6) var(--space-6) var(--space-4);
+}
+
+.library-announcement__heading {
+  display: grid;
+  gap: var(--space-2);
+}
+
+.library-announcement__heading h2 {
+  margin: 0;
+  color: var(--text-strong);
+  font-size: var(--text-xl);
+  line-height: 1.1;
+}
+
+.library-announcement__meta {
+  color: var(--text-muted);
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  letter-spacing: var(--tracking-wide);
+  text-transform: uppercase;
+}
+
+.library-announcement__body {
+  padding: var(--space-2) var(--space-6);
+  color: var(--text-muted);
+  font-size: var(--text-sm);
+  line-height: 1.75;
+}
+
+.library-announcement__summary {
+  margin: 0;
+  color: var(--text-strong);
+}
+
+.library-announcement__content {
+  margin-block-start: var(--space-3);
+}
+
+.library-announcement__content a {
+  color: var(--text-strong);
+  text-decoration-color: var(--accent);
+  text-underline-offset: 0.2rem;
+}
+
+.library-announcement__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+  align-items: center;
+  padding: var(--space-4) var(--space-6) var(--space-6);
+}
+
+.library-announcement__dismiss {
+  cursor: pointer;
+}
+
+.library-announcement__cta {
+  padding: var(--space-2) var(--space-4);
+  color: var(--accent-ink);
+  background: var(--accent);
+  font-family: var(--font-display);
+  font-size: var(--text-sm);
+  font-weight: 700;
+  letter-spacing: var(--tracking-wide);
+  text-transform: uppercase;
+  text-decoration: none;
+}
+
+.library-announcement__cta:hover {
+  background: var(--accent-hover);
+}
+
+/* No-JS fallback: present the notice inline rather than hiding it. */
+.no-js dialog.library-announcement {
+  position: static;
+  display: block;
+  width: auto;
+  max-width: var(--content-readable);
+  margin: var(--gutter);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .library-announcement {
+    transition: none;
+  }
+}

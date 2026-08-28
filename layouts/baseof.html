@@ -27,6 +27,9 @@
   </div>
 
   {{ partial "navigation/mobile-drawer.html" . }}
+  {{ if .IsHome }}
+    {{ partial "library/announcement.html" . }}
+  {{ end }}
   {{ partial "head/scripts.html" . }}
 </body>
 </html>

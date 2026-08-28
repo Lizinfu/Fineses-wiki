@@ -3,6 +3,8 @@ import { initMarginalNotes } from "./marginal-notes";
 import { initSearch } from "./search";
 import { initThemeToggle } from "./theme";
 import { initTableOfContents } from "./table-of-contents";
+import { initLibraryComments } from "./library-comments";
+import { initLibraryAnnouncement } from "./library-announcement";
 
 function boot(): void {
   document.documentElement.classList.remove("no-js");
@@ -13,6 +15,8 @@ function boot(): void {
   initMarginalNotes();
   initTableOfContents();
   initSearch();
+  initLibraryComments();
+  initLibraryAnnouncement();
 }
 
 if (document.readyState === "loading") {

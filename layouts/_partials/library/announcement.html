@@ -1,0 +1,40 @@
+{{- $notice := site.Data.library.announcement | default dict -}}
+{{- if $notice.enabled -}}
+  <dialog
+    class="library-announcement"
+    id="library-announcement"
+    data-announcement-id="{{ $notice.id | default "default" }}"
+    aria-labelledby="library-announcement-title">
+    <div class="library-announcement__panel ui-cut-panel">
+      <header class="library-announcement__header">
+        <div class="library-announcement__heading">
+          <span class="ui-kicker">Public notice</span>
+          <h2 id="library-announcement-title">{{ $notice.title | default "图书馆公告" }}</h2>
+        </div>
+        {{ with $notice.date }}
+          <time class="library-announcement__meta" datetime="{{ . }}">{{ . }}</time>
+        {{ end }}
+      </header>
+
+      <div class="library-announcement__body">
+        {{ with $notice.summary }}
+          <p class="library-announcement__summary">{{ . }}</p>
+        {{ end }}
+        {{ with $notice.body }}
+          <div class="library-announcement__content">{{ . | markdownify }}</div>
+        {{ end }}
+      </div>
+
+      <footer class="library-announcement__actions">
+        <button class="library-announcement__dismiss" type="button" data-announcement-close>
+          我知道了
+        </button>
+        {{ with $notice.cta_url }}
+          <a class="library-announcement__cta" href="{{ . | relURL }}">
+            {{ $notice.cta_label | default "查看详情" }}
+          </a>
+        {{ end }}
+      </footer>
+    </div>
+  </dialog>
+{{- end -}}
