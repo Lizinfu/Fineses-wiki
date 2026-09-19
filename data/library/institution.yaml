@@ -14,7 +14,7 @@ staff:
     message: "有事找玛夏娜，别找我。"
   - name: "玛夏娜"
     role: "文史修订室"
-    image: "images/library/staff/reader-services-placeholder.svg"
+    image: "images/library/staff/mashyana.svg"
     image_alt: "玛夏娜"
     email: "mashyana@finesses-library.org"
     description: "受理检索建议、访问问题、断链与公开条目的勘误反馈。"
