@@ -2,16 +2,15 @@
 title: 特兰蒙达努斯
 description: Transmundanus
 keywords:
-  - 洛砚
-  - 档案学者
-  - 白潮调查
+  - 大地的国王
+  - 皇帝
 cultures:
-  - 岚原文化圈
+  - 克里希达核心圈
 eras:
-  - 新历时代
+  - 古代
 topics:
-  - 学术
-  - 公共卫生
+  - 帝制
+  - 共和国
 params:
   id: per.transmundanus
   entity_kind: person
@@ -28,26 +27,20 @@ params:
     native: []
     former: []
     aliases:
-      - 洛砚
-      - 档案学者
-      - 白潮调查
+      - 特兰蒙达
   classifications:
     cultures:
-      - 岚原文化圈
+      - 克里希达核心圈
     eras:
-      - 新历时代
+      - 古代
     regions: []
     government_forms: []
     topics:
-      - 学术
-      - 公共卫生
+      - 帝制
+      - 共和国
   relations: []
   allow_orphan: true
 ---
 
 ## 生平 
 通称特兰蒙达，拉门斯共和国的最后一位执行官，也是拉门斯帝国的第一位皇帝。
-## 主要活动
-她将分散在港务局、医院与船东协会中的记录汇总为统一档案，并据此证明白潮并非单一传染病事件。
-
-相关事件：{{< entity-ref page="/history/events/evt-white-tide" >}}。
