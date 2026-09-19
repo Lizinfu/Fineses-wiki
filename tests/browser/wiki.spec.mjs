@@ -13,6 +13,15 @@ function accessibilityViolationSummary(violations) {
   }));
 }
 
+async function dismissAnnouncement(page) {
+  const dialog = page.locator("#library-announcement");
+
+  if (await dialog.isVisible()) {
+    await dialog.locator("[data-announcement-close]").click();
+    await expect(dialog).not.toBeVisible();
+  }
+}
+
 const routes = [
   "/",
   "/search/",
@@ -35,6 +44,7 @@ test("keyboard users can reach and activate the skip link", async ({
   page,
 }) => {
   await page.goto("/");
+  await dismissAnnouncement(page);
   await page.keyboard.press("Tab");
   await expect(page.locator("a.skip-link")).toBeFocused();
   await page.keyboard.press("Enter");
@@ -46,6 +56,7 @@ test("mobile navigation can be opened and closed", async ({
 }, testInfo) => {
   test.skip(testInfo.project.name !== "mobile", "Mobile-only interaction.");
   await page.goto("/");
+  await dismissAnnouncement(page);
   const toggle = page.locator("[data-nav-toggle]");
   const drawer = page.locator("[data-mobile-nav]");
   const close = drawer.locator("[data-nav-close]").last();
@@ -62,6 +73,30 @@ test("mobile navigation can be opened and closed", async ({
   await expect(drawer).toHaveAttribute("data-state", "closed");
   await expect(drawer).toHaveAttribute("aria-hidden", "true");
   await expect(toggle).toHaveAttribute("aria-expanded", "false");
+});
+
+test("home announcement can be dismissed and stays dismissed", async ({
+  page,
+}) => {
+  await page.goto("/");
+  const dialog = page.locator("#library-announcement");
+  const announcementId = await dialog.getAttribute("data-announcement-id");
+
+  expect(announcementId).toBeTruthy();
+  await expect(dialog).toBeVisible();
+  await dialog.locator("[data-announcement-close]").click();
+  await expect(dialog).not.toBeVisible();
+  await expect
+    .poll(() =>
+      page.evaluate(
+        (id) => window.localStorage.getItem(`world-library-notice:${id}`),
+        announcementId,
+      ),
+    )
+    .toBe("1");
+
+  await page.reload();
+  await expect(dialog).not.toBeVisible();
 });
 
 test("marginal notes support pointer, keyboard, and mobile reading", async ({

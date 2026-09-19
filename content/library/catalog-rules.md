@@ -1,6 +1,6 @@
 ---
 title: "编目与引用规则"
-description: "说明馆藏条目的编号、来源记录、版本说明与建议引用方式。"
+description: "馆藏条目的编号、来源记录、版本说明与建议引用方式。"
 weight: 40
 ---
 
@@ -10,6 +10,8 @@ weight: 40
 
 ## 建议引用格式
 
-> 《条目标题》，菲恩尼斯图书馆，馆藏编号：`CATALOG-NO`，访问日期：`YYYY-MM-DD`。
+- 《条目标题》，菲恩尼斯图书馆，馆藏编号：`CATALOG-NO`，访问日期：`YYYY-MM-DD`。
 
-如条目附带来源、作者署名或修订记录，请尽量引用更接近原始材料的来源，而非只引用索引页。
+{{< librarian-note title="批注" author="赫卡缇娜" status="info" >}}玛夏娜，真的会有人引用我们的内容吗？{{< /librarian-note >}}
+
+{{< librarian-note title="批注" author="玛夏娜" status="info" >}}用您的说法，这是为了以防万一。{{< /librarian-note >}}
