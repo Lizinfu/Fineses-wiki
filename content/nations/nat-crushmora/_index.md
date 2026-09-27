@@ -44,6 +44,18 @@ params:
   allow_orphan: true
 ---
 
+卡什莫兰联邦（Crushmora Federation），是世界西部，一个堪称年轻的国家。近年来发展迅速，引得克里希达诸多王侯西望，是当今举世瞩目的一名新星。
+
+{{< figure
+  src="media/jiejing.png"
+  alt="街景"
+  caption="卡什莫兰东北街景。摄于972年。"
+  credit=""
+  layout="bleed"
+  size="full"
+  frame="document"
+>}}
+
 ## 地区和城市
 
 ---

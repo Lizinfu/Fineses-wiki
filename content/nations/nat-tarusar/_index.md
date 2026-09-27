@@ -43,9 +43,15 @@ params:
   allow_orphan: true
 ---
 
-Taru-sar
-
-（苏美尔）
+{{< figure
+  src="media/overview.png"
+  alt="塔罗萨尔"
+  caption="塔罗萨尔假想复原图"
+  credit=""
+  layout="bleed"
+  size="full"
+  frame="document"
+>}}
 
 ## 群星往事：星源沃土与纷争之地
 

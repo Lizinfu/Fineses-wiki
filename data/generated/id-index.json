@@ -376,9 +376,7 @@
     "schema": "nation.v1",
     "catalog_no": "NAT-0008",
     "aliases": [
-      "德诺尼塞",
-      "殷",
-      "文明古国"
+      "德诺尼塞"
     ]
   },
   "nat.esa": {
@@ -726,6 +724,22 @@
       "半仙",
       "长生种",
       "仙婆"
+    ]
+  },
+  "reg.aotelaisi": {
+    "title": "奥特莱斯",
+    "page_ref": "/regions/reg-aotelaisi",
+    "content_path": "regions/reg-aotelaisi/index.md",
+    "section": "regions",
+    "entity_kind": "region",
+    "schema": "region.v1",
+    "catalog_no": "REG-0100",
+    "aliases": [
+      "克里希达大陆",
+      "“伊拉”",
+      "奥特莱斯",
+      "凋亡之地",
+      "覆灭的生命"
     ]
   },
   "reg.cressida": {

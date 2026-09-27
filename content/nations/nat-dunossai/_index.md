@@ -27,9 +27,7 @@ params:
     short: ""
     native: []
     former: []
-    aliases:
-      - 殷
-      - 文明古国
+    aliases: []
   classifications:
     cultures:
       - 克里希达核心圈
@@ -45,12 +43,14 @@ params:
   allow_orphan: true
 ---
 
-## 概览 
+德诺尼塞（Dunossai），即德诺尼塞帝国，位于大陆西侧，历史悠久的帝国。
 
-岚原联合体位于大陆东部海岸，由十二个城邦与三个高原自治领组成。联合体以共同关税、海上防务和跨区域议会维持统一，各成员仍保留较强的地方立法权。
-## 社会与文化
-沿海港口形成了多语言商业社会；高原地区则保留以氏族和季节迁徙为核心的传统制度。
-
-{{< archive-note title="馆员注" >}}
-本页为结构验证用示例。正式录入时可以将概览保留在此页，并将政体、历史、社会文化拆分为下级页面。
-{{< /archive-note >}}
+{{< figure
+  src="media/overview.png"
+  alt="德诺尼塞"
+  caption="德诺尼塞街景。摄于977年。"
+  credit=""
+  layout="bleed"
+  size="full"
+  frame="document"
+>}}

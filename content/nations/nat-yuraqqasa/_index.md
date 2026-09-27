@@ -49,7 +49,7 @@ params:
 “寒冷的雪境”，这是第一批流浪至此的开拓者对这片群山的第一印象。
 
 {{< figure
-  src="media/ramus.png"
+  src="media/thelake.png"
   alt="圣湖"
   caption="尤拉卡萨“圣湖”。摄于■■■■。"
   credit=""

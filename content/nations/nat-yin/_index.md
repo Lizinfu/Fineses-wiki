@@ -46,7 +46,17 @@ params:
   allow_orphan: true
 ---
 
-Yin
+殷，位于世界东方，是世界上历史最悠久的国家之一，时至今日，依然以稳定，强盛的姿态屹立于世。
+
+{{< figure
+  src="media/overview.png"
+  alt="殷国街景"
+  caption="殷国街景。摄于989年。"
+  credit=""
+  layout="bleed"
+  size="full"
+  frame="document"
+>}}
 
 ## 地区与城市
 

@@ -45,6 +45,18 @@ params:
       target: per.jonin
 ---
 
+天照，世界极东半岛之上的国家。
+
+{{< figure
+  src="media/overview.png"
+  alt="西南"
+  caption="天照西南沿海城市。摄于992年。"
+  credit=""
+  layout="bleed"
+  size="full"
+  frame="document"
+>}}
+
 ## 地区与城市
 
 ---

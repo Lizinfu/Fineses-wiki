@@ -30,11 +30,11 @@ params:
 ---
 
 {{< figure
-  src="media/overview.png"
+  src="media/jiejing.png"
   alt="莫里哈温"
   caption=""
   credit="莫里哈温街景。选自《赫芙伦特国家旅游手册》（第二版）"
   layout="float-end"
   size="full"
-  frame="portrait"
+  frame="document"
 >}}

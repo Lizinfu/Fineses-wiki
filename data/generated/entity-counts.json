@@ -1,5 +1,5 @@
 {
-  "total": 64,
+  "total": 65,
   "by_kind": {
     "artifact": 1,
     "concept": 2,
@@ -7,7 +7,7 @@
     "nation": 16,
     "organization": 2,
     "person": 10,
-    "region": 2,
+    "region": 3,
     "species": 2,
     "subpage": 13
   },
@@ -19,6 +19,6 @@
     "history": 18,
     "nations": 27,
     "organizations": 2,
-    "regions": 2
+    "regions": 3
   }
 }

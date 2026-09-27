@@ -59,16 +59,6 @@ params:
 
 真的是先民灵光一闪，还是他们真的，看到了什么？
 
-{{< warning level="danger" title="剧透警告" >}}
-以下内容涉及主线结局。
-{{< /warning >}}
-
-{{< redaction >}}机密内容{{< /redaction >}}
-
-{{< redaction reveal="true" >}}
-可悬停或聚焦查看的内容
-{{< /redaction >}}
-
 {{< figure
   src="media/ramus.png"
   alt="拉基迪杜姆"
