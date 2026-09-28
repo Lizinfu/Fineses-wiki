@@ -45,7 +45,7 @@ params:
   relations: []
 ---
 
-埃萨勒，Aiśāla/Esa'el。
+埃萨勒（Aiśāla/Esa'el）。
 
 世界以南，遍布雨林与溪流的广阔土地。
 
