@@ -60,7 +60,7 @@ for (const filePath of htmlFiles) {
   }
 
   for (const image of source.matchAll(/<img\b[^>]*>/gi)) {
-    if (!/\balt=["'][^"']*["']/i.test(image[0])) {
+    if (!/\balt(?:\s*=\s*(?:"[^"]*"|'[^']*'|[^\s>]+))?(?=\s|>)/i.test(image[0])) {
       warnings.push(`${relative}: an <img> has no alt attribute.`);
     }
   }

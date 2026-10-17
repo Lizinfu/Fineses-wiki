@@ -1,0 +1,50 @@
+version: 1
+
+# 参考图只用于生成瓦片数据，不会作为网站运行时底图加载。
+sources:
+  world:
+    input: "assets/map-sources/world-political.png"
+    output: "data/maps/tiles.yaml"
+    grid:
+      columns: 64
+      rows: 28
+    crop:
+      left: 0.007
+      right: 0.007
+      top: 0.007
+      bottom: 0.007
+    region_sampling:
+      samples: 7
+      radius_x: 0.46
+      radius_y: 0.46
+      color_tolerance: 74
+      minimum_region_ratio: 0.16
+    regions:
+      country.crushmora:
+        color: [76, 223, 249]
+      country.tarusar:
+        color: [249, 243, 76]
+      country.esael:
+        color: [11, 168, 44]
+      country.inibholc:
+        color: [49, 107, 204]
+      country.muocils:
+        color: [214, 12, 227]
+      country.dunossai:
+        color: [255, 108, 0]
+      country.havfrentyr:
+        color: [1, 255, 222]
+      country.khaos:
+        color: [59, 167, 202]
+      country.sivlanzio:
+        color: [67, 0, 237]
+      country.sirena:
+        color: [0, 24, 255]
+      country.amaterasu:
+        color: [241, 255, 14]
+      country.yin:
+        color: [255, 0, 0]
+      country.yuraqqasa:
+        color: [169, 205, 0]
+      special.uninhabited:
+        color: [255, 255, 255]

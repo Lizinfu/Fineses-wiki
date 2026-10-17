@@ -1,0 +1,13 @@
+version: 1
+
+# 这里记录不能仅凭视觉近似判断的世界级空间关系。
+# 校验器会在政治覆盖层完成优先级解析后检查这些约束。
+relations:
+  - id: relation.inibholc-dunossai
+    map_id: world
+    areas:
+      - country.inibholc
+      - country.dunossai
+    constraints:
+      land_border: true
+      shared_water_boundary: bay

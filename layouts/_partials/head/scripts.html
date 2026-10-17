@@ -19,3 +19,24 @@
   integrity="{{ $script.Data.Integrity }}"
   crossorigin="anonymous"
   defer></script>
+
+{{- if eq .Layout "atlas" -}}
+  {{- $atlasEntry := resources.Get "scripts/map-entry.ts" -}}
+  {{- if not $atlasEntry -}}
+    {{- errorf "Required script not found: assets/scripts/map-entry.ts" -}}
+  {{- end -}}
+  {{- $atlasScript := $atlasEntry
+    | js.Build (dict
+      "targetPath" "js/atlas.js"
+      "format" "iife"
+      "target" "es2018"
+      "minify" true
+    )
+    | fingerprint "sha384"
+  -}}
+  <script
+    src="{{ $atlasScript.RelPermalink }}"
+    integrity="{{ $atlasScript.Data.Integrity }}"
+    crossorigin="anonymous"
+    defer></script>
+{{- end -}}

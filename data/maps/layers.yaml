@@ -1,0 +1,23 @@
+# 程序化六边形地图。陆地瓦片由参考图生成，网站运行时不加载底图。
+maps:
+  - id: world
+    title: "世界总图"
+    type: hex
+    mask_id: world
+    grid:
+      columns: 64
+      rows: 28
+      hex_size: 24
+      gap: 0.9
+      orientation: flat
+    min_zoom: 0.18
+    max_zoom: 5
+    default_zoom: 0.72
+    default_center:
+      col: 31.5
+      row: 13.5
+    wrap_x: true
+    appearance:
+      palette: political-pastel
+      relief: subtle
+      material: paper

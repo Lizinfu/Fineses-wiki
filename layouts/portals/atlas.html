@@ -1,0 +1,123 @@
+{{ define "main" }}
+  {{- $maps := site.Data.maps.layers.maps | default (slice) -}}
+  {{- $allLocations := site.Data.maps.locations.locations | default (slice) -}}
+  {{- $allAreas := site.Data.maps.areas.areas | default (slice) -}}
+  {{- $activeMap := dict -}}
+  {{- with first 1 $maps -}}
+    {{- $activeMap = index . 0 -}}
+  {{- end -}}
+  {{- $locations := slice -}}
+  {{- $areas := slice -}}
+  {{- with $activeMap.id -}}
+    {{- $locations = where $allLocations "map_id" . -}}
+    {{- $areas = where $allAreas "map_id" . -}}
+  {{- end -}}
+  {{- $countryAreas := where $areas "layer" "country" -}}
+  {{- $indexedCount := add (len $countryAreas) (len $locations) -}}
+  {{- $entities := index site.Data.generated "id-index" -}}
+  {{- $tileMasks := site.Data.maps.tiles.masks | default (dict) -}}
+  {{- $mapData := dict "maps" $maps "locations" $locations "areas" $areas "entities" $entities "tile_masks" $tileMasks -}}
+  <div class="page-main__inner atlas-page" data-atlas>
+    {{ partial "navigation/breadcrumbs.html" . }}
+
+    <header class="atlas-hero">
+      <div>
+        <span class="ui-label">ATLAS / MAP SYSTEM</span>
+        <h1 class="list-hero__title">{{ .Title }}</h1>
+        <p class="list-hero__description">{{ .Description }}</p>
+      </div>
+      <span class="ui-index">{{ $indexedCount }} MAP ENTRIES INDEXED</span>
+    </header>
+
+    <section class="atlas-workspace" aria-label="交互式地图工作区">
+      <aside class="atlas-directory" aria-label="地图地点目录">
+        <label class="atlas-search-label" for="atlas-location-search">地点检索</label>
+        <input id="atlas-location-search" class="atlas-search" type="search" placeholder="输入地点或实体名称" data-atlas-search>
+        <div class="atlas-directory__meta">
+          <span data-atlas-count aria-live="polite">{{ $indexedCount }} 个地图条目</span>
+          <button class="atlas-text-button" type="button" data-atlas-reset>重置视野</button>
+        </div>
+        <ul class="atlas-location-list" data-atlas-list>
+          {{ range $countryAreas }}
+            {{- $entity := index $entities .entity_id -}}
+            <li data-atlas-area-item data-area-id="{{ .id }}" data-entity-id="{{ .entity_id }}">
+              <button type="button" class="atlas-location" data-atlas-area-focus="{{ .id }}" aria-pressed="false">
+                <span class="atlas-location__kind">{{ if eq .political_status "unruled" }}无政权地区{{ else }}国家{{ end }}</span>
+                <strong>{{ .label }}</strong>
+                <span>{{ if eq .detail_status "awaiting-source" }}世界总图 · 详图待补充{{ else }}可进入详图{{ end }}</span>
+              </button>
+              {{ with $entity }}<a class="atlas-entry-link" href="{{ .page_ref | relURL }}">打开条目</a>{{ end }}
+            </li>
+          {{ end }}
+          {{ range $locations }}
+            {{- $entity := index $entities .entity_id -}}
+            <li data-atlas-location-item data-location-id="{{ .id }}" data-entity-id="{{ .entity_id }}">
+              <button type="button" class="atlas-location" data-atlas-focus="{{ .id }}" aria-pressed="false">
+                <span class="atlas-location__kind">{{ .kind | default "地点" }}</span>
+                <strong>{{ .label }}</strong>
+                {{ with $entity }}<span>{{ .title }}</span>{{ end }}
+              </button>
+            </li>
+          {{ end }}
+          {{ if eq $indexedCount 0 }}
+            <li class="atlas-empty">地图地点资料尚未录入。</li>
+          {{ end }}
+        </ul>
+      </aside>
+
+      <div class="atlas-stage" data-atlas-stage tabindex="0" aria-label="地图画布">
+        <div class="atlas-stage__toolbar" role="toolbar" aria-label="地图控制">
+          <button type="button" class="atlas-control" data-atlas-zoom="in" aria-label="放大地图">+</button>
+          <button type="button" class="atlas-control" data-atlas-zoom="out" aria-label="缩小地图">−</button>
+          <span class="atlas-zoom-readout" data-atlas-zoom-readout>100%</span>
+        </div>
+        <div class="atlas-canvas" data-atlas-canvas>
+          {{ with $activeMap.id }}
+          <div class="atlas-map-layer" data-atlas-map>
+            {{ range $areas }}
+              <button
+                type="button"
+                class="atlas-area-label atlas-area-label--{{ .layer }}"
+                data-atlas-area-label
+                data-atlas-area-focus="{{ .id }}"
+                data-col="{{ index .label_anchor 0 }}"
+                data-row="{{ index .label_anchor 1 }}"
+                aria-label="定位{{ .label }}">
+                {{ .label }}
+              </button>
+            {{ end }}
+            {{ range $locations }}
+              {{- $entity := index $entities .entity_id -}}
+              <a class="atlas-marker" data-atlas-marker data-location-id="{{ .id }}" data-col="{{ .col }}" data-row="{{ .row }}" href="{{ with $entity }}{{ .page_ref | relURL }}{{ else }}#{{ end }}" aria-label="打开{{ .label }}条目">
+                <span aria-hidden="true"></span><b>{{ .label }}</b>
+              </a>
+            {{ end }}
+          </div>
+          <noscript>
+            <div class="atlas-placeholder">
+              <span class="ui-label">INTERACTIVE MAP</span>
+              <strong>六边形地图需要 JavaScript</strong>
+              <p>地点目录和实体链接仍可使用；启用 JavaScript 后可浏览完整地图。</p>
+            </div>
+          </noscript>
+          {{ else }}
+          <div class="atlas-placeholder" data-atlas-placeholder>
+            <span class="ui-label">MAP DATA REQUIRED</span>
+            <strong>等待地图配置</strong>
+            <p>补充六边形网格和大陆轮廓数据后，地图会显示在这里。</p>
+          </div>
+          {{ end }}
+        </div>
+        <aside class="atlas-selection" data-atlas-selection hidden aria-live="polite">
+          <span class="atlas-selection__kind" data-atlas-selection-kind></span>
+          <strong data-atlas-selection-title></strong>
+          <span data-atlas-selection-status></span>
+          <a data-atlas-selection-link hidden>打开条目</a>
+        </aside>
+        <p class="atlas-stage__hint">点击国家名称聚焦 · 拖拽移动 · 按钮缩放</p>
+      </div>
+    </section>
+
+    <script id="atlas-map-data" type="application/json">{{ $mapData | jsonify | safeHTML }}</script>
+  </div>
+{{ end }}

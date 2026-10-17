@@ -1,0 +1,182 @@
+version: 2
+
+# 国家和无人区的瓦片归属由 world-political.png 的颜色直接生成。
+# 大陆与海洋特殊区域仍使用轻量多边形，仅负责总览标签和聚焦范围。
+areas:
+  - id: continent.kukulcan
+    map_id: world
+    layer: continent
+    entity_id: reg.kukulcan
+    label: "库库尔坎"
+    label_anchor: [17, 11]
+    polygons:
+      - [[4, 6], [22, 5], [31, 9], [32, 22], [17, 25], [5, 19]]
+
+  - id: continent.cressida
+    map_id: world
+    layer: continent
+    entity_id: reg.cressida
+    label: "克里希达"
+    label_anchor: [40, 4]
+    polygons:
+      - [[21, 1], [52, 1], [59, 7], [51, 16], [38, 20], [27, 14], [20, 7]]
+
+  - id: continent.qihuang
+    map_id: world
+    layer: continent
+    entity_id: reg.qihuang
+    label: "齐黄大地"
+    label_anchor: [52, 11]
+    wrap_x: true
+    polygons:
+      - [[46, 8], [64, 7], [64, 24], [49, 22], [44, 15]]
+      - [[0, 1], [13, 1], [13, 11], [0, 11]]
+
+  - id: country.crushmora
+    map_id: world
+    layer: country
+    entity_id: nat.cru
+    label: "卡什莫兰"
+    label_anchor: [17, 10]
+    tile_source: generated
+    style_token: country-crushmora
+    detail_status: awaiting-source
+
+  - id: country.tarusar
+    map_id: world
+    layer: country
+    entity_id: nat.tar
+    label: "塔罗萨尔"
+    label_anchor: [12, 15]
+    tile_source: generated
+    style_token: country-tarusar
+    political_status: unruled
+    detail_status: awaiting-source
+
+  - id: country.esael
+    map_id: world
+    layer: country
+    entity_id: nat.esa
+    label: "埃萨勒"
+    label_anchor: [23, 17]
+    tile_source: generated
+    style_token: country-esael
+    detail_status: awaiting-source
+
+  - id: country.inibholc
+    map_id: world
+    layer: country
+    entity_id: nat.ini
+    label: "伊琳沃克"
+    label_anchor: [27, 7]
+    tile_source: generated
+    style_token: country-inibholc
+    detail_status: awaiting-source
+
+  - id: country.muocils
+    map_id: world
+    layer: country
+    entity_id: nat.muo
+    label: "莫尔索斯"
+    label_anchor: [40, 4]
+    tile_source: generated
+    style_token: country-muocils
+    detail_status: awaiting-source
+
+  - id: country.dunossai
+    map_id: world
+    layer: country
+    entity_id: nat.dun
+    label: "德诺尼塞"
+    label_anchor: [34, 8]
+    tile_source: generated
+    style_token: country-dunossai
+    detail_status: awaiting-source
+
+  - id: country.havfrentyr
+    map_id: world
+    layer: country
+    entity_id: nat.hav
+    label: "赫芙伦特"
+    label_anchor: [48, 5]
+    tile_source: generated
+    style_token: country-havfrentyr
+    detail_status: awaiting-source
+
+  - id: country.khaos
+    map_id: world
+    layer: country
+    entity_id: nat.kha
+    label: "卡俄斯"
+    label_anchor: [34, 12]
+    tile_source: generated
+    style_token: country-khaos
+    detail_status: awaiting-source
+
+  - id: country.sivlanzio
+    map_id: world
+    layer: country
+    entity_id: nat.siv
+    label: "斯兰缇亚"
+    label_anchor: [38, 10]
+    tile_source: generated
+    style_token: country-sivlanzio
+    detail_status: awaiting-source
+
+  - id: country.sirena
+    map_id: world
+    layer: country
+    entity_id: nat.sir
+    label: "塞壬"
+    label_anchor: [55, 4]
+    tile_source: generated
+    style_token: country-sirena
+    detail_status: awaiting-source
+
+  - id: country.amaterasu
+    map_id: world
+    layer: country
+    entity_id: nat.ama
+    label: "天照"
+    label_anchor: [52, 11]
+    tile_source: generated
+    style_token: country-amaterasu
+    detail_status: awaiting-source
+
+  - id: country.yin
+    map_id: world
+    layer: country
+    entity_id: nat.yin
+    label: "殷"
+    label_anchor: [50, 14]
+    tile_source: generated
+    style_token: country-yin
+    detail_status: awaiting-source
+
+  - id: country.yuraqqasa
+    map_id: world
+    layer: country
+    entity_id: nat.yur
+    label: "尤拉卡萨"
+    label_anchor: [54, 13]
+    tile_source: generated
+    style_token: country-yuraqqasa
+    detail_status: awaiting-source
+
+  - id: special.uninhabited
+    map_id: world
+    layer: special
+    label: "无人区"
+    label_anchor: [59, 14]
+    tile_source: generated
+    style_token: unexplored
+
+  - id: special.ring-void
+    map_id: world
+    layer: special
+    label: "环形空洞"
+    label_anchor: [43, 20]
+    style_token: anomaly
+    applies_to: ocean
+    polygons:
+      - [[38, 16], [48, 15], [50, 22], [45, 25], [37, 22]]

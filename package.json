@@ -13,8 +13,10 @@
     "build": "npm run wiki:build",
     "check": "npm run wiki:validate",
     "content:migrate-v1": "node scripts/migrate-frontmatter-v1.mjs --write",
+    "map:generate": "node scripts/generate-hex-map.mjs",
+    "map:check": "node scripts/generate-hex-map.mjs --check",
     "wiki:prepare": "node scripts/prepare-wiki.mjs",
-    "wiki:validate": "node scripts/validate-content-model.mjs && node scripts/prepare-wiki.mjs --check",
+    "wiki:validate": "node scripts/validate-content-model.mjs && npm run map:check && node scripts/validate-maps.mjs && node scripts/prepare-wiki.mjs --check",
     "wiki:report": "node scripts/print-content-report.mjs && node scripts/print-timeline-report.mjs",
     "quality:source": "node scripts/check-media-budget.mjs",
     "quality:site": "node scripts/check-site-output.mjs",
@@ -28,6 +30,7 @@
     "@axe-core/playwright": "^4.10.2",
     "@playwright/test": "^1.55.1",
     "pagefind": "1.5.2",
+    "sharp": "^0.35.5",
     "yaml": "2.9.0"
   }
 }

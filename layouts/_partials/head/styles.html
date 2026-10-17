@@ -59,6 +59,19 @@ Every listed file is required. Missing resources stop the Hugo build.
   integrity="{{ $bundle.Data.Integrity }}"
   crossorigin="anonymous">
 
+{{- if eq .Layout "atlas" -}}
+  {{- $atlasStyles := resources.Get "styles/pages/atlas.css" -}}
+  {{- if not $atlasStyles -}}
+    {{- errorf "Required stylesheet not found: assets/styles/pages/atlas.css" -}}
+  {{- end -}}
+  {{- $atlasStyles = $atlasStyles | minify | fingerprint "sha384" -}}
+  <link
+    rel="stylesheet"
+    href="{{ $atlasStyles.RelPermalink }}"
+    integrity="{{ $atlasStyles.Data.Integrity }}"
+    crossorigin="anonymous">
+{{- end -}}
+
 {{- $annotationFont := resources.Get "fonts/PingFangChangAnTi-2.ttf" -}}
 {{- if not $annotationFont -}}
   {{- errorf "Required annotation font not found: assets/fonts/PingFangChangAnTi-2.ttf" -}}

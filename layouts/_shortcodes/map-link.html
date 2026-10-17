@@ -1,0 +1,8 @@
+{{- $entity := .Get "entity" | default "" -}}
+{{- $location := .Get "location" | default "" -}}
+{{- $label := .Get "label" | default "在地图中查看" -}}
+{{- if and (not $location) (not $entity) -}}
+  {{- errorf "map-link requires either location or entity: %s" .Position -}}
+{{- end -}}
+{{- $query := cond $location (printf "?loc=%s" ($location | urlquery)) (printf "?entity=%s" ($entity | urlquery)) -}}
+<a class="map-link" href="{{ "portals/atlas/" | relURL }}{{ $query }}">{{ $label }}</a>

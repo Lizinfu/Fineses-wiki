@@ -804,6 +804,19 @@
       "高风原野"
     ]
   },
+  "reg.kukulcan": {
+    "title": "库库尔坎地区",
+    "page_ref": "/regions/reg-kukulcan",
+    "content_path": "regions/reg-kukulcan/index.md",
+    "section": "regions",
+    "entity_kind": "region",
+    "schema": "region.v1",
+    "catalog_no": "REG-0003",
+    "aliases": [
+      "库库尔坎",
+      "库库尔坎地区"
+    ]
+  },
   "reg.muo.bop": {
     "title": "沃罗柏勒",
     "page_ref": "/nations/nat-muocils/region/bopobolo",

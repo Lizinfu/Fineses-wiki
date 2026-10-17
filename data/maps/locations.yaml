@@ -1,0 +1,9 @@
+# 地点使用六边形列/行坐标，并继续引用现有实体的稳定 params.id。
+locations:
+  - id: loc.muocils
+    entity_id: nat.muo
+    map_id: world
+    label: "莫尔索斯"
+    kind: region
+    col: 40
+    row: 4

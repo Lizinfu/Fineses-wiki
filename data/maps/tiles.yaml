@@ -1,0 +1,797 @@
+version: 1
+generated_notice: 由 npm run map:generate 生成，请勿手工修改。
+masks:
+  world:
+    source: assets/map-sources/world-political.png
+    source_sha256: cc21ef20c4ed8071b7ddc6d2b9efb94e101f76c912a09bbb424b7579d1c629a7
+    source_dimensions:
+      - 4096
+      - 2048
+    crop_pixels:
+      left: 29
+      top: 14
+      width: 4038
+      height: 2020
+    classification:
+      method: palette-majority
+      samples: 7
+      color_tolerance: 74
+      minimum_region_ratio: 0.16
+    grid:
+      columns: 64
+      rows: 28
+      orientation: flat
+      offset: odd-q
+    land_tile_count: 626
+    land_rows:
+      - row: 0
+        ranges:
+          - - 2
+            - 2
+          - - 13
+            - 24
+      - row: 1
+        ranges:
+          - - 9
+            - 20
+          - - 41
+            - 41
+          - - 43
+            - 43
+          - - 45
+            - 45
+          - - 47
+            - 47
+          - - 49
+            - 49
+      - row: 2
+        ranges:
+          - - 0
+            - 5
+          - - 10
+            - 12
+          - - 14
+            - 21
+          - - 23
+            - 23
+          - - 25
+            - 25
+          - - 31
+            - 31
+          - - 33
+            - 33
+          - - 35
+            - 35
+          - - 37
+            - 51
+          - - 55
+            - 55
+      - row: 3
+        ranges:
+          - - 2
+            - 8
+          - - 14
+            - 52
+          - - 54
+            - 57
+      - row: 4
+        ranges:
+          - - 9
+            - 10
+          - - 14
+            - 14
+          - - 16
+            - 16
+          - - 18
+            - 20
+          - - 22
+            - 51
+          - - 55
+            - 56
+      - row: 5
+        ranges:
+          - - 9
+            - 10
+          - - 22
+            - 22
+          - - 24
+            - 24
+          - - 26
+            - 49
+          - - 55
+            - 56
+      - row: 6
+        ranges:
+          - - 9
+            - 9
+          - - 26
+            - 48
+          - - 54
+            - 56
+      - row: 7
+        ranges:
+          - - 8
+            - 8
+          - - 14
+            - 15
+          - - 17
+            - 19
+          - - 21
+            - 21
+          - - 25
+            - 29
+          - - 31
+            - 46
+      - row: 8
+        ranges:
+          - - 15
+            - 21
+          - - 26
+            - 26
+          - - 28
+            - 28
+          - - 31
+            - 40
+          - - 42
+            - 44
+          - - 46
+            - 46
+          - - 51
+            - 51
+      - row: 9
+        ranges:
+          - - 13
+            - 13
+          - - 15
+            - 22
+          - - 30
+            - 38
+          - - 49
+            - 53
+      - row: 10
+        ranges:
+          - - 7
+            - 7
+          - - 9
+            - 22
+          - - 32
+            - 39
+          - - 48
+            - 55
+          - - 57
+            - 57
+      - row: 11
+        ranges:
+          - - 6
+            - 22
+          - - 32
+            - 38
+          - - 48
+            - 59
+      - row: 12
+        ranges:
+          - - 5
+            - 22
+          - - 32
+            - 37
+          - - 48
+            - 61
+      - row: 13
+        ranges:
+          - - 1
+            - 2
+          - - 5
+            - 23
+          - - 34
+            - 34
+          - - 46
+            - 63
+      - row: 14
+        ranges:
+          - - 1
+            - 2
+          - - 5
+            - 25
+          - - 27
+            - 27
+          - - 39
+            - 39
+          - - 45
+            - 63
+      - row: 15
+        ranges:
+          - - 6
+            - 27
+          - - 29
+            - 30
+          - - 38
+            - 41
+          - - 47
+            - 60
+          - - 62
+            - 62
+      - row: 16
+        ranges:
+          - - 6
+            - 30
+          - - 40
+            - 40
+          - - 47
+            - 58
+      - row: 17
+        ranges:
+          - - 2
+            - 2
+          - - 8
+            - 8
+          - - 10
+            - 31
+          - - 40
+            - 40
+          - - 54
+            - 57
+      - row: 18
+        ranges:
+          - - 10
+            - 10
+          - - 12
+            - 12
+          - - 14
+            - 26
+          - - 28
+            - 28
+          - - 31
+            - 32
+          - - 40
+            - 40
+          - - 56
+            - 56
+      - row: 19
+        ranges:
+          - - 16
+            - 18
+          - - 20
+            - 24
+          - - 27
+            - 27
+      - row: 20
+        ranges:
+          - - 22
+            - 22
+          - - 29
+            - 29
+          - - 31
+            - 32
+      - row: 21
+        ranges:
+          - - 29
+            - 32
+    area_masks:
+      country.crushmora:
+        tile_count: 45
+        tile_rows:
+          - row: 7
+            ranges:
+              - - 14
+                - 15
+              - - 17
+                - 19
+              - - 21
+                - 21
+          - row: 8
+            ranges:
+              - - 15
+                - 21
+          - row: 9
+            ranges:
+              - - 13
+                - 13
+              - - 15
+                - 22
+          - row: 10
+            ranges:
+              - - 12
+                - 12
+              - - 14
+                - 22
+          - row: 11
+            ranges:
+              - - 14
+                - 22
+          - row: 12
+            ranges:
+              - - 16
+                - 16
+              - - 20
+                - 22
+      country.tarusar:
+        tile_count: 87
+        tile_rows:
+          - row: 10
+            ranges:
+              - - 7
+                - 7
+              - - 9
+                - 11
+              - - 13
+                - 13
+          - row: 11
+            ranges:
+              - - 6
+                - 13
+          - row: 12
+            ranges:
+              - - 5
+                - 15
+              - - 17
+                - 19
+          - row: 13
+            ranges:
+              - - 5
+                - 18
+              - - 20
+                - 20
+          - row: 14
+            ranges:
+              - - 5
+                - 18
+          - row: 15
+            ranges:
+              - - 6
+                - 16
+          - row: 16
+            ranges:
+              - - 6
+                - 15
+          - row: 17
+            ranges:
+              - - 8
+                - 8
+              - - 10
+                - 15
+          - row: 18
+            ranges:
+              - - 10
+                - 10
+              - - 12
+                - 12
+              - - 14
+                - 14
+      country.esael:
+        tile_count: 88
+        tile_rows:
+          - row: 13
+            ranges:
+              - - 19
+                - 19
+              - - 21
+                - 23
+          - row: 14
+            ranges:
+              - - 19
+                - 25
+              - - 27
+                - 27
+          - row: 15
+            ranges:
+              - - 17
+                - 27
+              - - 29
+                - 30
+          - row: 16
+            ranges:
+              - - 16
+                - 30
+          - row: 17
+            ranges:
+              - - 16
+                - 31
+          - row: 18
+            ranges:
+              - - 15
+                - 26
+              - - 28
+                - 28
+              - - 31
+                - 32
+          - row: 19
+            ranges:
+              - - 16
+                - 18
+              - - 20
+                - 24
+              - - 27
+                - 27
+          - row: 20
+            ranges:
+              - - 22
+                - 22
+              - - 29
+                - 29
+              - - 31
+                - 32
+          - row: 21
+            ranges:
+              - - 29
+                - 32
+      country.inibholc:
+        tile_count: 18
+        tile_rows:
+          - row: 5
+            ranges:
+              - - 27
+                - 31
+          - row: 6
+            ranges:
+              - - 26
+                - 31
+          - row: 7
+            ranges:
+              - - 25
+                - 29
+          - row: 8
+            ranges:
+              - - 26
+                - 26
+              - - 28
+                - 28
+      country.muocils:
+        tile_count: 127
+        tile_rows:
+          - row: 1
+            ranges:
+              - - 41
+                - 41
+              - - 43
+                - 43
+              - - 45
+                - 45
+              - - 47
+                - 47
+              - - 49
+                - 49
+          - row: 2
+            ranges:
+              - - 21
+                - 21
+              - - 23
+                - 23
+              - - 25
+                - 25
+              - - 31
+                - 31
+              - - 33
+                - 33
+              - - 35
+                - 35
+              - - 37
+                - 51
+          - row: 3
+            ranges:
+              - - 19
+                - 52
+          - row: 4
+            ranges:
+              - - 19
+                - 20
+              - - 22
+                - 48
+              - - 50
+                - 51
+          - row: 5
+            ranges:
+              - - 22
+                - 22
+              - - 24
+                - 24
+              - - 26
+                - 26
+              - - 32
+                - 32
+              - - 34
+                - 45
+          - row: 6
+            ranges:
+              - - 36
+                - 36
+              - - 38
+                - 45
+          - row: 7
+            ranges:
+              - - 40
+                - 46
+          - row: 8
+            ranges:
+              - - 42
+                - 44
+              - - 46
+                - 46
+      country.dunossai:
+        tile_count: 26
+        tile_rows:
+          - row: 5
+            ranges:
+              - - 33
+                - 33
+          - row: 6
+            ranges:
+              - - 32
+                - 35
+              - - 37
+                - 37
+          - row: 7
+            ranges:
+              - - 31
+                - 37
+          - row: 8
+            ranges:
+              - - 31
+                - 36
+          - row: 9
+            ranges:
+              - - 30
+                - 34
+          - row: 10
+            ranges:
+              - - 32
+                - 32
+              - - 34
+                - 34
+      country.havfrentyr:
+        tile_count: 8
+        tile_rows:
+          - row: 4
+            ranges:
+              - - 49
+                - 49
+          - row: 5
+            ranges:
+              - - 46
+                - 49
+          - row: 6
+            ranges:
+              - - 46
+                - 48
+      country.khaos:
+        tile_count: 11
+        tile_rows:
+          - row: 9
+            ranges:
+              - - 35
+                - 35
+          - row: 10
+            ranges:
+              - - 33
+                - 33
+              - - 35
+                - 35
+          - row: 11
+            ranges:
+              - - 32
+                - 35
+          - row: 12
+            ranges:
+              - - 32
+                - 34
+          - row: 13
+            ranges:
+              - - 34
+                - 34
+      country.sivlanzio:
+        tile_count: 19
+        tile_rows:
+          - row: 7
+            ranges:
+              - - 38
+                - 39
+          - row: 8
+            ranges:
+              - - 37
+                - 40
+          - row: 9
+            ranges:
+              - - 36
+                - 38
+          - row: 10
+            ranges:
+              - - 36
+                - 39
+          - row: 11
+            ranges:
+              - - 36
+                - 38
+          - row: 12
+            ranges:
+              - - 35
+                - 37
+      country.sirena:
+        tile_count: 12
+        tile_rows:
+          - row: 2
+            ranges:
+              - - 55
+                - 55
+          - row: 3
+            ranges:
+              - - 54
+                - 57
+          - row: 4
+            ranges:
+              - - 55
+                - 56
+          - row: 5
+            ranges:
+              - - 55
+                - 56
+          - row: 6
+            ranges:
+              - - 54
+                - 56
+      country.amaterasu:
+        tile_count: 20
+        tile_rows:
+          - row: 8
+            ranges:
+              - - 51
+                - 51
+          - row: 9
+            ranges:
+              - - 49
+                - 53
+          - row: 10
+            ranges:
+              - - 48
+                - 55
+          - row: 11
+            ranges:
+              - - 48
+                - 48
+              - - 50
+                - 54
+      country.yin:
+        tile_count: 32
+        tile_rows:
+          - row: 11
+            ranges:
+              - - 49
+                - 49
+          - row: 12
+            ranges:
+              - - 48
+                - 51
+          - row: 13
+            ranges:
+              - - 46
+                - 52
+          - row: 14
+            ranges:
+              - - 45
+                - 52
+          - row: 15
+            ranges:
+              - - 47
+                - 52
+          - row: 16
+            ranges:
+              - - 47
+                - 52
+      country.yuraqqasa:
+        tile_count: 5
+        tile_rows:
+          - row: 11
+            ranges:
+              - - 55
+                - 55
+          - row: 12
+            ranges:
+              - - 52
+                - 54
+          - row: 13
+            ranges:
+              - - 54
+                - 54
+      special.uninhabited:
+        tile_count: 128
+        tile_rows:
+          - row: 0
+            ranges:
+              - - 2
+                - 2
+              - - 13
+                - 24
+          - row: 1
+            ranges:
+              - - 9
+                - 20
+          - row: 2
+            ranges:
+              - - 0
+                - 5
+              - - 10
+                - 12
+              - - 14
+                - 20
+          - row: 3
+            ranges:
+              - - 2
+                - 8
+              - - 14
+                - 18
+          - row: 4
+            ranges:
+              - - 9
+                - 10
+              - - 14
+                - 14
+              - - 16
+                - 16
+              - - 18
+                - 18
+          - row: 5
+            ranges:
+              - - 9
+                - 10
+          - row: 6
+            ranges:
+              - - 9
+                - 9
+          - row: 7
+            ranges:
+              - - 8
+                - 8
+          - row: 10
+            ranges:
+              - - 57
+                - 57
+          - row: 11
+            ranges:
+              - - 56
+                - 59
+          - row: 12
+            ranges:
+              - - 55
+                - 61
+          - row: 13
+            ranges:
+              - - 1
+                - 2
+              - - 53
+                - 53
+              - - 55
+                - 63
+          - row: 14
+            ranges:
+              - - 1
+                - 2
+              - - 39
+                - 39
+              - - 53
+                - 63
+          - row: 15
+            ranges:
+              - - 38
+                - 41
+              - - 53
+                - 60
+              - - 62
+                - 62
+          - row: 16
+            ranges:
+              - - 40
+                - 40
+              - - 53
+                - 58
+          - row: 17
+            ranges:
+              - - 2
+                - 2
+              - - 40
+                - 40
+              - - 54
+                - 57
+          - row: 18
+            ranges:
+              - - 40
+                - 40
+              - - 56
+                - 56

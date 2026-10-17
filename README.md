@@ -61,6 +61,7 @@ npm run wiki:preview-search
 - [设计系统](docs/design-system.md)
 - [发布流程](docs/release-process.md)
 - [面向编辑者的维护手册](docs/BUILDER/WIKI_MAINTENANCE_GUIDE.md)
+- [地图资产与信息补充指南](docs/BUILDER/MAP_ASSET_GUIDE.md)
 - [脚本职责与兼容状态](scripts/README.md)
 
 ## 目录职责
