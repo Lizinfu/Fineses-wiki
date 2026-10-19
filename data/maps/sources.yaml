@@ -76,6 +76,138 @@ sources:
       country.inibholc.nation:
         color: [49, 107, 204]
 
+  nation.crushmora:
+    output: "data/maps/tiles.yaml"
+    grid:
+      columns: 32
+      rows: 22
+    # 暂定国家细格直接继承世界国界；未来专题数据独立叠加。
+    derive_from_parent:
+      mask_id: world
+      area_id: country.crushmora
+      detail_area_id: country.crushmora.nation
+
+  nation.tarusar:
+    output: "data/maps/tiles.yaml"
+    grid:
+      columns: 32
+      rows: 22
+    # 暂定国家细格直接继承世界国界；未来专题数据独立叠加。
+    derive_from_parent:
+      mask_id: world
+      area_id: country.tarusar
+      detail_area_id: country.tarusar.nation
+
+  nation.esael:
+    output: "data/maps/tiles.yaml"
+    grid:
+      columns: 32
+      rows: 22
+    # 暂定国家细格直接继承世界国界；未来专题数据独立叠加。
+    derive_from_parent:
+      mask_id: world
+      area_id: country.esael
+      detail_area_id: country.esael.nation
+
+  nation.muocils:
+    output: "data/maps/tiles.yaml"
+    grid:
+      columns: 32
+      rows: 22
+    # 暂定国家细格直接继承世界国界；未来专题数据独立叠加。
+    derive_from_parent:
+      mask_id: world
+      area_id: country.muocils
+      detail_area_id: country.muocils.nation
+
+  nation.dunossai:
+    output: "data/maps/tiles.yaml"
+    grid:
+      columns: 32
+      rows: 22
+    # 暂定国家细格直接继承世界国界；未来专题数据独立叠加。
+    derive_from_parent:
+      mask_id: world
+      area_id: country.dunossai
+      detail_area_id: country.dunossai.nation
+
+  nation.havfrentyr:
+    output: "data/maps/tiles.yaml"
+    grid:
+      columns: 32
+      rows: 22
+    # 暂定国家细格直接继承世界国界；未来专题数据独立叠加。
+    derive_from_parent:
+      mask_id: world
+      area_id: country.havfrentyr
+      detail_area_id: country.havfrentyr.nation
+
+  nation.khaos:
+    output: "data/maps/tiles.yaml"
+    grid:
+      columns: 32
+      rows: 22
+    # 暂定国家细格直接继承世界国界；未来专题数据独立叠加。
+    derive_from_parent:
+      mask_id: world
+      area_id: country.khaos
+      detail_area_id: country.khaos.nation
+
+  nation.sivlanzio:
+    output: "data/maps/tiles.yaml"
+    grid:
+      columns: 32
+      rows: 22
+    # 暂定国家细格直接继承世界国界；未来专题数据独立叠加。
+    derive_from_parent:
+      mask_id: world
+      area_id: country.sivlanzio
+      detail_area_id: country.sivlanzio.nation
+
+  nation.sirena:
+    output: "data/maps/tiles.yaml"
+    grid:
+      columns: 32
+      rows: 22
+    # 暂定国家细格直接继承世界国界；未来专题数据独立叠加。
+    derive_from_parent:
+      mask_id: world
+      area_id: country.sirena
+      detail_area_id: country.sirena.nation
+
+  nation.amaterasu:
+    output: "data/maps/tiles.yaml"
+    grid:
+      columns: 32
+      rows: 22
+    # 暂定国家细格直接继承世界国界；未来专题数据独立叠加。
+    derive_from_parent:
+      mask_id: world
+      area_id: country.amaterasu
+      detail_area_id: country.amaterasu.nation
+
+  nation.yin:
+    output: "data/maps/tiles.yaml"
+    grid:
+      columns: 32
+      rows: 22
+    # 暂定国家细格直接继承世界国界；未来专题数据独立叠加。
+    derive_from_parent:
+      mask_id: world
+      area_id: country.yin
+      detail_area_id: country.yin.nation
+
+  nation.yuraqqasa:
+    output: "data/maps/tiles.yaml"
+    grid:
+      columns: 32
+      rows: 22
+    # 暂定国家细格直接继承世界国界；未来专题数据独立叠加。
+    derive_from_parent:
+      mask_id: world
+      area_id: country.yuraqqasa
+      detail_area_id: country.yuraqqasa.nation
+
   # 白色圆点只确定城市位置；城区外缘是可替换的暂定示意范围。
   city.cathair:
     input: "assets/map-sources/inibholc-political.png"

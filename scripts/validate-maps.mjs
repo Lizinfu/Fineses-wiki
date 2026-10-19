@@ -1,4 +1,4 @@
-import { readFile } from "node:fs/promises";
+import { readFile, stat } from "node:fs/promises";
 import path from "node:path";
 import { parse as parseYaml } from "yaml";
 import { walkMarkdown } from "./lib/files.mjs";
@@ -23,7 +23,6 @@ const areaStyles = new Set([
   "country-yin",
   "country-yuraqqasa",
   "unexplored",
-  "anomaly",
   "urban-cathair",
 ]);
 const politicalStatuses = new Set(["active", "unruled"]);
@@ -220,6 +219,23 @@ for (const map of mapList) {
     const parent = mapList.find((candidate) => candidate.id === map.parent_map_id);
     if (!parent) errors.push(`maps.${map.id}: level-${map.level} maps must reference an existing parent_map_id.`);
     else if (parent.level !== map.level - 1) errors.push(`maps.${map.id}: parent map must be exactly one level above it.`);
+    if (map.level === 1 && parent) {
+      const alignment = masks[map.mask_id]?.alignment;
+      const parentArea = areaList.find((area) => area.detail_map_id === map.id && area.map_id === parent.id);
+      const detailArea = areaList.find((area) => area.map_id === map.id && area.layer === "country");
+      if (!alignment || !parentArea || !detailArea ||
+        alignment.parent_mask_id !== parent.mask_id || alignment.parent_area_id !== parentArea.id ||
+        alignment.parent_source_sha256 !== masks[parent.mask_id]?.source_sha256 ||
+        !Array.isArray(alignment.transform) || alignment.transform.length !== 4 ||
+        !alignment.transform.every(Number.isFinite) || alignment.transform[0] <= 0 || alignment.transform[1] <= 0 ||
+        !masks[map.mask_id]?.area_masks?.[detailArea.id]?.tile_count) {
+        errors.push(`maps.${map.id}: national mask must share the current parent political footprint.`);
+      }
+      if (masks[map.mask_id]?.classification?.method === "parent-political-mask" &&
+        masks[map.mask_id]?.classification?.status !== "provisional") {
+        errors.push(`maps.${map.id}: a parent-derived national extent must be marked provisional.`);
+      }
+    }
     if (map.level === 2 && parent) {
       const alignment = masks[map.mask_id]?.alignment;
       const parentLocation = locationList.find((location) => location.id === alignment?.parent_location_id);
@@ -264,6 +280,23 @@ for (const area of areaList) {
   if (!areaLayers.has(area.layer)) errors.push(`areas.${area.id}: layer "${area.layer ?? ""}" is not registered.`);
   if (!mapIds.has(area.map_id)) errors.push(`areas.${area.id}: map_id "${area.map_id ?? ""}" does not exist.`);
   if (typeof area.label !== "string" || !area.label.trim()) errors.push(`areas.${area.id}: label is required.`);
+  if (area.map_id === "world" && area.layer === "country" &&
+    (typeof area.foreign_label !== "string" || !area.foreign_label.trim())) {
+    errors.push(`areas.${area.id}: world country requires a foreign_label.`);
+  }
+  if (area.icon_ref !== undefined) {
+    if (area.map_id !== "world" || area.layer !== "country" ||
+      typeof area.icon_ref !== "string" || !/^[a-z0-9-]+\.svg$/.test(area.icon_ref)) {
+      errors.push(`areas.${area.id}: icon_ref must be a root-level SVG filename on a world country.`);
+    } else {
+      try {
+        const icon = await stat(path.join(root, "static", area.icon_ref));
+        if (!icon.isFile() || icon.size === 0) errors.push(`areas.${area.id}: icon_ref must reference a non-empty SVG file.`);
+      } catch {
+        errors.push(`areas.${area.id}: icon_ref ${area.icon_ref} does not exist in static/.`);
+      }
+    }
+  }
   if (area.entity_id && !entityIds.has(area.entity_id)) errors.push(`areas.${area.id}: entity_id "${area.entity_id}" does not exist.`);
   if ((area.layer === "continent" || area.layer === "country") && !area.entity_id) {
     errors.push(`areas.${area.id}: ${area.layer} areas must reference an entity_id.`);

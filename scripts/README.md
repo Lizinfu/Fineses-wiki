@@ -1,13 +1,13 @@
 # 脚本职责与兼容状态
 
-`npm run wiki:*` 是普通内容维护的统一入口；修改地图参考图或采样配置时使用 `npm run map:generate`，只检查同步状态时使用 `npm run map:check`。不要在 CI、文档或编辑教程中自行串联底层脚本。
+`npm run wiki:*` 是普通内容维护的统一入口；修改地图参考图、父级派生配置或网格时使用 `npm run map:generate`，只检查同步状态时使用 `npm run map:check`。文件级操作步骤见 [`MAP_MAINTENANCE.md`](../docs/BUILDER/MAP_MAINTENANCE.md)。不要在 CI、文档或编辑教程中自行串联底层脚本。
 
 ## 当前生效的脚本
 
 | 脚本 | 由哪个入口调用 | 职责 |
 |---|---|---|
 | `validate-content-model.mjs` | `wiki:validate` | 校验公开实体的最小字段契约、Schema 命名、受控枚举和顶层 taxonomy 同步。 |
-| `generate-hex-map.mjs` | `map:generate`、`map:check`、`wiki:validate` | 从登记的政治参考图确定性生成陆地、国家与无人区六边形掩膜；国家试点从世界图投影共享边界，并记录双图来源哈希和变换参数。 |
+| `generate-hex-map.mjs` | `map:generate`、`map:check`、`wiki:validate` | 从政治参考图生成世界、伊琳沃克掩膜；其余 12 国从世界政治掩膜派生国家细格；城市示意范围从伊琳沃克父层派生。保存来源哈希、共享边界与坐标变换。 |
 | `validate-maps.mjs` | `wiki:validate` | 校验地图层级、L0 网格及 L1 国土预算、区域与地点、父子地图、专题空接口、实体引用、视觉令牌和关键拓扑关系。 |
 | `prepare-wiki.mjs` | `wiki:validate`、`wiki:prepare`、预览与构建 | 构建内容关系图和时间线；检查 ID、关系目标/类型、来源和孤立实体；生成 `data/generated/`。 |
 | `lib/content-graph.mjs` | `prepare-wiki.mjs` | 内容图、ID 索引、反向链接和关系报告的底层实现。 |

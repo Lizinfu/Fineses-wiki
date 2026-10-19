@@ -70,6 +70,354 @@ maps:
       relief: subtle
       material: paper
 
+  - id: nation.crushmora
+    title: "卡什莫兰国家地图"
+    page_ref: "portals/atlas/"
+    type: hex
+    level: 1
+    parent_map_id: world
+    parent_entity_id: nat.cru
+    mask_id: nation.crushmora
+    grid:
+      columns: 32
+      rows: 22
+      hex_size: 24
+      gap: 0.9
+      orientation: flat
+    min_zoom: 0.08
+    max_zoom: 5
+    default_zoom: 0.72
+    default_center:
+      col: 15.5
+      row: 10.5
+    wrap_x: false
+    land_only: true
+    chunk_size: 16
+    target_land_tiles: [100, 704]
+    appearance:
+      palette: political-pastel
+      relief: subtle
+      material: paper
+
+  - id: nation.tarusar
+    title: "塔罗萨尔地区地图"
+    page_ref: "portals/atlas/"
+    type: hex
+    level: 1
+    parent_map_id: world
+    parent_entity_id: nat.tar
+    mask_id: nation.tarusar
+    grid:
+      columns: 32
+      rows: 22
+      hex_size: 24
+      gap: 0.9
+      orientation: flat
+    min_zoom: 0.08
+    max_zoom: 5
+    default_zoom: 0.72
+    default_center:
+      col: 15.5
+      row: 10.5
+    wrap_x: false
+    land_only: true
+    chunk_size: 16
+    target_land_tiles: [100, 704]
+    appearance:
+      palette: political-pastel
+      relief: subtle
+      material: paper
+
+  - id: nation.esael
+    title: "埃萨勒国家地图"
+    page_ref: "portals/atlas/"
+    type: hex
+    level: 1
+    parent_map_id: world
+    parent_entity_id: nat.esa
+    mask_id: nation.esael
+    grid:
+      columns: 32
+      rows: 22
+      hex_size: 24
+      gap: 0.9
+      orientation: flat
+    min_zoom: 0.08
+    max_zoom: 5
+    default_zoom: 0.72
+    default_center:
+      col: 15.5
+      row: 10.5
+    wrap_x: false
+    land_only: true
+    chunk_size: 16
+    target_land_tiles: [100, 704]
+    appearance:
+      palette: political-pastel
+      relief: subtle
+      material: paper
+
+  - id: nation.muocils
+    title: "莫尔索斯国家地图"
+    page_ref: "portals/atlas/"
+    type: hex
+    level: 1
+    parent_map_id: world
+    parent_entity_id: nat.muo
+    mask_id: nation.muocils
+    grid:
+      columns: 32
+      rows: 22
+      hex_size: 24
+      gap: 0.9
+      orientation: flat
+    min_zoom: 0.08
+    max_zoom: 5
+    default_zoom: 0.72
+    default_center:
+      col: 15.5
+      row: 10.5
+    wrap_x: false
+    land_only: true
+    chunk_size: 16
+    target_land_tiles: [100, 704]
+    appearance:
+      palette: political-pastel
+      relief: subtle
+      material: paper
+
+  - id: nation.dunossai
+    title: "德诺尼塞国家地图"
+    page_ref: "portals/atlas/"
+    type: hex
+    level: 1
+    parent_map_id: world
+    parent_entity_id: nat.dun
+    mask_id: nation.dunossai
+    grid:
+      columns: 32
+      rows: 22
+      hex_size: 24
+      gap: 0.9
+      orientation: flat
+    min_zoom: 0.08
+    max_zoom: 5
+    default_zoom: 0.72
+    default_center:
+      col: 15.5
+      row: 10.5
+    wrap_x: false
+    land_only: true
+    chunk_size: 16
+    target_land_tiles: [100, 704]
+    appearance:
+      palette: political-pastel
+      relief: subtle
+      material: paper
+
+  - id: nation.havfrentyr
+    title: "赫芙伦特国家地图"
+    page_ref: "portals/atlas/"
+    type: hex
+    level: 1
+    parent_map_id: world
+    parent_entity_id: nat.hav
+    mask_id: nation.havfrentyr
+    grid:
+      columns: 32
+      rows: 22
+      hex_size: 24
+      gap: 0.9
+      orientation: flat
+    min_zoom: 0.08
+    max_zoom: 5
+    default_zoom: 0.72
+    default_center:
+      col: 15.5
+      row: 10.5
+    wrap_x: false
+    land_only: true
+    chunk_size: 16
+    target_land_tiles: [100, 704]
+    appearance:
+      palette: political-pastel
+      relief: subtle
+      material: paper
+
+  - id: nation.khaos
+    title: "卡俄斯国家地图"
+    page_ref: "portals/atlas/"
+    type: hex
+    level: 1
+    parent_map_id: world
+    parent_entity_id: nat.kha
+    mask_id: nation.khaos
+    grid:
+      columns: 32
+      rows: 22
+      hex_size: 24
+      gap: 0.9
+      orientation: flat
+    min_zoom: 0.08
+    max_zoom: 5
+    default_zoom: 0.72
+    default_center:
+      col: 15.5
+      row: 10.5
+    wrap_x: false
+    land_only: true
+    chunk_size: 16
+    target_land_tiles: [100, 704]
+    appearance:
+      palette: political-pastel
+      relief: subtle
+      material: paper
+
+  - id: nation.sivlanzio
+    title: "斯兰缇亚国家地图"
+    page_ref: "portals/atlas/"
+    type: hex
+    level: 1
+    parent_map_id: world
+    parent_entity_id: nat.siv
+    mask_id: nation.sivlanzio
+    grid:
+      columns: 32
+      rows: 22
+      hex_size: 24
+      gap: 0.9
+      orientation: flat
+    min_zoom: 0.08
+    max_zoom: 5
+    default_zoom: 0.72
+    default_center:
+      col: 15.5
+      row: 10.5
+    wrap_x: false
+    land_only: true
+    chunk_size: 16
+    target_land_tiles: [100, 704]
+    appearance:
+      palette: political-pastel
+      relief: subtle
+      material: paper
+
+  - id: nation.sirena
+    title: "塞壬国家地图"
+    page_ref: "portals/atlas/"
+    type: hex
+    level: 1
+    parent_map_id: world
+    parent_entity_id: nat.sir
+    mask_id: nation.sirena
+    grid:
+      columns: 32
+      rows: 22
+      hex_size: 24
+      gap: 0.9
+      orientation: flat
+    min_zoom: 0.08
+    max_zoom: 5
+    default_zoom: 0.72
+    default_center:
+      col: 15.5
+      row: 10.5
+    wrap_x: false
+    land_only: true
+    chunk_size: 16
+    target_land_tiles: [100, 704]
+    appearance:
+      palette: political-pastel
+      relief: subtle
+      material: paper
+
+  - id: nation.amaterasu
+    title: "天照国家地图"
+    page_ref: "portals/atlas/"
+    type: hex
+    level: 1
+    parent_map_id: world
+    parent_entity_id: nat.ama
+    mask_id: nation.amaterasu
+    grid:
+      columns: 32
+      rows: 22
+      hex_size: 24
+      gap: 0.9
+      orientation: flat
+    min_zoom: 0.08
+    max_zoom: 5
+    default_zoom: 0.72
+    default_center:
+      col: 15.5
+      row: 10.5
+    wrap_x: false
+    land_only: true
+    chunk_size: 16
+    target_land_tiles: [100, 704]
+    appearance:
+      palette: political-pastel
+      relief: subtle
+      material: paper
+
+  - id: nation.yin
+    title: "殷国家地图"
+    page_ref: "portals/atlas/"
+    type: hex
+    level: 1
+    parent_map_id: world
+    parent_entity_id: nat.yin
+    mask_id: nation.yin
+    grid:
+      columns: 32
+      rows: 22
+      hex_size: 24
+      gap: 0.9
+      orientation: flat
+    min_zoom: 0.08
+    max_zoom: 5
+    default_zoom: 0.72
+    default_center:
+      col: 15.5
+      row: 10.5
+    wrap_x: false
+    land_only: true
+    chunk_size: 16
+    target_land_tiles: [100, 704]
+    appearance:
+      palette: political-pastel
+      relief: subtle
+      material: paper
+
+  - id: nation.yuraqqasa
+    title: "尤拉卡萨国家地图"
+    page_ref: "portals/atlas/"
+    type: hex
+    level: 1
+    parent_map_id: world
+    parent_entity_id: nat.yur
+    mask_id: nation.yuraqqasa
+    grid:
+      columns: 32
+      rows: 22
+      hex_size: 24
+      gap: 0.9
+      orientation: flat
+    min_zoom: 0.08
+    max_zoom: 5
+    default_zoom: 0.72
+    default_center:
+      col: 15.5
+      row: 10.5
+    wrap_x: false
+    land_only: true
+    chunk_size: 16
+    target_land_tiles: [100, 704]
+    appearance:
+      palette: political-pastel
+      relief: subtle
+      material: paper
+
   - id: city.cathair
     title: "卡夏·欧尔莱特城区"
     page_ref: "portals/atlas/"

@@ -295,6 +295,40 @@ function alignDetailMask(id, mask, source, generatedMasks, sourceConfigs) {
   };
 }
 
+function deriveNationFromParent(id, source, generatedMasks, sourceConfigs) {
+  const derived = source.derive_from_parent;
+  const parent = generatedMasks[derived?.mask_id];
+  const parentArea = parent?.area_masks?.[derived?.area_id];
+  const columns = Number(source.grid?.columns);
+  const rows = Number(source.grid?.rows);
+  if (!parentArea?.tile_count || !derived.detail_area_id || !Number.isInteger(columns) ||
+    !Number.isInteger(rows) || columns < 4 || rows < 4) {
+    throw new Error(`Map source ${id} needs an existing parent area and a valid detail grid.`);
+  }
+  const extent = new Set();
+  for (let col = 0; col < columns; col += 1) {
+    for (let row = 0; row < rows; row += 1) extent.add(`${col}:${row}`);
+  }
+  const extentRows = compressRows(extent, columns, rows);
+  const mask = {
+    source: `derived:${derived.mask_id}/${derived.area_id}`,
+    source_sha256: createHash("sha256").update(JSON.stringify({
+      parent_sha256: parent.source_sha256, area_id: derived.area_id,
+      detail_area_id: derived.detail_area_id, columns, rows,
+    })).digest("hex"),
+    source_dimensions: parent.source_dimensions,
+    classification: { method: "parent-political-mask", status: "provisional" },
+    grid: { columns, rows, orientation: "flat", offset: "odd-q" },
+    land_tile_count: extent.size,
+    land_rows: extentRows,
+    area_masks: { [derived.detail_area_id]: { tile_count: extent.size, tile_rows: extentRows } },
+  };
+  return alignDetailMask(id, mask, {
+    ...source,
+    align_to_parent: { mask_id: derived.mask_id, area_id: derived.area_id },
+  }, generatedMasks, sourceConfigs);
+}
+
 async function generateUrbanFootprint(id, source, generatedMasks, sourceConfigs) {
   const footprint = source.urban_footprint;
   const parent = generatedMasks[footprint.parent_mask_id];
@@ -550,6 +584,8 @@ const masks = {};
 for (const [id, source] of Object.entries(sources)) {
   masks[id] = source.urban_footprint
     ? await generateUrbanFootprint(id, source, masks, sources)
+    : source.derive_from_parent
+      ? deriveNationFromParent(id, source, masks, sources)
     : alignDetailMask(id, await generateSource(id, source), source, masks, sources);
 }
 

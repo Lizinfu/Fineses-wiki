@@ -328,7 +328,8 @@ function createContextCanvas(
   detailSize: number,
   centerFor: (coordinate: HexCoordinate) => PixelPoint,
   layer: HTMLElement,
-): { canvas: HTMLCanvasElement; redraw: () => void; tileCount: number; footprintPath: string; boundaryPath: string; borderCount: number } | undefined {
+  drawCanvas = true,
+): { canvas?: HTMLCanvasElement; redraw?: () => void; tileCount: number; footprintPath: string; boundaryPath: string; borderCount: number } | undefined {
   const focusTiles = expandTileRows(context.mask.area_masks?.[context.focus_area_id]?.tile_rows ?? []);
   if (!focusTiles.size) return undefined;
   const [scaleX, scaleY, offsetX, offsetY] = alignment.transform;
@@ -359,6 +360,12 @@ function createContextCanvas(
         boundarySegments.push({ start: corners[neighbor.edgeStart], end: corners[neighbor.edgeEnd] });
       }
     }
+  }
+  if (!drawCanvas) {
+    return {
+      tileCount: 0, footprintPath,
+      boundaryPath: segmentsPath(boundarySegments), borderCount: boundarySegments.length,
+    };
   }
   const worldLand = expandLandRows(context.mask);
   const worldAreas = new Map<string, AtlasArea>();
@@ -442,6 +449,7 @@ function createHexMap(
   locations: AtlasLocation[],
   layer: HTMLElement,
   context?: AtlasContext,
+  drawContext = true,
 ): HexGeometry {
   const { columns, rows, hex_size: size, gap = 1 } = map.grid;
   const padding = size * 1.25;
@@ -611,7 +619,7 @@ function createHexMap(
       shape.setAttribute("fill", `url(#${oceanGradientId})`);
       if (assignment.special) {
         shape.dataset.special = assignment.special.id;
-        shape.dataset.areaStyle = assignment.special.style_token ?? "anomaly";
+        shape.dataset.areaStyle = assignment.special.style_token ?? "unexplored";
       }
       return;
     }
@@ -750,7 +758,7 @@ function createHexMap(
   }
 
   const contextCanvas = context?.map && context.mask && mask.alignment
-    ? createContextCanvas(context, mask.alignment, width, height, size, centerFor, layer)
+    ? createContextCanvas(context, mask.alignment, width, height, size, centerFor, layer, drawContext)
     : undefined;
   if (contextCanvas) {
     const detailClip = document.createElementNS(SVG_NAMESPACE, "clipPath");
@@ -764,7 +772,7 @@ function createHexMap(
     coastPath.setAttribute("d", contextCanvas.boundaryPath);
   }
   const overlayNodes = Array.from(layer.querySelectorAll("[data-atlas-label-layer]"));
-  layer.replaceChildren(...(contextCanvas ? [contextCanvas.canvas] : []), svg, ...overlayNodes);
+  layer.replaceChildren(...(contextCanvas?.canvas ? [contextCanvas.canvas] : []), svg, ...overlayNodes);
   layer.style.width = `${width}px`;
   layer.style.height = `${height}px`;
   layer.dataset.palette = map.appearance?.palette ?? "monochrome";
@@ -851,6 +859,7 @@ type AlignedOverlay = {
   geometry: HexGeometry;
   parentToDetail: (point: PixelPoint) => PixelPoint;
   detailToParent: (point: PixelPoint) => PixelPoint;
+  setHorizontalRepeat: (shift: number) => void;
   scaleX: number;
   scaleY: number;
 };
@@ -869,11 +878,17 @@ function alignDetailLayer(
   const scaleY = parent.size / (map.grid.hex_size * alignY);
   const shiftX = parentZero.x - (detailZero.x + offsetX * map.grid.hex_size) * scaleX;
   const shiftY = parentZero.y - (detailZero.y + offsetY * map.grid.hex_size) * scaleY;
-  layer.style.transform = `translate(${shiftX}px, ${shiftY}px) scale(${scaleX}, ${scaleY})`;
+  let horizontalRepeat = 0;
+  const setHorizontalRepeat = (shift: number): void => {
+    if (horizontalRepeat === shift && layer.style.transform) return;
+    horizontalRepeat = shift;
+    layer.style.transform = `translate(${shiftX + shift}px, ${shiftY}px) scale(${scaleX}, ${scaleY})`;
+  };
+  setHorizontalRepeat(0);
   return {
-    layer, geometry: detail, scaleX, scaleY,
-    parentToDetail: (point) => ({ x: (point.x - shiftX) / scaleX, y: (point.y - shiftY) / scaleY }),
-    detailToParent: (point) => ({ x: shiftX + point.x * scaleX, y: shiftY + point.y * scaleY }),
+    layer, geometry: detail, scaleX, scaleY, setHorizontalRepeat,
+    parentToDetail: (point) => ({ x: (point.x - shiftX - horizontalRepeat) / scaleX, y: (point.y - shiftY) / scaleY }),
+    detailToParent: (point) => ({ x: shiftX + horizontalRepeat + point.x * scaleX, y: shiftY + point.y * scaleY }),
   };
 }
 
@@ -908,34 +923,42 @@ export function initAtlas(): void {
   const activeAreas = (data.areas ?? []).filter((area) => area.map_id === activeMap.id);
   const activeLocations = (data.locations ?? []).filter((location) => location.map_id === activeMap.id);
   const geometry = createHexMap(activeMap, activeMask, activeAreas, activeLocations, layer, data.context);
-  const detailMap = data.maps.find((map) => map.parent_map_id === activeMap.id && map.level === 1);
-  const detailMask = detailMap && data.tile_masks?.[detailMap.mask_id];
-  const alignment = detailMask?.alignment;
-  const detailArea = activeAreas.find((area) => area.detail_map_id === detailMap?.id);
   const detailEnterScale = 0.62;
   const detailExitScale = 0.53;
   const cityEnterScale = 2.4;
   const cityExitScale = 2.05;
-  let detailOverlay: AlignedOverlay | undefined;
-  if (detailMap && detailMask && alignment && detailArea && alignment.parent_mask_id === activeMap.mask_id) {
+  const nationOverlays: Array<{
+    map: AtlasMap; area: AtlasArea; overlay: AlignedOverlay; visible: boolean;
+    worldBox?: PixelBounds; visibleWorldBox?: PixelBounds; worldShift: number;
+  }> = [];
+  for (const nationMap of data.maps.filter((map) => map.parent_map_id === activeMap.id && map.level === 1)) {
+    const detailMask = data.tile_masks?.[nationMap.mask_id];
+    const alignment = detailMask?.alignment;
+    const detailArea = activeAreas.find((area) => area.detail_map_id === nationMap.id);
+    if (!detailMask || !alignment || !detailArea || alignment.parent_mask_id !== activeMap.mask_id) continue;
     const detailLayer = document.createElement("div");
     detailLayer.className = "atlas-map-layer atlas-detail-overlay";
-    detailLayer.dataset.atlasDetailMap = detailMap.id;
-    const detailAreas = (data.detail_areas ?? []).filter((area) => area.map_id === detailMap.id);
-    const detailGeometry = createHexMap(detailMap, detailMask, detailAreas, [], detailLayer, {
+    detailLayer.dataset.atlasDetailMap = nationMap.id;
+    const detailAreas = (data.detail_areas ?? []).filter((area) => area.map_id === nationMap.id);
+    const detailGeometry = createHexMap(nationMap, detailMask, detailAreas, [], detailLayer, {
       map: activeMap, mask: activeMask, areas: activeAreas, focus_area_id: detailArea.id,
-    });
-    // The live world layer replaces the old flattened, blurred context canvas.
-    detailLayer.querySelector(".atlas-context-canvas")?.remove();
+    }, false);
     layer.append(detailLayer);
-    detailOverlay = alignDetailLayer(detailLayer, detailGeometry, geometry, detailMap, alignment);
-    root.dataset.atlasDetailMapId = detailMap.id;
-    root.dataset.atlasDetailLogicalTiles = String(detailGeometry.logicalTileCount);
+    const overlay = alignDetailLayer(detailLayer, detailGeometry, geometry, nationMap, alignment);
+    nationOverlays.push({ map: nationMap, area: detailArea, overlay, visible: false, worldShift: 0 });
     layer.querySelectorAll<HTMLElement>("[data-atlas-area-label]").forEach((label) => {
-      if (label.dataset.atlasAreaFocus === detailArea.id) label.dataset.detailFocus = "true";
+      if (label.dataset.atlasAreaFocus === detailArea.id) label.dataset.detailMapId = nationMap.id;
     });
   }
-  const cityMap = detailMap && data.maps.find((map) => map.parent_map_id === detailMap.id && map.level === 2);
+  root.dataset.atlasDetailMapCount = String(nationOverlays.length);
+  root.dataset.atlasDetailLogicalTiles = String(nationOverlays.reduce(
+    (count, nation) => count + nation.overlay.geometry.logicalTileCount, 0));
+  const cityMap = data.maps.find((map) => map.level === 2 && nationOverlays.some((nation) => nation.map.id === map.parent_map_id));
+  const cityParent = nationOverlays.find((nation) => nation.map.id === cityMap?.parent_map_id);
+  const detailMap = cityParent?.map;
+  const detailOverlay = cityParent?.overlay;
+  if (detailMap) root.dataset.atlasDetailMapId = detailMap.id;
+  const detailMask = detailMap && data.tile_masks?.[detailMap.mask_id];
   const cityMask = cityMap && data.tile_masks?.[cityMap.mask_id];
   const cityLocation = (data.detail_locations ?? []).find((location) => location.detail_map_id === cityMap?.id);
   const cityParentArea = (data.detail_areas ?? []).find((area) =>
@@ -964,8 +987,7 @@ export function initAtlas(): void {
     const parentAreas = (data.detail_areas ?? []).filter((area) => area.map_id === detailMap.id);
     const cityGeometry = createHexMap(cityMap, cityMask, cityAreas, [], cityLayer, {
       map: detailMap, mask: detailMask, areas: parentAreas, focus_area_id: cityParentArea.id,
-    });
-    cityLayer.querySelector(".atlas-context-canvas")?.remove();
+    }, false);
     detailOverlay.layer.append(cityLayer);
     cityOverlay = alignDetailLayer(cityLayer, cityGeometry, detailOverlay.geometry, cityMap, cityMask.alignment);
     root.dataset.atlasCityMapId = cityMap.id;
@@ -1014,8 +1036,10 @@ export function initAtlas(): void {
       maxY: Math.max(first.y, last.y) + paddingSize,
     };
   };
-  const detailBounds = detailArea && geometry.boundsByArea.get(detailArea.id);
-  const detailWorldBox = detailBounds && boundsInWorld(detailBounds, geometry.centerFor, geometry.size * 2);
+  for (const nation of nationOverlays) {
+    const bounds = geometry.boundsByArea.get(nation.area.id);
+    if (bounds) nation.worldBox = boundsInWorld(bounds, geometry.centerFor, geometry.size * 2);
+  }
   const cityBounds = cityParentArea && detailOverlay?.geometry.boundsByArea.get(cityParentArea.id);
   const cityWorldBox = cityBounds && detailOverlay && boundsInWorld(cityBounds,
     (coordinate) => detailOverlay.detailToParent(detailOverlay.geometry.centerFor(coordinate)),
@@ -1097,7 +1121,7 @@ export function initAtlas(): void {
       lineX = clamp(anchorX, cardX + 20, cardX + selectionWidth - 20);
       lineY = below ? cardY : cardY + selectionHeight;
     }
-    if (detailVisible && !cityVisible && cityLocation && detailOverlay && detailMap) {
+    if (cityParent?.visible && !cityVisible && cityLocation && detailOverlay && detailMap) {
       const cityPoint = detailOverlay.detailToParent(
         detailOverlay.geometry.centerFor(locationCoordinate(cityLocation, detailMap)));
       let cityX = stageWidth / 2 + offsetX + (cityPoint.x - geometry.width / 2) * scale;
@@ -1143,7 +1167,7 @@ export function initAtlas(): void {
 
   const setVisualPreset = (preset: "political-pastel" | "tactical-paper"): void => {
     layer.dataset.visualPreset = preset;
-    if (detailOverlay) detailOverlay.layer.dataset.visualPreset = preset;
+    for (const nation of nationOverlays) nation.overlay.layer.dataset.visualPreset = preset;
     if (cityOverlay) cityOverlay.layer.dataset.visualPreset = preset;
     geometry.redrawContext?.();
     const tactical = preset === "tactical-paper";
@@ -1173,27 +1197,49 @@ export function initAtlas(): void {
       minY: geometry.height / 2 + (-stage.clientHeight / 2 - offsetY) / scale,
       maxY: geometry.height / 2 + (stage.clientHeight / 2 - offsetY) / scale,
     };
-    if (detailOverlay) {
+    if (nationOverlays.length) {
       // Hysteresis avoids flickering when wheel zoom settles on the LOD boundary.
-      const wasDetailVisible = detailVisible;
-      detailVisible = intersects(viewport, detailWorldBox) &&
-        (detailVisible ? scale >= detailExitScale : scale >= detailEnterScale);
-      const detailLayer = detailOverlay.layer;
-      detailLayer.dataset.detailVisible = String(detailVisible);
-      layer.dataset.detailActive = String(detailVisible);
-      detailLayer.style.setProperty("--atlas-city-label-scale", String(1 / (scale * detailOverlay.scaleX)));
-      if (wasDetailVisible && !detailVisible) {
-        detailOverlay.geometry.updateVisibleChunks?.({ minX: Infinity, maxX: -Infinity, minY: Infinity, maxY: -Infinity });
+      let detailTiles = 0;
+      for (const nation of nationOverlays) {
+        const centerX = nation.worldBox ? (nation.worldBox.minX + nation.worldBox.maxX) / 2 : 0;
+        const viewportCenterX = (viewport.minX + viewport.maxX) / 2;
+        nation.worldShift = activeMap.wrap_x
+          ? Math.round((viewportCenterX - centerX) / geometry.wrapWidth) * geometry.wrapWidth : 0;
+        nation.overlay.setHorizontalRepeat(nation.worldShift);
+        nation.visibleWorldBox = nation.worldBox && {
+          minX: nation.worldBox.minX + nation.worldShift,
+          maxX: nation.worldBox.maxX + nation.worldShift,
+          minY: nation.worldBox.minY, maxY: nation.worldBox.maxY,
+        };
+        const wasVisible = nation.visible;
+        nation.visible = intersects(viewport, nation.visibleWorldBox) &&
+          (wasVisible ? scale >= detailExitScale : scale >= detailEnterScale);
+        const detailLayer = nation.overlay.layer;
+        detailLayer.dataset.detailVisible = String(nation.visible);
+        if (wasVisible && !nation.visible) {
+          nation.overlay.geometry.updateVisibleChunks?.({ minX: Infinity, maxX: -Infinity, minY: Infinity, maxY: -Infinity });
+        }
+        if (nation.visible) {
+          const first = nation.overlay.parentToDetail({ x: viewport.minX, y: viewport.minY });
+          const last = nation.overlay.parentToDetail({ x: viewport.maxX, y: viewport.maxY });
+          detailTiles += nation.overlay.geometry.updateVisibleChunks?.({
+            minX: first.x, minY: first.y, maxX: last.x, maxY: last.y,
+          }) ?? 0;
+        }
       }
-      const first = detailOverlay.parentToDetail({ x: viewport.minX, y: viewport.minY });
-      const last = detailOverlay.parentToDetail({ x: viewport.maxX, y: viewport.maxY });
-      const detailTiles = detailVisible ? detailOverlay.geometry.updateVisibleChunks?.({
-        minX: first.x, minY: first.y, maxX: last.x, maxY: last.y,
-      }) ?? 0 : 0;
+      detailVisible = nationOverlays.some((nation) => nation.visible);
+      layer.dataset.detailActive = String(detailVisible);
       let cityTiles = 0;
-      if (cityOverlay) {
+      if (cityOverlay && detailOverlay && cityParent) {
+        const detailLayer = detailOverlay.layer;
+        detailLayer.style.setProperty("--atlas-city-label-scale", String(1 / (scale * detailOverlay.scaleX)));
         const wasCityVisible = cityVisible;
-        cityVisible = detailVisible && intersects(viewport, cityWorldBox) &&
+        const repeatedCityBox = cityWorldBox && {
+          minX: cityWorldBox.minX + cityParent.worldShift,
+          maxX: cityWorldBox.maxX + cityParent.worldShift,
+          minY: cityWorldBox.minY, maxY: cityWorldBox.maxY,
+        };
+        cityVisible = cityParent.visible && intersects(viewport, repeatedCityBox) &&
           (cityVisible ? scale >= cityExitScale : scale >= cityEnterScale);
         cityOverlay.layer.dataset.detailVisible = String(cityVisible);
         detailLayer.dataset.cityActive = String(cityVisible);
@@ -1201,6 +1247,8 @@ export function initAtlas(): void {
           cityOverlay.geometry.updateVisibleChunks?.({ minX: Infinity, maxX: -Infinity, minY: Infinity, maxY: -Infinity });
         }
         if (cityVisible) {
+          const first = detailOverlay.parentToDetail({ x: viewport.minX, y: viewport.minY });
+          const last = detailOverlay.parentToDetail({ x: viewport.maxX, y: viewport.maxY });
           const cityFirst = cityOverlay.parentToDetail(first);
           const cityLast = cityOverlay.parentToDetail(last);
           cityTiles = cityOverlay.geometry.updateVisibleChunks?.({
@@ -1219,10 +1267,21 @@ export function initAtlas(): void {
     const focusedArea = geometry.areaAt(viewCenter);
     const centerIn = (box?: PixelBounds): boolean => Boolean(box && viewCenter.x >= box.minX &&
       viewCenter.x <= box.maxX && viewCenter.y >= box.minY && viewCenter.y <= box.maxY);
-    const viewTier = cityVisible && centerIn(cityWorldBox) ? "城区" :
-      detailVisible && centerIn(detailWorldBox) ? "国家详图" :
+    const focusedNation = nationOverlays.find((nation) => nation.visible && centerIn(nation.visibleWorldBox) &&
+      (focusedArea?.country?.id === nation.area.id ||
+        (!focusedArea?.country && layer.dataset.selectedAreaId === nation.area.id)));
+    layer.querySelectorAll<HTMLElement>("[data-detail-map-id]").forEach((label) => {
+      label.dataset.detailActive = String(label.dataset.detailMapId === focusedNation?.map.id);
+    });
+    const focusedCityBox = cityWorldBox && {
+      minX: cityWorldBox.minX + (cityParent?.worldShift ?? 0),
+      maxX: cityWorldBox.maxX + (cityParent?.worldShift ?? 0),
+      minY: cityWorldBox.minY, maxY: cityWorldBox.maxY,
+    };
+    const viewTier = cityVisible && centerIn(focusedCityBox) ? "城区" :
+      focusedNation ? "国家详图" :
         layer.dataset.zoomBand === "overview" ? "世界总览" : "世界地图";
-    const region = viewTier === "城区" ? cityLocation?.label : viewTier === "国家详图" ? detailArea?.label :
+    const region = viewTier === "城区" ? cityLocation?.label : viewTier === "国家详图" ? focusedNation?.area.label :
       layer.dataset.zoomBand === "overview" ? "全球" :
         focusedArea?.country?.label ?? focusedArea?.special?.label ?? focusedArea?.continent?.label ?? "海洋";
     if (viewLevel && viewLevel.textContent !== viewTier) viewLevel.textContent = viewTier;
@@ -1304,8 +1363,15 @@ export function initAtlas(): void {
     geometry.centerFor({ col: bounds.maxCol, row: bounds.maxRow }),
   );
 
-  const focusBounds = (bounds: TileBounds): void => {
-    ({ scale, offsetX, offsetY } = viewForBounds(bounds));
+  const focusBounds = (bounds: TileBounds, minimumScale = 0): void => {
+    const target = viewForBounds(bounds);
+    if (target.scale < minimumScale) {
+      const factor = minimumScale / target.scale;
+      target.scale = minimumScale;
+      target.offsetX *= factor;
+      target.offsetY *= factor;
+    }
+    ({ scale, offsetX, offsetY } = target);
     render();
   };
 
@@ -1382,8 +1448,10 @@ export function initAtlas(): void {
 
     const bounds = geometry.boundsByArea.get(area.id);
     if (bounds) {
-      if (animate) animateFocusBounds(bounds, area.detail_map_id && detailOverlay ? detailEnterScale + 0.01 : 0);
-      else focusBounds(bounds);
+      const minimumScale = area.detail_map_id && nationOverlays.some(
+        (nation) => nation.map.id === area.detail_map_id) ? detailEnterScale + 0.01 : 0;
+      if (animate) animateFocusBounds(bounds, minimumScale);
+      else focusBounds(bounds, minimumScale);
     }
     if (selection) selection.hidden = false;
     if (selectionKind) selectionKind.textContent = areaKind(area);
@@ -1598,7 +1666,7 @@ export function initAtlas(): void {
       const area = activeAreas.find((entry) => entry.id === button.dataset.atlasAreaFocus);
       if (!area) return;
       const detailHref = button.dataset.detailHref;
-      if (detailHref && detailOverlay) enterDetail(area);
+      if (detailHref && nationOverlays.some((nation) => nation.map.id === area.detail_map_id)) enterDetail(area);
       else selectArea(area);
     });
   });
@@ -1607,7 +1675,7 @@ export function initAtlas(): void {
     link.addEventListener("click", (event) => {
       const areaId = link.closest<HTMLElement>("[data-area-id]")?.dataset.areaId;
       const area = activeAreas.find((entry) => entry.id === areaId);
-      if (!area || !detailOverlay) return;
+      if (!area || !nationOverlays.some((nation) => nation.map.id === area.detail_map_id)) return;
       event.preventDefault();
       enterDetail(area);
     });

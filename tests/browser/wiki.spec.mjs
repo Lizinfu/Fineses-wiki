@@ -225,7 +225,7 @@ test("Inibholc detail refines the persistent world map in place", async ({ page 
   await expect(page).toHaveURL(/\/portals\/atlas\/\?entity=nat\.ini/);
   await expect(world).toHaveAttribute("data-persistence-probe", "same-scene");
   await expect(root).toHaveAttribute("data-atlas-map-id", "world");
-  await expect(root).toHaveAttribute("data-atlas-detail-logical-tiles", "782");
+  await expect(root).toHaveAttribute("data-atlas-detail-map-count", "13");
   await expect(world).toHaveAttribute("data-detail-active", "true");
   await expect(page.locator("[data-atlas-view-level]")).toHaveText("国家详图");
   await expect(page.locator("[data-atlas-view-region]")).toHaveText("伊琳沃克");
@@ -238,14 +238,14 @@ test("Inibholc detail refines the persistent world map in place", async ({ page 
     selectedCard.y < cityLabel.y + cityLabel.height &&
     selectedCard.y + selectedCard.height > cityLabel.y;
   expect(coversCityLabel).toBe(false);
-  await expect(page.locator("[data-atlas-detail-map]")).toHaveAttribute("data-detail-visible", "true");
+  await expect(page.locator("[data-atlas-detail-map='nation.inibholc']")).toHaveAttribute("data-detail-visible", "true");
   await expect.poll(async () => Number(await root.getAttribute("data-atlas-detail-visible-tiles"))).toBeGreaterThan(0);
   expect(await page.locator("[data-atlas-map] > .atlas-hex-map .atlas-hex-batch").count()).toBeLessThan(80);
   await expect(page.locator("[data-atlas-map] > .atlas-hex-map .atlas-hex--ocean")).not.toHaveCount(0);
   await expect(page.locator(".atlas-context-canvas")).toHaveCount(0);
   await expect(page.locator("clipPath[id='atlas-shared-border-nation.inibholc'] path"))
     .toHaveAttribute("d", /M .* Z/);
-  await expect(page.locator("[data-atlas-detail-map] > .atlas-hex-map .atlas-political-layer"))
+  await expect(page.locator("[data-atlas-detail-map='nation.inibholc'] > .atlas-hex-map .atlas-political-layer"))
     .toHaveAttribute("clip-path", "url(#atlas-shared-border-nation.inibholc)");
   const borderError = await page.locator("[data-atlas]").evaluate((rootNode) => {
     const raw = JSON.parse(rootNode.querySelector("#atlas-map-data").textContent);
@@ -263,7 +263,7 @@ test("Inibholc detail refines the persistent world map in place", async ({ page 
     const padding = worldMap.grid.hex_size * 1.25;
     const clip = rootNode.querySelector('clipPath[id="atlas-shared-border-nation.inibholc"] path');
     const vertices = [...clip.getAttribute("d").matchAll(/M ([\d.-]+) ([\d.-]+)/g)];
-    const overlay = rootNode.querySelector('[data-atlas-detail-map]');
+    const overlay = rootNode.querySelector('[data-atlas-detail-map="nation.inibholc"]');
     const transform = new DOMMatrix(getComputedStyle(overlay).transform);
     const errors = coordinates.map(({ col, row }, index) => {
       const vertex = vertices[index === 0 ? 0 : vertices.length - 1];
@@ -279,7 +279,7 @@ test("Inibholc detail refines the persistent world map in place", async ({ page 
     );
   });
   expect(borderError).toBeLessThan(0.01);
-  await expect(page.locator("[data-atlas-detail-map] .atlas-tile-chunk")).not.toHaveCount(0);
+  await expect(page.locator("[data-atlas-detail-map='nation.inibholc'] .atlas-tile-chunk")).not.toHaveCount(0);
   await expect(page.locator(".atlas-area-label--country[data-atlas-area-focus='country.muocils']")).toBeVisible();
 
   for (let index = 0; index < 5; index += 1) await page.locator("[data-atlas-zoom='out']").click();
@@ -310,7 +310,7 @@ test("Cathair refines a provisional urban area without replacing its country", a
   await expect(page).toHaveURL(/\/portals\/atlas\/\?loc=loc\.cathair/);
   await expect(world).toHaveAttribute("data-persistence-probe", "city-same-scene");
   await expect(root).toHaveAttribute("data-atlas-city-logical-tiles", "566");
-  await expect(page.locator("[data-atlas-detail-map]")).toHaveAttribute("data-detail-visible", "true");
+  await expect(page.locator("[data-atlas-detail-map='nation.inibholc']")).toHaveAttribute("data-detail-visible", "true");
   await expect(page.locator("[data-atlas-city-map]")).toHaveAttribute("data-detail-visible", "true");
   await expect(page.locator("[data-atlas-view-level]")).toHaveText("城区");
   await expect(page.locator("[data-atlas-view-region]")).toHaveText("卡夏·欧尔莱特");
@@ -324,7 +324,7 @@ test("Cathair refines a provisional urban area without replacing its country", a
   await page.locator("[data-atlas-preset-toggle]").click();
   await expect(page.locator("[data-atlas-map] > .atlas-hex-map .atlas-terrain-relief"))
     .toHaveCSS("display", "none");
-  await expect(page.locator("[data-atlas-detail-map] > .atlas-hex-map .atlas-terrain-relief"))
+  await expect(page.locator("[data-atlas-detail-map='nation.inibholc'] > .atlas-hex-map .atlas-terrain-relief"))
     .toHaveCSS("display", "none");
   await expect(page.locator("[data-atlas-city-map] > .atlas-hex-map .atlas-terrain-relief"))
     .not.toHaveCSS("display", "none");
@@ -335,7 +335,7 @@ test("Cathair refines a provisional urban area without replacing its country", a
     await page.locator("[data-atlas-zoom='out']").click();
   }
   await expect(page.locator("[data-atlas-city-map]")).toHaveAttribute("data-detail-visible", "false");
-  await expect(page.locator("[data-atlas-detail-map]")).toHaveAttribute("data-detail-visible", "true");
+  await expect(page.locator("[data-atlas-detail-map='nation.inibholc']")).toHaveAttribute("data-detail-visible", "true");
   await expect(page.locator("[data-atlas-view-level]")).toHaveText("国家详图");
   await page.goto("/portals/atlas/?loc=loc.cathair");
   await expect(page.locator("[data-atlas-city-map]")).toHaveAttribute("data-detail-visible", "true");
@@ -376,9 +376,45 @@ test("atlas labels follow exclusive overview, region, and detail bands without w
   await expect(page).toHaveURL(/\/portals\/atlas\/\?entity=nat\.ini/);
 });
 
+test("world countries show icon when available, then Chinese and foreign names", async ({ page }) => {
+  await page.goto("/portals/atlas/");
+  const countries = [
+    ["crushmora", "卡什莫兰", "Crushmora", "crushmora.svg"],
+    ["tarusar", "塔罗萨尔", "𒋫𒊒𒊬", null],
+    ["esael", "埃萨勒", "ऐशाल", null],
+    ["inibholc", "伊琳沃克", "Inibholc", "inibholc.svg"],
+    ["muocils", "莫尔索斯", "Муоцилс", "muocils.svg"],
+    ["dunossai", "德诺尼塞", "Dunossai", null],
+    ["havfrentyr", "赫芙伦特", "Havfrentyr", null],
+    ["khaos", "卡俄斯", "ΧΑΟΣ", null],
+    ["sivlanzio", "斯兰缇亚", "Sivlanzio", "sivlanzio.svg"],
+    ["sirena", "塞壬", "Sírena", null],
+    ["amaterasu", "天照", "天照", null],
+    ["yin", "殷", "殷", "yin.svg"],
+    ["yuraqqasa", "尤拉卡萨", "Yuraqq'asa", null],
+  ];
+  for (const [id, chinese, foreign, icon] of countries) {
+    const label = page.locator(`.atlas-country-label[data-atlas-area-focus='country.${id}']`);
+    await expect(label).toHaveCSS("flex-direction", "column");
+    await expect(label.locator(".atlas-country-label__chinese")).toHaveText(chinese);
+    await expect(label.locator(".atlas-country-label__foreign")).toHaveText(foreign);
+    await expect(label.locator(".atlas-country-label__foreign")).toHaveCSS("text-transform", "none");
+    if (icon) {
+      await expect(label.locator(".atlas-country-label__icon img")).toHaveAttribute("src", new RegExp(`/${icon}$`));
+      await expect(label.locator(".atlas-country-label__icon img")).toHaveAttribute("loading", "lazy");
+    } else {
+      await expect(label.locator(".atlas-country-label__icon")).toHaveCount(0);
+    }
+    const order = await label.locator(":scope > span").evaluateAll((nodes) => nodes.map((node) => node.className));
+    expect(order).toEqual(icon
+      ? ["atlas-country-label__icon", "atlas-country-label__chinese", "atlas-country-label__foreign"]
+      : ["atlas-country-label__chinese", "atlas-country-label__foreign"]);
+  }
+});
+
 test("atlas detail tracks the viewed region instead of zoom alone", async ({ page }) => {
   await page.goto("/portals/atlas/");
-  const detail = page.locator("[data-atlas-detail-map]");
+  const detail = page.locator("[data-atlas-detail-map='nation.inibholc']");
   await page.locator("[data-atlas-area-item] [data-atlas-area-focus='country.inibholc']").click();
   await expect(detail).toHaveAttribute("data-detail-visible", "true");
   await page.locator("[data-atlas-area-item] [data-atlas-area-focus='country.sirena']").click();
@@ -388,8 +424,31 @@ test("atlas detail tracks the viewed region instead of zoom alone", async ({ pag
     await page.locator("[data-atlas-zoom='in']").click();
   }
   await expect(detail).toHaveAttribute("data-detail-visible", "false");
-  await expect(page.locator(".atlas-area-label--country[data-atlas-area-focus='country.sirena']")).toBeVisible();
-  await expect(page.locator("[data-atlas-view-region]")).not.toHaveText("伊琳沃克");
+  await expect(page.locator("[data-atlas-detail-map='nation.sirena']")).toHaveAttribute("data-detail-visible", "true");
+  await expect(page.locator("[data-atlas-view-region]")).toHaveText("塞壬");
+});
+
+test("all current countries have an aligned same-scene national layer", async ({ page }) => {
+  await page.goto("/portals/atlas/");
+  const ids = ["crushmora", "tarusar", "esael", "inibholc", "muocils", "dunossai",
+    "havfrentyr", "khaos", "sivlanzio", "sirena", "amaterasu", "yin", "yuraqqasa"];
+  const root = page.locator("[data-atlas]");
+  const data = await page.locator("#atlas-map-data").evaluate((node) => {
+    const parsed = JSON.parse(node.textContent);
+    return typeof parsed === "string" ? JSON.parse(parsed) : parsed;
+  });
+  expect(data.areas.some((area) => area.id === "special.ring-void")).toBe(false);
+  await expect(page.getByText("环形空洞")).toHaveCount(0);
+  for (const id of ids) {
+    const mapId = `nation.${id}`;
+    const areaId = `country.${id}`;
+    const nation = page.locator(`[data-atlas-detail-map='${mapId}']`);
+    expect(data.tile_masks[mapId].alignment.parent_area_id).toBe(areaId);
+    await expect(page.locator(`clipPath[id='atlas-shared-border-${mapId}'] path`)).toHaveAttribute("d", /M .* Z/);
+    await page.locator(`[data-atlas-area-item] [data-atlas-area-focus='${areaId}']`).click();
+    await expect(nation).toHaveAttribute("data-detail-visible", "true");
+    await expect(root).toHaveAttribute("data-atlas-map-id", "world");
+  }
 });
 
 test("atlas wheel zoom keeps the map point under the pointer", async ({ page }) => {

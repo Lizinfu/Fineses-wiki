@@ -127,14 +127,22 @@
               {{ range $areas }}
                 <button
                   type="button"
-                  class="atlas-area-label atlas-area-label--{{ .layer }}"
+                  class="atlas-area-label atlas-area-label--{{ .layer }}{{ if and (eq $mapID "world") (eq .layer "country") }} atlas-country-label{{ end }}"
                   data-atlas-area-label
                   data-atlas-area-focus="{{ .id }}"
                   {{ if eq .detail_status "available" }}data-detail-href="{{ printf "%s?entity=%s" (index $mapURLs $mapID) .entity_id }}"{{ end }}
                   data-col="{{ index .label_anchor 0 }}"
                   data-row="{{ index .label_anchor 1 }}"
                   aria-label="定位{{ .label }}">
-                  <span class="atlas-label-icon" aria-hidden="true"></span><span class="atlas-label-text">{{ .label }}</span>
+                  {{- if and (eq $mapID "world") (eq .layer "country") -}}
+                    {{- with .icon_ref -}}
+                      <span class="atlas-country-label__icon" aria-hidden="true"><img src="{{ . | relURL }}" alt="" width="44" height="44" loading="lazy" decoding="async" fetchpriority="low"></span>
+                    {{- end -}}
+                    <span class="atlas-country-label__chinese">{{ .label }}</span>
+                    <span class="atlas-country-label__foreign">{{ .foreign_label }}</span>
+                  {{- else -}}
+                    <span class="atlas-label-icon" aria-hidden="true"></span><span class="atlas-label-text">{{ .label }}</span>
+                  {{- end -}}
                 </button>
               {{ end }}
               {{ if eq $mapID "world" }}

@@ -37,37 +37,46 @@ areas:
     layer: country
     entity_id: nat.cru
     label: "卡什莫兰"
+    foreign_label: "Crushmora"
+    icon_ref: "crushmora.svg"
     label_anchor: [37, 21]
     tile_source: generated
     style_token: country-crushmora
-    detail_status: awaiting-source
+    detail_status: available
+    detail_map_id: nation.crushmora
 
   - id: country.tarusar
     map_id: world
     layer: country
     entity_id: nat.tar
     label: "塔罗萨尔"
+    foreign_label: "𒋫𒊒𒊬"
     label_anchor: [26, 33]
     tile_source: generated
     style_token: country-tarusar
     political_status: unruled
-    detail_status: awaiting-source
+    detail_status: available
+    detail_map_id: nation.tarusar
 
   - id: country.esael
     map_id: world
     layer: country
     entity_id: nat.esa
     label: "埃萨勒"
+    foreign_label: "ऐशाल"
     label_anchor: [48, 37]
     tile_source: generated
     style_token: country-esael
-    detail_status: awaiting-source
+    detail_status: available
+    detail_map_id: nation.esael
 
   - id: country.inibholc
     map_id: world
     layer: country
     entity_id: nat.ini
     label: "伊琳沃克"
+    foreign_label: "Inibholc"
+    icon_ref: "inibholc.svg"
     label_anchor: [58, 16]
     tile_source: generated
     style_token: country-inibholc
@@ -107,90 +116,220 @@ areas:
     layer: country
     entity_id: nat.muo
     label: "莫尔索斯"
-    label_anchor: [85, 9]
+    foreign_label: "Муоцилс"
+    icon_ref: "muocils.svg"
+    label_anchor: [85, 13]
     tile_source: generated
     style_token: country-muocils
-    detail_status: awaiting-source
+    detail_status: available
+    detail_map_id: nation.muocils
 
   - id: country.dunossai
     map_id: world
     layer: country
     entity_id: nat.dun
     label: "德诺尼塞"
+    foreign_label: "Dunossai"
     label_anchor: [72, 17]
     tile_source: generated
     style_token: country-dunossai
-    detail_status: awaiting-source
+    detail_status: available
+    detail_map_id: nation.dunossai
 
   - id: country.havfrentyr
     map_id: world
     layer: country
     entity_id: nat.hav
     label: "赫芙伦特"
+    foreign_label: "Havfrentyr"
     label_anchor: [102, 12]
     tile_source: generated
     style_token: country-havfrentyr
-    detail_status: awaiting-source
+    detail_status: available
+    detail_map_id: nation.havfrentyr
 
   - id: country.khaos
     map_id: world
     layer: country
     entity_id: nat.kha
     label: "卡俄斯"
+    foreign_label: "ΧΑΟΣ"
     label_anchor: [72, 26]
     tile_source: generated
     style_token: country-khaos
-    detail_status: awaiting-source
+    detail_status: available
+    detail_map_id: nation.khaos
 
   - id: country.sivlanzio
     map_id: world
     layer: country
     entity_id: nat.siv
     label: "斯兰缇亚"
+    foreign_label: "Sivlanzio"
+    icon_ref: "sivlanzio.svg"
     label_anchor: [81, 21]
     tile_source: generated
     style_token: country-sivlanzio
-    detail_status: awaiting-source
+    detail_status: available
+    detail_map_id: nation.sivlanzio
 
   - id: country.sirena
     map_id: world
     layer: country
     entity_id: nat.sir
     label: "塞壬"
+    foreign_label: "Sírena"
     label_anchor: [119, 9]
     tile_source: generated
     style_token: country-sirena
-    detail_status: awaiting-source
+    detail_status: available
+    detail_map_id: nation.sirena
 
   - id: country.amaterasu
     map_id: world
     layer: country
     entity_id: nat.ama
     label: "天照"
+    foreign_label: "天照"
     label_anchor: [111, 23]
     tile_source: generated
     style_token: country-amaterasu
-    detail_status: awaiting-source
+    detail_status: available
+    detail_map_id: nation.amaterasu
 
   - id: country.yin
     map_id: world
     layer: country
     entity_id: nat.yin
     label: "殷"
+    foreign_label: "殷"
+    icon_ref: "yin.svg"
     label_anchor: [106, 30]
     tile_source: generated
     style_token: country-yin
-    detail_status: awaiting-source
+    detail_status: available
+    detail_map_id: nation.yin
 
   - id: country.yuraqqasa
     map_id: world
     layer: country
     entity_id: nat.yur
     label: "尤拉卡萨"
+    foreign_label: "Yuraqq'asa"
     label_anchor: [115, 27]
     tile_source: generated
     style_token: country-yuraqqasa
-    detail_status: awaiting-source
+    detail_status: available
+    detail_map_id: nation.yuraqqasa
+
+  - id: country.crushmora.nation
+    map_id: nation.crushmora
+    layer: country
+    entity_id: nat.cru
+    label: "卡什莫兰"
+    label_anchor: [16, 11]
+    tile_source: generated
+    style_token: country-crushmora
+
+  - id: country.tarusar.nation
+    map_id: nation.tarusar
+    layer: country
+    entity_id: nat.tar
+    label: "塔罗萨尔"
+    label_anchor: [16, 11]
+    tile_source: generated
+    style_token: country-tarusar
+    political_status: unruled
+
+  - id: country.esael.nation
+    map_id: nation.esael
+    layer: country
+    entity_id: nat.esa
+    label: "埃萨勒"
+    label_anchor: [16, 11]
+    tile_source: generated
+    style_token: country-esael
+
+  - id: country.muocils.nation
+    map_id: nation.muocils
+    layer: country
+    entity_id: nat.muo
+    label: "莫尔索斯"
+    label_anchor: [16, 11]
+    tile_source: generated
+    style_token: country-muocils
+
+  - id: country.dunossai.nation
+    map_id: nation.dunossai
+    layer: country
+    entity_id: nat.dun
+    label: "德诺尼塞"
+    label_anchor: [16, 11]
+    tile_source: generated
+    style_token: country-dunossai
+
+  - id: country.havfrentyr.nation
+    map_id: nation.havfrentyr
+    layer: country
+    entity_id: nat.hav
+    label: "赫芙伦特"
+    label_anchor: [16, 11]
+    tile_source: generated
+    style_token: country-havfrentyr
+
+  - id: country.khaos.nation
+    map_id: nation.khaos
+    layer: country
+    entity_id: nat.kha
+    label: "卡俄斯"
+    label_anchor: [16, 11]
+    tile_source: generated
+    style_token: country-khaos
+
+  - id: country.sivlanzio.nation
+    map_id: nation.sivlanzio
+    layer: country
+    entity_id: nat.siv
+    label: "斯兰缇亚"
+    label_anchor: [16, 11]
+    tile_source: generated
+    style_token: country-sivlanzio
+
+  - id: country.sirena.nation
+    map_id: nation.sirena
+    layer: country
+    entity_id: nat.sir
+    label: "塞壬"
+    label_anchor: [16, 11]
+    tile_source: generated
+    style_token: country-sirena
+
+  - id: country.amaterasu.nation
+    map_id: nation.amaterasu
+    layer: country
+    entity_id: nat.ama
+    label: "天照"
+    label_anchor: [16, 11]
+    tile_source: generated
+    style_token: country-amaterasu
+
+  - id: country.yin.nation
+    map_id: nation.yin
+    layer: country
+    entity_id: nat.yin
+    label: "殷"
+    label_anchor: [16, 11]
+    tile_source: generated
+    style_token: country-yin
+
+  - id: country.yuraqqasa.nation
+    map_id: nation.yuraqqasa
+    layer: country
+    entity_id: nat.yur
+    label: "尤拉卡萨"
+    label_anchor: [16, 11]
+    tile_source: generated
+    style_token: country-yuraqqasa
 
   - id: special.uninhabited
     map_id: world
@@ -199,13 +338,3 @@ areas:
     label_anchor: [126, 30]
     tile_source: generated
     style_token: unexplored
-
-  - id: special.ring-void
-    map_id: world
-    layer: special
-    label: "环形空洞"
-    label_anchor: [92, 43]
-    style_token: anomaly
-    applies_to: ocean
-    polygons:
-      - [[81, 34], [102, 33], [106, 47], [95, 54], [78, 47]]
