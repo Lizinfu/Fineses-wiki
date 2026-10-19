@@ -1,0 +1,14 @@
+# 国家级专题数据接口。未有可靠资料前保持空数组，不据参考图推断地名。
+maps:
+  nation.inibholc:
+    administrative_regions: []
+    terrain: []
+    waterways: []
+    routes: []
+    settlements: []
+  city.cathair:
+    administrative_regions: []
+    terrain: []
+    waterways: []
+    routes: []
+    settlements: []

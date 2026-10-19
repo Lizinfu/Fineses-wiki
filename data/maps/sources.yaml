@@ -6,8 +6,8 @@ sources:
     input: "assets/map-sources/world-political.png"
     output: "data/maps/tiles.yaml"
     grid:
-      columns: 64
-      rows: 28
+      columns: 136
+      rows: 60
     crop:
       left: 0.007
       right: 0.007
@@ -19,6 +19,7 @@ sources:
       radius_y: 0.46
       color_tolerance: 74
       minimum_region_ratio: 0.16
+      fill_enclosed_annotation_holes: true
     regions:
       country.crushmora:
         color: [76, 223, 249]
@@ -48,3 +49,45 @@ sources:
         color: [169, 205, 0]
       special.uninhabited:
         color: [255, 255, 255]
+
+  nation.inibholc:
+    input: "assets/map-sources/inibholc-political.png"
+    output: "data/maps/tiles.yaml"
+    grid:
+      columns: 48
+      rows: 28
+    # 国家单图仅确定详图占据的范围；可见国界从世界图同一国家掩膜投影。
+    align_to_parent:
+      mask_id: world
+      area_id: country.inibholc
+    crop:
+      left: 0.152
+      right: 0.125
+      top: 0.020
+      bottom: 0.018
+    region_sampling:
+      samples: 7
+      radius_x: 0.46
+      radius_y: 0.46
+      color_tolerance: 68
+      minimum_region_ratio: 0.18
+      fill_enclosed_white_annotations: true
+    regions:
+      country.inibholc.nation:
+        color: [49, 107, 204]
+
+  # 白色圆点只确定城市位置；城区外缘是可替换的暂定示意范围。
+  city.cathair:
+    input: "assets/map-sources/inibholc-political.png"
+    output: "data/maps/tiles.yaml"
+    grid:
+      columns: 36
+      rows: 20
+    urban_footprint:
+      parent_mask_id: nation.inibholc
+      parent_area_id: city.cathair.nation
+      parent_location_id: loc.cathair
+      area_id: city.cathair
+      marker_image: [0.481, 0.725]
+      center_parent: [22, 20]
+      radius_parent: [2.8, 1.5]

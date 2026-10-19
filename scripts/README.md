@@ -1,19 +1,21 @@
 # 脚本职责与兼容状态
 
-`npm run wiki:*` 是日常使用的唯一命令入口；不要在 CI、文档或编辑教程中直接串联底层脚本。
+`npm run wiki:*` 是普通内容维护的统一入口；修改地图参考图或采样配置时使用 `npm run map:generate`，只检查同步状态时使用 `npm run map:check`。不要在 CI、文档或编辑教程中自行串联底层脚本。
 
 ## 当前生效的脚本
 
 | 脚本 | 由哪个入口调用 | 职责 |
 |---|---|---|
 | `validate-content-model.mjs` | `wiki:validate` | 校验公开实体的最小字段契约、Schema 命名、受控枚举和顶层 taxonomy 同步。 |
+| `generate-hex-map.mjs` | `map:generate`、`map:check`、`wiki:validate` | 从登记的政治参考图确定性生成陆地、国家与无人区六边形掩膜；国家试点从世界图投影共享边界，并记录双图来源哈希和变换参数。 |
+| `validate-maps.mjs` | `wiki:validate` | 校验地图层级、L0 网格及 L1 国土预算、区域与地点、父子地图、专题空接口、实体引用、视觉令牌和关键拓扑关系。 |
 | `prepare-wiki.mjs` | `wiki:validate`、`wiki:prepare`、预览与构建 | 构建内容关系图和时间线；检查 ID、关系目标/类型、来源和孤立实体；生成 `data/generated/`。 |
 | `lib/content-graph.mjs` | `prepare-wiki.mjs` | 内容图、ID 索引、反向链接和关系报告的底层实现。 |
 | `lib/timeline.mjs` | `prepare-wiki.mjs` | 时间线校验、排序与派生数据的底层实现。 |
 | `verify-search-index.mjs` | `wiki:build`、CI | 验证 Pagefind 输出存在。 |
 | `check-media-budget.mjs` | `quality:source`、`wiki:build`、CI | 阻止单个媒体超过 5 MiB 或内容/静态媒体总量超过 300 MiB，并报告空媒体文件。 |
 | `check-site-output.mjs` | `quality:site`、`wiki:build`、CI | 检查生成页面的标题与本地链接/资源目标；报告缺少图片替代文字。 |
-| `serve-public.mjs` + `tests/browser/` | `test:browser`、`wiki:build`、CI | 使用 Playwright/axe 对首页、搜索、时间线、实体页、404、跳过链接、移动导航和 WCAG A/AA 规则进行浏览器检查。 |
+| `serve-public.mjs` + `tests/browser/` | `test:browser`、CI | 使用 Playwright/axe 对首页、搜索、时间线、地图、实体页、404、键盘与移动交互和 WCAG A/AA 规则进行浏览器检查。 |
 | `print-*-report.mjs` | `wiki:report` | 输出关系和时间线统计，不修改文件。 |
 
 ## 维护脚本

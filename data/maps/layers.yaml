@@ -2,21 +2,98 @@
 maps:
   - id: world
     title: "世界总图"
+    page_ref: "portals/atlas/"
     type: hex
+    level: 0
     mask_id: world
     grid:
-      columns: 64
+      columns: 136
+      rows: 60
+      hex_size: 24
+      gap: 0.9
+      orientation: flat
+    min_zoom: 0.08
+    max_zoom: 16
+    default_zoom: 0.72
+    default_center:
+      col: 67.5
+      row: 29.5
+    wrap_x: true
+    appearance:
+      palette: political-pastel
+      relief: subtle
+      material: paper
+
+  - id: nation.inibholc
+    title: "伊琳沃克国家地图"
+    page_ref: "portals/atlas/inibholc/"
+    type: hex
+    level: 1
+    parent_map_id: world
+    parent_entity_id: nat.ini
+    mask_id: nation.inibholc
+    grid:
+      columns: 48
       rows: 28
       hex_size: 24
       gap: 0.9
       orientation: flat
-    min_zoom: 0.18
+    min_zoom: 0.08
     max_zoom: 5
     default_zoom: 0.72
     default_center:
-      col: 31.5
+      col: 23.5
       row: 13.5
-    wrap_x: true
+    wrap_x: false
+    land_only: true
+    chunk_size: 16
+    target_land_tiles: [450, 1100]
+    context:
+      map_id: world
+      focus_area_id: country.inibholc
+      labels:
+        - area_id: continent.cressida
+          position: [0.16, 0.08]
+          tier: overview
+        - label: "海洋"
+          kind: ocean
+          position: [0.72, 0.80]
+          tier: overview
+        - area_id: country.muocils
+          position: [0.22, 0.22]
+          tier: region
+        - area_id: country.dunossai
+          position: [0.82, 0.57]
+          tier: region
+    appearance:
+      palette: political-pastel
+      relief: subtle
+      material: paper
+
+  - id: city.cathair
+    title: "卡夏·欧尔莱特城区"
+    page_ref: "portals/atlas/"
+    type: hex
+    level: 2
+    parent_map_id: nation.inibholc
+    parent_entity_id: reg.ini.col
+    mask_id: city.cathair
+    grid:
+      columns: 36
+      rows: 20
+      hex_size: 24
+      gap: 0.9
+      orientation: flat
+    min_zoom: 0.08
+    max_zoom: 16
+    default_zoom: 0.72
+    default_center:
+      col: 17.5
+      row: 9.5
+    wrap_x: false
+    land_only: true
+    chunk_size: 12
+    target_land_tiles: [300, 650]
     appearance:
       palette: political-pastel
       relief: subtle

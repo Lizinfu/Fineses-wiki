@@ -19,13 +19,23 @@ weight = 20
   sections = ["nations", "regions"]
 
 [[main]]
+identifier = "atlas"
+name = "世界地图"
+pageRef = "/portals/atlas"
+weight = 25
+
+  [main.params]
+  code = "02"
+  sections = []
+
+[[main]]
 identifier = "characters-organizations"
 name = "人物与组织"
 pageRef = "/portals/characters-organizations"
 weight = 30
 
   [main.params]
-  code = "02"
+  code = "03"
   sections = ["characters", "organizations"]
 
 [[main]]
@@ -35,7 +45,7 @@ pageRef = "/portals/history"
 weight = 40
 
   [main.params]
-  code = "03"
+  code = "04"
   sections = ["history"]
 
 [[main]]
@@ -45,7 +55,7 @@ pageRef = "/portals/concepts-records"
 weight = 50
 
   [main.params]
-  code = "04"
+  code = "05"
   sections = ["concepts", "artifacts", "records"]
 
 [[main]]
@@ -55,7 +65,7 @@ pageRef = "/portals/ecology"
 weight = 60
 
   [main.params]
-  code = "05"
+  code = "06"
   sections = ["ecology"]
 
 [[main]]
@@ -65,7 +75,7 @@ pageRef = "/timeline"
 weight = 70
 
   [main.params]
-  code = "06"
+  code = "07"
   sections = ["timeline"]
 
 [[main]]
@@ -75,5 +85,5 @@ pageRef = "/search"
 weight = 80
 
   [main.params]
-  code = "07"
+  code = "08"
   sections = ["search"]

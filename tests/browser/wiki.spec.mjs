@@ -27,6 +27,7 @@ const routes = [
   "/search/",
   "/timeline/",
   "/portals/atlas/",
+  "/portals/atlas/inibholc/",
   "/nations/nat-ramus/",
   "/404.html",
 ];
@@ -138,11 +139,26 @@ test("atlas supports country focus, search, location focus, and keyboard zoom", 
     "href",
     /\/nations\/nat-muocils\/?$/,
   );
-  await expect(page.locator(".atlas-hex")).toHaveCount(1792);
+  const worldTileNodes = await page.locator("[data-atlas-map] > .atlas-hex-map .atlas-hex-batch").count();
+  expect(worldTileNodes).toBeLessThan(80);
+  expect(worldTileNodes).toBeGreaterThan(10);
   await expect(page.locator(".atlas-hex-repeat")).toHaveCount(2);
-  expect(await page.locator(".atlas-hex--land").count()).toBeGreaterThan(600);
-  expect(await page.locator(".atlas-hex[data-special='special.uninhabited']").count()).toBeGreaterThan(100);
-  await expect(page.locator(".atlas-ocean-gradient")).toHaveCount(1);
+  const worldSvg = page.locator("[data-atlas-map] > .atlas-hex-map");
+  await expect(worldSvg.locator(".atlas-terrain-layer")).toHaveCount(1);
+  await expect(worldSvg.locator(".atlas-political-layer")).toHaveCount(1);
+  await expect(worldSvg.locator(".atlas-boundary-layer")).toHaveCount(1);
+  await expect(worldSvg.locator(".atlas-route-layer")).toHaveCount(1);
+  await expect(page.locator("[data-atlas-label-layer]")).toHaveCount(1);
+  await expect(worldSvg.locator(".atlas-coast-path")).toHaveCount(1);
+  expect(await worldSvg.locator(".atlas-political-boundary-path").count()).toBeGreaterThan(1);
+  expect(await page.locator(".atlas-political-boundary-path[data-selected]").count()).toBeGreaterThan(0);
+  await expect(worldSvg.locator(".atlas-relief-filter")).toHaveCount(1);
+  await expect(page.locator(".atlas-hex[data-political-boundary]")).toHaveCount(0);
+  await expect(page.locator("[data-atlas]")).toHaveAttribute("data-atlas-logical-tiles", "8160");
+  await expect(page.locator("[data-atlas]")).toHaveAttribute("data-atlas-svg-tiles", String(worldTileNodes));
+  expect(await page.locator(".atlas-hex--land").count()).toBeGreaterThan(10);
+  expect(await page.locator(".atlas-hex[data-special='special.uninhabited']").count()).toBeGreaterThan(0);
+  await expect(worldSvg.locator(".atlas-ocean-gradient")).toHaveCount(1);
   const countryStyleCount = await page.locator(".atlas-hex[data-country]").evaluateAll((tiles) => (
     new Set(tiles.map((tile) => tile.getAttribute("data-area-style"))).size
   ));
@@ -152,13 +168,35 @@ test("atlas supports country focus, search, location focus, and keyboard zoom", 
   expect(oceanFill).not.toBe(uninhabitedFill);
   await expect(page.locator(".atlas-map-image")).toHaveCount(0);
 
+  const repeats = await page.locator(".atlas-map-repeat").evaluateAll((nodes) => nodes.map((node) => ({
+    href: node.getAttribute("href"),
+    transform: node.getAttribute("transform"),
+  })));
+  expect(repeats).toEqual([
+    { href: "#atlas-map-content-world", transform: "translate(-4896 0)" },
+    { href: "#atlas-map-content-world", transform: "translate(4896 0)" },
+  ]);
+
+  const mapData = await page.locator("#atlas-map-data").evaluate((node) => {
+    const parsed = JSON.parse(node.textContent);
+    return typeof parsed === "string" ? JSON.parse(parsed) : parsed;
+  });
+  expect(mapData.maps[0].level).toBe(0);
+  expect(mapData.locations[0].position).toEqual({ x: 0.634921, y: 0.148148 });
+
+  const presetToggle = page.locator("[data-atlas-preset-toggle]");
+  await presetToggle.click();
+  await expect(presetToggle).toHaveAttribute("aria-pressed", "true");
+  await expect(page.locator("[data-atlas-map]")).toHaveAttribute("data-visual-preset", "tactical-paper");
+  await expect(presetToggle).toHaveText("政治配色");
+
   await page.locator("[data-atlas-search]").fill("不存在的地点");
   await expect(page.locator("[data-atlas-count]")).toHaveText("0 个地图条目");
   await expect(page.locator("[data-atlas-location-item]")).toBeHidden();
   await expect(page.locator("[data-atlas-area-item]").first()).toBeHidden();
 
   await page.locator("[data-atlas-search]").fill("");
-  await expect(page.locator("[data-atlas-count]")).toHaveText("14 个地图条目");
+  await expect(page.locator("[data-atlas-count]")).toHaveText("15 个地图条目");
 
   await location.click();
   await expect(location).toHaveAttribute("aria-pressed", "true");
@@ -166,7 +204,7 @@ test("atlas supports country focus, search, location focus, and keyboard zoom", 
 
   const zoomReadout = page.locator("[data-atlas-zoom-readout]");
   const initialZoom = Number((await zoomReadout.textContent()).replace("%", ""));
-  await stage.focus();
+  // A directory click leaves focus outside the stage; map shortcuts still work.
   await page.keyboard.press("+");
   await expect.poll(async () => Number((await zoomReadout.textContent()).replace("%", "")))
     .toBeGreaterThan(initialZoom);
@@ -176,6 +214,226 @@ test("atlas supports country focus, search, location focus, and keyboard zoom", 
     .toBeLessThan(initialZoom);
   await expect(page.locator("[data-atlas-selection]")).toBeHidden();
   await expect(page).not.toHaveURL(/loc=/);
+});
+
+test("Inibholc detail refines the persistent world map in place", async ({ page }) => {
+  await page.goto("/portals/atlas/");
+  const root = page.locator("[data-atlas]");
+  const world = page.locator("[data-atlas-map]");
+  await world.evaluate((node) => { node.dataset.persistenceProbe = "same-scene"; });
+  await page.locator("[data-atlas-area-focus='country.inibholc']").first().click();
+  await expect(page).toHaveURL(/\/portals\/atlas\/\?entity=nat\.ini/);
+  await expect(world).toHaveAttribute("data-persistence-probe", "same-scene");
+  await expect(root).toHaveAttribute("data-atlas-map-id", "world");
+  await expect(root).toHaveAttribute("data-atlas-detail-logical-tiles", "782");
+  await expect(world).toHaveAttribute("data-detail-active", "true");
+  await expect(page.locator("[data-atlas-view-level]")).toHaveText("国家详图");
+  await expect(page.locator("[data-atlas-view-region]")).toHaveText("伊琳沃克");
+  await expect(page.locator("[data-atlas-selection-leader]")).toBeVisible();
+  await expect(page.locator("[data-atlas-selection-link]")).toContainText("查看档案");
+  const selectedCard = await page.locator("[data-atlas-selection]").boundingBox();
+  const cityLabel = await page.locator(".atlas-city-label").boundingBox();
+  const coversCityLabel = selectedCard.x < cityLabel.x + cityLabel.width &&
+    selectedCard.x + selectedCard.width > cityLabel.x &&
+    selectedCard.y < cityLabel.y + cityLabel.height &&
+    selectedCard.y + selectedCard.height > cityLabel.y;
+  expect(coversCityLabel).toBe(false);
+  await expect(page.locator("[data-atlas-detail-map]")).toHaveAttribute("data-detail-visible", "true");
+  await expect.poll(async () => Number(await root.getAttribute("data-atlas-detail-visible-tiles"))).toBeGreaterThan(0);
+  expect(await page.locator("[data-atlas-map] > .atlas-hex-map .atlas-hex-batch").count()).toBeLessThan(80);
+  await expect(page.locator("[data-atlas-map] > .atlas-hex-map .atlas-hex--ocean")).not.toHaveCount(0);
+  await expect(page.locator(".atlas-context-canvas")).toHaveCount(0);
+  await expect(page.locator("clipPath[id='atlas-shared-border-nation.inibholc'] path"))
+    .toHaveAttribute("d", /M .* Z/);
+  await expect(page.locator("[data-atlas-detail-map] > .atlas-hex-map .atlas-political-layer"))
+    .toHaveAttribute("clip-path", "url(#atlas-shared-border-nation.inibholc)");
+  const borderError = await page.locator("[data-atlas]").evaluate((rootNode) => {
+    const raw = JSON.parse(rootNode.querySelector("#atlas-map-data").textContent);
+    const data = typeof raw === "string" ? JSON.parse(raw) : raw;
+    const worldMap = data.maps.find((entry) => entry.id === "world");
+    const nationMask = data.tile_masks["nation.inibholc"];
+    const areaRows = data.tile_masks.world.area_masks["country.inibholc"].tile_rows;
+    const firstRow = areaRows[0];
+    const lastRow = areaRows.at(-1);
+    const coordinates = [
+      { col: firstRow.ranges[0][0], row: firstRow.row },
+      { col: lastRow.ranges.at(-1)[1], row: lastRow.row },
+    ];
+    const radius = worldMap.grid.hex_size - worldMap.grid.gap / 2;
+    const padding = worldMap.grid.hex_size * 1.25;
+    const clip = rootNode.querySelector('clipPath[id="atlas-shared-border-nation.inibholc"] path');
+    const vertices = [...clip.getAttribute("d").matchAll(/M ([\d.-]+) ([\d.-]+)/g)];
+    const overlay = rootNode.querySelector('[data-atlas-detail-map]');
+    const transform = new DOMMatrix(getComputedStyle(overlay).transform);
+    const errors = coordinates.map(({ col, row }, index) => {
+      const vertex = vertices[index === 0 ? 0 : vertices.length - 1];
+      const projected = transform.transformPoint({ x: Number(vertex[1]), y: Number(vertex[2]) });
+      const expectedX = padding + worldMap.grid.hex_size + col * worldMap.grid.hex_size * 1.5 + radius;
+      const expectedY = padding + worldMap.grid.hex_size * Math.sqrt(3) / 2 +
+        (row + (col % 2 === 0 ? 0 : 0.5)) * worldMap.grid.hex_size * Math.sqrt(3);
+      return Math.max(Math.abs(projected.x - expectedX), Math.abs(projected.y - expectedY));
+    });
+    return Math.max(
+      Math.abs(nationMask.alignment.parent_hex_radius - radius / worldMap.grid.hex_size),
+      ...errors,
+    );
+  });
+  expect(borderError).toBeLessThan(0.01);
+  await expect(page.locator("[data-atlas-detail-map] .atlas-tile-chunk")).not.toHaveCount(0);
+  await expect(page.locator(".atlas-area-label--country[data-atlas-area-focus='country.muocils']")).toBeVisible();
+
+  for (let index = 0; index < 5; index += 1) await page.locator("[data-atlas-zoom='out']").click();
+  await expect(world).toHaveAttribute("data-detail-active", "false");
+  await expect(world).toHaveAttribute("data-persistence-probe", "same-scene");
+  await page.goBack();
+  await expect(page).toHaveURL(/\/portals\/atlas\/$/);
+  await expect(world).toHaveAttribute("data-persistence-probe", "same-scene");
+});
+
+test("Cathair refines a provisional urban area without replacing its country", async ({ page }) => {
+  await page.goto("/portals/atlas/");
+  await expect(page.locator(".site-rail .primary-nav__link", { hasText: "世界地图" }))
+    .toHaveAttribute("href", /\/portals\/atlas\/$/);
+  const root = page.locator("[data-atlas]");
+  const world = page.locator("[data-atlas-map]");
+  const mapData = await page.locator("#atlas-map-data").evaluate((node) => {
+    const parsed = JSON.parse(node.textContent);
+    return typeof parsed === "string" ? JSON.parse(parsed) : parsed;
+  });
+  expect(mapData.tile_masks["city.cathair"].alignment.parent_area_id).toBe("city.cathair.nation");
+  expect(mapData.tile_masks["nation.inibholc"].area_masks["city.cathair.nation"].tile_count).toBeGreaterThan(8);
+  await world.evaluate((node) => { node.dataset.persistenceProbe = "city-same-scene"; });
+  await page.locator("[data-atlas-area-focus='country.inibholc']").first().click();
+  const cityLabel = page.locator(".atlas-city-label[data-atlas-city-focus='loc.cathair']");
+  await expect(cityLabel).toBeVisible();
+  await cityLabel.click();
+  await expect(page).toHaveURL(/\/portals\/atlas\/\?loc=loc\.cathair/);
+  await expect(world).toHaveAttribute("data-persistence-probe", "city-same-scene");
+  await expect(root).toHaveAttribute("data-atlas-city-logical-tiles", "566");
+  await expect(page.locator("[data-atlas-detail-map]")).toHaveAttribute("data-detail-visible", "true");
+  await expect(page.locator("[data-atlas-city-map]")).toHaveAttribute("data-detail-visible", "true");
+  await expect(page.locator("[data-atlas-view-level]")).toHaveText("城区");
+  await expect(page.locator("[data-atlas-view-region]")).toHaveText("卡夏·欧尔莱特");
+  await expect(page.locator("[data-atlas-selection-leader]")).toBeVisible();
+  await expect.poll(async () => Number(await root.getAttribute("data-atlas-city-visible-tiles"))).toBeGreaterThan(100);
+  await expect(page.locator("[data-atlas-city-map] .atlas-hex[data-city='city.cathair']"))
+    .not.toHaveCount(0);
+  await expect(page.locator("clipPath#atlas-shared-border-city\\.cathair path")).toHaveAttribute("d", /M .* Z/);
+  await expect(page.locator("[data-atlas-city-map] > .atlas-hex-map .atlas-political-layer"))
+    .toHaveAttribute("clip-path", "url(#atlas-shared-border-city.cathair)");
+  await page.locator("[data-atlas-preset-toggle]").click();
+  await expect(page.locator("[data-atlas-map] > .atlas-hex-map .atlas-terrain-relief"))
+    .toHaveCSS("display", "none");
+  await expect(page.locator("[data-atlas-detail-map] > .atlas-hex-map .atlas-terrain-relief"))
+    .toHaveCSS("display", "none");
+  await expect(page.locator("[data-atlas-city-map] > .atlas-hex-map .atlas-terrain-relief"))
+    .not.toHaveCSS("display", "none");
+  expect(await page.locator("[data-atlas-map] > .atlas-hex-map .atlas-hex-batch").count()).toBeLessThan(80);
+  await expect(page.locator("[data-atlas-selection-status]")).toContainText("暂定范围");
+
+  for (let index = 0; index < 8 && await page.locator("[data-atlas-city-map]").getAttribute("data-detail-visible") === "true"; index += 1) {
+    await page.locator("[data-atlas-zoom='out']").click();
+  }
+  await expect(page.locator("[data-atlas-city-map]")).toHaveAttribute("data-detail-visible", "false");
+  await expect(page.locator("[data-atlas-detail-map]")).toHaveAttribute("data-detail-visible", "true");
+  await expect(page.locator("[data-atlas-view-level]")).toHaveText("国家详图");
+  await page.goto("/portals/atlas/?loc=loc.cathair");
+  await expect(page.locator("[data-atlas-city-map]")).toHaveAttribute("data-detail-visible", "true");
+});
+
+test("atlas labels follow exclusive overview, region, and detail bands without white boxes", async ({ page }) => {
+  const reachBand = async (band, direction) => {
+    const map = page.locator("[data-atlas-map]");
+    for (let attempt = 0; attempt < 24; attempt += 1) {
+      if (await map.getAttribute("data-zoom-band") === band) return;
+      await page.locator(`[data-atlas-zoom='${direction}']`).click();
+    }
+    expect(await map.getAttribute("data-zoom-band")).toBe(band);
+  };
+
+  await page.goto("/portals/atlas/");
+  await reachBand("overview", "out");
+  await expect(page.locator(".atlas-area-label--continent").first()).toBeVisible();
+  await expect(page.locator(".atlas-context-label--ocean")).toBeVisible();
+  await expect(page.locator(".atlas-area-label--country").first()).toBeHidden();
+  await expect(page.locator("[data-atlas-marker]")).toBeHidden();
+
+  await reachBand("region", "in");
+  await expect(page.locator(".atlas-area-label--country").first()).toBeVisible();
+  await expect(page.locator(".atlas-area-label--continent").first()).toBeHidden();
+  await expect(page.locator(".atlas-context-label--ocean")).toBeHidden();
+  const labelAppearance = await page.locator(".atlas-area-label--country").first().evaluate((label) => ({
+    background: getComputedStyle(label).backgroundColor,
+    border: getComputedStyle(label).borderTopWidth,
+  }));
+  expect(labelAppearance).toEqual({ background: "rgba(0, 0, 0, 0)", border: "0px" });
+
+  await reachBand("detail", "in");
+  await expect(page.locator(".atlas-area-label--country").first()).toBeVisible();
+  await expect(page.locator("[data-atlas-marker]")).toBeVisible();
+
+  await page.goto("/portals/atlas/inibholc/");
+  await expect(page).toHaveURL(/\/portals\/atlas\/\?entity=nat\.ini/);
+});
+
+test("atlas detail tracks the viewed region instead of zoom alone", async ({ page }) => {
+  await page.goto("/portals/atlas/");
+  const detail = page.locator("[data-atlas-detail-map]");
+  await page.locator("[data-atlas-area-item] [data-atlas-area-focus='country.inibholc']").click();
+  await expect(detail).toHaveAttribute("data-detail-visible", "true");
+  await page.locator("[data-atlas-area-item] [data-atlas-area-focus='country.sirena']").click();
+  for (let attempt = 0; attempt < 12; attempt += 1) {
+    const zoom = Number((await page.locator("[data-atlas-zoom-readout]").textContent()).replace("%", ""));
+    if (zoom >= 75) break;
+    await page.locator("[data-atlas-zoom='in']").click();
+  }
+  await expect(detail).toHaveAttribute("data-detail-visible", "false");
+  await expect(page.locator(".atlas-area-label--country[data-atlas-area-focus='country.sirena']")).toBeVisible();
+  await expect(page.locator("[data-atlas-view-region]")).not.toHaveText("伊琳沃克");
+});
+
+test("atlas wheel zoom keeps the map point under the pointer", async ({ page }) => {
+  await page.goto("/portals/atlas/");
+  await page.locator("[data-atlas-stage]").scrollIntoViewIfNeeded();
+  const stage = await page.locator("[data-atlas-stage]").boundingBox();
+  const pointer = { x: stage.x + stage.width * 0.6, y: stage.y + stage.height * 0.55 };
+  const pointUnderPointer = () => page.locator("[data-atlas-map]").evaluate((map, { x, y }) => {
+    const bounds = map.getBoundingClientRect();
+    return { x: (x - bounds.left) / bounds.width, y: (y - bounds.top) / bounds.height };
+  }, pointer);
+  const before = await pointUnderPointer();
+  const readout = page.locator("[data-atlas-zoom-readout]");
+  const initialZoom = Number((await readout.textContent()).replace("%", ""));
+  await page.mouse.move(pointer.x, pointer.y);
+  await page.mouse.wheel(0, -120);
+  await expect.poll(async () => Number((await readout.textContent()).replace("%", "")))
+    .toBeGreaterThan(initialZoom);
+  const after = await pointUnderPointer();
+  expect(Math.abs(after.x - before.x)).toBeLessThan(0.0005);
+  expect(Math.abs(after.y - before.y)).toBeLessThan(0.0005);
+});
+
+test("atlas refits untouched views on resize but preserves a manually chosen zoom", async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto("/portals/atlas/");
+  await expect(page.locator("[data-atlas]")).toHaveAttribute("data-atlas-logical-tiles", "8160");
+  const zoom = page.locator("[data-atlas-zoom-readout]");
+  const narrow = Number((await zoom.textContent()).replace("%", ""));
+  await page.setViewportSize({ width: 1280, height: 900 });
+  await expect.poll(async () => Number((await zoom.textContent()).replace("%", ""))).toBeGreaterThan(narrow);
+  await page.locator("[data-atlas-zoom='in']").click();
+  const manuallyChosen = await zoom.textContent();
+  await page.setViewportSize({ width: 1080, height: 900 });
+  await expect(zoom).toHaveText(manuallyChosen);
+});
+
+test("atlas disables decorative transitions for reduced motion", async ({ page }) => {
+  await page.emulateMedia({ reducedMotion: "reduce" });
+  await page.goto("/portals/atlas/");
+  const transitionDuration = await page.locator(".atlas-hex").first().evaluate((tile) => (
+    getComputedStyle(tile).transitionDuration
+  ));
+  expect(parseFloat(transitionDuration)).toBeLessThan(0.001);
 });
 
 test("atlas assets are only loaded by the atlas page", async ({ page }) => {

@@ -2,31 +2,59 @@
   {{- $maps := site.Data.maps.layers.maps | default (slice) -}}
   {{- $allLocations := site.Data.maps.locations.locations | default (slice) -}}
   {{- $allAreas := site.Data.maps.areas.areas | default (slice) -}}
+  {{- $mapID := .Params.map_id | default "world" -}}
   {{- $activeMap := dict -}}
-  {{- with first 1 $maps -}}
+  {{- with first 1 (where $maps "id" $mapID) -}}
     {{- $activeMap = index . 0 -}}
   {{- end -}}
+  {{- $mapURLs := dict -}}
+  {{- range $maps -}}
+    {{- $mapURLs = merge $mapURLs (dict .id (.page_ref | relURL)) -}}
+  {{- end -}}
   {{- $locations := slice -}}
+  {{- $detailLocations := slice -}}
   {{- $areas := slice -}}
   {{- with $activeMap.id -}}
     {{- $locations = where $allLocations "map_id" . -}}
     {{- $areas = where $allAreas "map_id" . -}}
   {{- end -}}
   {{- $countryAreas := where $areas "layer" "country" -}}
-  {{- $indexedCount := add (len $countryAreas) (len $locations) -}}
   {{- $entities := index site.Data.generated "id-index" -}}
-  {{- $tileMasks := site.Data.maps.tiles.masks | default (dict) -}}
-  {{- $mapData := dict "maps" $maps "locations" $locations "areas" $areas "entities" $entities "tile_masks" $tileMasks -}}
-  <div class="page-main__inner atlas-page" data-atlas>
+  {{- $tileMasks := dict -}}
+  {{- $renderMaps := slice $activeMap -}}
+  {{- $detailAreas := slice -}}
+  {{- with $activeMap.mask_id -}}
+    {{- $tileMasks = dict . (index site.Data.maps.tiles.masks .) -}}
+  {{- end -}}
+  {{- if eq $mapID "world" -}}
+    {{- range $maps -}}
+      {{- if ne .id $mapID -}}
+        {{- $renderMaps = $renderMaps | append . -}}
+        {{- $tileMasks = merge $tileMasks (dict .mask_id (index site.Data.maps.tiles.masks .mask_id)) -}}
+        {{- $detailAreas = $detailAreas | append (where $allAreas "map_id" .id) -}}
+        {{- $detailLocations = $detailLocations | append (where $allLocations "map_id" .id) -}}
+      {{- end -}}
+    {{- end -}}
+  {{- end -}}
+  {{- $indexedCount := add (add (len $countryAreas) (len $locations)) (len $detailLocations) -}}
+  {{- $features := index site.Data.maps.features.maps $mapID | default (dict) -}}
+  {{- $context := dict -}}
+  {{- with $activeMap.context -}}
+    {{- $contextConfig := . -}}
+    {{- with first 1 (where $maps "id" $contextConfig.map_id) -}}
+      {{- $contextMap := index . 0 -}}
+      {{- $context = dict "map" $contextMap "mask" (index site.Data.maps.tiles.masks $contextMap.mask_id) "areas" (where $allAreas "map_id" $contextMap.id) "focus_area_id" $contextConfig.focus_area_id -}}
+    {{- end -}}
+  {{- end -}}
+  {{- $mapData := dict "maps" $renderMaps "map_urls" $mapURLs "locations" $locations "detail_locations" $detailLocations "areas" $areas "detail_areas" $detailAreas "features" $features "context" $context "entities" $entities "tile_masks" $tileMasks -}}
+  <div class="page-main__inner atlas-page" data-atlas data-atlas-map-id="{{ $mapID }}" data-atlas-land-only="{{ $activeMap.land_only | default false }}">
     {{ partial "navigation/breadcrumbs.html" . }}
 
     <header class="atlas-hero">
       <div>
         <span class="ui-label">ATLAS / MAP SYSTEM</span>
         <h1 class="list-hero__title">{{ .Title }}</h1>
-        <p class="list-hero__description">{{ .Description }}</p>
       </div>
-      <span class="ui-index">{{ $indexedCount }} MAP ENTRIES INDEXED</span>
     </header>
 
     <section class="atlas-workspace" aria-label="交互式地图工作区">
@@ -37,14 +65,20 @@
           <span data-atlas-count aria-live="polite">{{ $indexedCount }} 个地图条目</span>
           <button class="atlas-text-button" type="button" data-atlas-reset>重置视野</button>
         </div>
+        {{ with $activeMap.parent_map_id }}
+          <a class="atlas-parent-link" data-atlas-parent href="{{ index $mapURLs . }}?entity={{ $activeMap.parent_entity_id }}">← 返回世界总图</a>
+        {{ end }}
         <ul class="atlas-location-list" data-atlas-list>
           {{ range $countryAreas }}
             {{- $entity := index $entities .entity_id -}}
+            {{- $detailHref := "" -}}
+            {{- if eq .detail_status "available" -}}
+              {{- $detailHref = printf "%s?entity=%s" (index $mapURLs $mapID) .entity_id -}}
+            {{- end -}}
             <li data-atlas-area-item data-area-id="{{ .id }}" data-entity-id="{{ .entity_id }}">
-              <button type="button" class="atlas-location" data-atlas-area-focus="{{ .id }}" aria-pressed="false">
+              <button type="button" class="atlas-location" data-atlas-area-focus="{{ .id }}" {{ with $detailHref }}data-detail-href="{{ . }}"{{ end }} aria-pressed="false">
                 <span class="atlas-location__kind">{{ if eq .political_status "unruled" }}无政权地区{{ else }}国家{{ end }}</span>
                 <strong>{{ .label }}</strong>
-                <span>{{ if eq .detail_status "awaiting-source" }}世界总图 · 详图待补充{{ else }}可进入详图{{ end }}</span>
               </button>
               {{ with $entity }}<a class="atlas-entry-link" href="{{ .page_ref | relURL }}">打开条目</a>{{ end }}
             </li>
@@ -59,6 +93,16 @@
               </button>
             </li>
           {{ end }}
+          {{ range $detailLocations }}
+            {{- $entity := index $entities .entity_id -}}
+            <li data-atlas-city-item data-location-id="{{ .id }}" data-entity-id="{{ .entity_id }}">
+              <button type="button" class="atlas-location" data-atlas-city-focus="{{ .id }}" aria-pressed="false">
+                <span class="atlas-location__kind">{{ if eq .kind "capital" }}首都城区{{ else }}城市城区{{ end }}</span>
+                <strong>{{ .label }}</strong>
+              </button>
+              {{ with $entity }}<a class="atlas-entry-link" href="{{ .page_ref | relURL }}">打开条目</a>{{ end }}
+            </li>
+          {{ end }}
           {{ if eq $indexedCount 0 }}
             <li class="atlas-empty">地图地点资料尚未录入。</li>
           {{ end }}
@@ -70,28 +114,54 @@
           <button type="button" class="atlas-control" data-atlas-zoom="in" aria-label="放大地图">+</button>
           <button type="button" class="atlas-control" data-atlas-zoom="out" aria-label="缩小地图">−</button>
           <span class="atlas-zoom-readout" data-atlas-zoom-readout>100%</span>
+          <button type="button" class="atlas-preset-toggle" data-atlas-preset-toggle aria-pressed="false">战术质感</button>
+        </div>
+        <div class="atlas-view-indicator" aria-label="当前地图范围">
+          <span data-atlas-view-level>世界总览</span>
+          <strong data-atlas-view-region>全球</strong>
         </div>
         <div class="atlas-canvas" data-atlas-canvas>
           {{ with $activeMap.id }}
           <div class="atlas-map-layer" data-atlas-map>
-            {{ range $areas }}
-              <button
-                type="button"
-                class="atlas-area-label atlas-area-label--{{ .layer }}"
-                data-atlas-area-label
-                data-atlas-area-focus="{{ .id }}"
-                data-col="{{ index .label_anchor 0 }}"
-                data-row="{{ index .label_anchor 1 }}"
-                aria-label="定位{{ .label }}">
-                {{ .label }}
-              </button>
-            {{ end }}
-            {{ range $locations }}
-              {{- $entity := index $entities .entity_id -}}
-              <a class="atlas-marker" data-atlas-marker data-location-id="{{ .id }}" data-col="{{ .col }}" data-row="{{ .row }}" href="{{ with $entity }}{{ .page_ref | relURL }}{{ else }}#{{ end }}" aria-label="打开{{ .label }}条目">
-                <span aria-hidden="true"></span><b>{{ .label }}</b>
-              </a>
-            {{ end }}
+            <div class="atlas-html-layer" data-atlas-label-layer data-layer="labels">
+              {{ range $areas }}
+                <button
+                  type="button"
+                  class="atlas-area-label atlas-area-label--{{ .layer }}"
+                  data-atlas-area-label
+                  data-atlas-area-focus="{{ .id }}"
+                  {{ if eq .detail_status "available" }}data-detail-href="{{ printf "%s?entity=%s" (index $mapURLs $mapID) .entity_id }}"{{ end }}
+                  data-col="{{ index .label_anchor 0 }}"
+                  data-row="{{ index .label_anchor 1 }}"
+                  aria-label="定位{{ .label }}">
+                  <span class="atlas-label-icon" aria-hidden="true"></span><span class="atlas-label-text">{{ .label }}</span>
+                </button>
+              {{ end }}
+              {{ if eq $mapID "world" }}
+                <span class="atlas-context-label atlas-context-label--ocean" data-zoom-tier="overview" data-col="72" data-row="47">海洋</span>
+              {{ end }}
+              {{ range $activeMap.context.labels }}
+                {{- $labelSpec := . -}}
+                {{- $contextLabel := .label | default "" -}}
+                {{- $contextKind := .kind | default "country" -}}
+                {{- with .area_id -}}
+                  {{- with first 1 (where $allAreas "id" .) -}}
+                    {{- $area := index . 0 -}}
+                    {{- $contextLabel = $area.label -}}
+                    {{- $contextKind = $area.layer -}}
+                  {{- end -}}
+                {{- end -}}
+                {{- with $contextLabel -}}
+                  <span class="atlas-context-label atlas-context-label--{{ $contextKind }}" data-zoom-tier="{{ $labelSpec.tier | default "region" }}" data-map-x="{{ index $labelSpec.position 0 }}" data-map-y="{{ index $labelSpec.position 1 }}"><span class="atlas-label-icon" aria-hidden="true"></span>{{ . }}</span>
+                {{- end -}}
+              {{ end }}
+              {{ range $locations }}
+                {{- $entity := index $entities .entity_id -}}
+                <a class="atlas-marker" data-atlas-marker data-location-id="{{ .id }}" data-col="{{ .col }}" data-row="{{ .row }}" href="{{ with $entity }}{{ .page_ref | relURL }}{{ else }}#{{ end }}" aria-label="打开{{ .label }}条目">
+                  <span aria-hidden="true"></span><b>{{ .label }}</b>
+                </a>
+              {{ end }}
+            </div>
           </div>
           <noscript>
             <div class="atlas-placeholder">
@@ -108,13 +178,17 @@
           </div>
           {{ end }}
         </div>
+        <svg class="atlas-selection-leader" data-atlas-selection-leader hidden aria-hidden="true">
+          <line data-atlas-selection-line></line>
+          <circle data-atlas-selection-point r="4"></circle>
+        </svg>
         <aside class="atlas-selection" data-atlas-selection hidden aria-live="polite">
+          <span class="atlas-selection__eyebrow">ATLAS / FILE</span>
           <span class="atlas-selection__kind" data-atlas-selection-kind></span>
           <strong data-atlas-selection-title></strong>
           <span data-atlas-selection-status></span>
-          <a data-atlas-selection-link hidden>打开条目</a>
+          <a data-atlas-selection-link hidden>查看档案 <span aria-hidden="true">↗</span></a>
         </aside>
-        <p class="atlas-stage__hint">点击国家名称聚焦 · 拖拽移动 · 按钮缩放</p>
       </div>
     </section>
 

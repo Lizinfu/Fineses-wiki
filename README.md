@@ -10,6 +10,7 @@
 - 响应式导航、面包屑、页面目录、深浅主题和无 JavaScript 基础阅读；
 - Pagefind 全文搜索及实体类型、Section、时间线等筛选元数据；
 - 通过稳定 ID 构建关系与自动反向链接；
+- 参考图生成的交互式六边形地图：世界总图 8,160 个逻辑格以合并 SVG 路径绘制并支持横向环绕；伊琳沃克 782 片国土候选瓦片和卡夏·欧尔莱特 566 片暂定城区瓦片逐层原位覆盖，共享父级六边形边界，城外、邻国和海洋保留上级瓦片；世界地图直接位于主侧边栏。
 - GitHub Actions 在 Pull Request 校验内容，并在 `main` 分支自动部署到 GitHub Pages。
 
 完整目标和长期路线见 [`docs/BUILDER/PLAN.MD`](docs/BUILDER/PLAN.MD)。该文件是架构蓝图；**日常编辑与当前实现规则以 `docs/` 下的专题文档和本 README 为准。**
@@ -35,8 +36,10 @@ npm run wiki:preview-search
 
 | 命令 | 用途 | 是否写入文件 |
 |---|---|---|
-| `npm run wiki:validate` | 校验公开实体的最小内容契约、受控枚举、关系、来源和时间线；同时检查派生数据能否由当前内容重建。 | 否 |
+| `npm run wiki:validate` | 校验公开实体、地图、关系、来源和时间线；同时检查地图及其他派生数据能否由当前源文件重建。 | 否 |
 | `npm run wiki:prepare` | 生成 `data/generated/` 中的 ID 索引、反向链接、统计、时间线及报告。 | 是 |
+| `npm run map:generate` | 从已登记的政治参考图重新生成 `data/maps/tiles.yaml`。仅在修改地图来源或采样配置后运行。 | 是 |
+| `npm run map:check` | 检查地图生成数据是否与参考图和配置一致。 | 否 |
 | `npm run wiki:build` | 执行校验、生成派生数据、Hugo 构建、Pagefind 建索引和静态站点质量检查。 | 是（含忽略的 `public/`） |
 | `npm run quality:source` | 检查源媒体的单文件/总量预算；空媒体会报告为警告。 | 否 |
 | `npm run quality:site` | 检查已生成站点的页面标题、本地链接和资源目标；缺少图片替代文字会报告为警告。 | 否 |
@@ -61,7 +64,7 @@ npm run wiki:preview-search
 - [设计系统](docs/design-system.md)
 - [发布流程](docs/release-process.md)
 - [面向编辑者的维护手册](docs/BUILDER/WIKI_MAINTENANCE_GUIDE.md)
-- [地图资产与信息补充指南](docs/BUILDER/MAP_ASSET_GUIDE.md)
+- [交互式六边形地图实施方案](docs/BUILDER/MAP_IMPLEMENTATION_PLAN.md)
 - [脚本职责与兼容状态](scripts/README.md)
 
 ## 目录职责

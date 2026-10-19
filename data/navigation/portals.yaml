@@ -16,10 +16,6 @@ portals:
         label: "地区与城市"
         page_ref: "/regions"
         description: "大陆、区域、行政区、城市、聚落与地理环境。"
-      - key: "atlas"
-        label: "世界地图"
-        page_ref: "/portals/atlas"
-        description: "通过可缩放地图定位国家、地区、城市与重要地标。"
     featured_ids: []
 
   - key: characters-organizations

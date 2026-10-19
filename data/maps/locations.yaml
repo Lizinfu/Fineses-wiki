@@ -5,5 +5,22 @@ locations:
     map_id: world
     label: "莫尔索斯"
     kind: region
-    col: 40
-    row: 4
+    position:
+      x: 0.634921
+      y: 0.148148
+    col: 86
+    row: 9
+
+  - id: loc.cathair
+    entity_id: reg.ini.col
+    map_id: nation.inibholc
+    label: "卡夏·欧尔莱特"
+    kind: capital
+    position:
+      x: 0.458
+      y: 0.736
+    col: 22
+    row: 20
+    detail_status: available
+    detail_map_id: city.cathair
+    footprint_status: provisional
