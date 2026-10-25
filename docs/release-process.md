@@ -10,10 +10,9 @@
 4. `npm run quality:source`（媒体预算）；
 5. `npm run wiki:prepare`；
 6. 使用 `--cleanDestinationDir` 的 Hugo 构建；
-7. Pagefind 建索引；
-8. 验证 Pagefind bundle；
-9. `npm run quality:site`（渲染页面标题与本地资源/链接目标）。
-10. `npm run test:browser`（Playwright + axe 的关键路径和浏览器无障碍检查）。
+7. 验证 Hugo 生成的正文检索索引；
+8. `npm run quality:site`（渲染页面标题与本地资源/链接目标）；
+9. `npm run test:browser`（Playwright + axe 的关键路径、正文检索和浏览器无障碍检查）。
 
 PR 不应在上述错误级检查失败时合并。媒体总量/单文件超限和失效本地链接会阻止合并；空媒体与缺失图片替代文字当前仅报告警告，作为存量治理清单。Markdown lint、Lighthouse 和视觉回归门禁尚未配置。
 

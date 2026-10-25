@@ -23,7 +23,7 @@
 1. 已填 ID 并部署后，`/library/messages/` 显示 Giscus 输入框和既有评论。
 2. 使用非维护者 GitHub 账号发布一条测试留言，刷新页面后仍可读取。
 3. 在 Discussions 后台删除或锁定测试留言，确认网页同步反映。
-4. 确认其他页面未加载 `giscus.app/client.js`，且 Pagefind 不索引动态评论。
+4. 确认其他页面未加载 `giscus.app/client.js`，且 Hugo 正文检索索引不收录动态评论。
 
 ## 主题同步
 

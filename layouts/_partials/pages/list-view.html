@@ -1,15 +1,7 @@
 <div class="page-main__inner">
-  {{- $isEntitySection := isset .Params "id" -}}
-
-  {{- if $isEntitySection -}}
-    {{ partial "search/pagefind-metadata.html" . }}
-  {{- end -}}
-
   {{ partial "navigation/breadcrumbs.html" . }}
 
-  <header
-    class="list-hero"
-    {{- if $isEntitySection }} data-pagefind-body{{ end }}>
+  <header class="list-hero">
     <div class="list-hero__topline">
       <span class="ui-label">
         {{ .Kind | upper }}
@@ -31,10 +23,7 @@
     {{ end }}
   </header>
 
-  <section
-    class="list-section"
-    aria-labelledby="subsections-title"
-    data-pagefind-ignore>
+  <section class="list-section" aria-labelledby="subsections-title">
     <header class="list-section__header">
       <h2 id="subsections-title">馆藏页面</h2>
       <span class="list-section__count">

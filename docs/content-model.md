@@ -63,7 +63,7 @@ params:
 - `classifications.cultures`、`eras`、`regions`、`government_forms`、`topics` 和 `relations` 必须为数组；
 - 顶层 `cultures`、`eras`、`topics` 必须与 `params.classifications` 中的同名数组完全一致。
 
-`description`、`keywords` 和 `library.source_refs` 是当前强烈建议字段；模板与搜索会使用它们，但最小校验尚未将前三者全部视为必填。新内容应填写 `description`，并为别名、旧称和外文名使用 `keywords` 或 `params.names`。
+`description`、`keywords` 和 `library.source_refs` 是当前强烈建议字段；模板会使用描述，别名仍用于档案展示与未来扩展，但当前正文检索不以这些元数据作为命中依据。最小校验尚未将前三者全部视为必填。新内容应填写 `description`，并为别名、旧称和外文名使用 `keywords` 或 `params.names`。
 
 ## 稳定 ID 与 URL
 

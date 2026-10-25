@@ -1,0 +1,16 @@
+{{- $documents := slice -}}
+{{- range site.Pages -}}
+  {{- if and .File (in (slice "page" "section") .Kind) (ne .Section "search") (not .Params.exclude_from_search) -}}
+    {{- $body := .Plain | strings.TrimSpace -}}
+    {{- if $body -}}
+      {{- $documents = $documents | append (dict
+        "url" .RelPermalink
+        "title" .Title
+        "body" $body
+        "kind" (.Params.entity_kind | default .Section | default .Kind)
+        "section" .Section
+      ) -}}
+    {{- end -}}
+  {{- end -}}
+{{- end -}}
+{{- dict "version" 1 "base_path" site.Home.RelPermalink "documents" $documents | jsonify -}}

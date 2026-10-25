@@ -12,7 +12,7 @@
 | `prepare-wiki.mjs` | `wiki:validate`、`wiki:prepare`、预览与构建 | 构建内容关系图和时间线；检查 ID、关系目标/类型、来源和孤立实体；生成 `data/generated/`。 |
 | `lib/content-graph.mjs` | `prepare-wiki.mjs` | 内容图、ID 索引、反向链接和关系报告的底层实现。 |
 | `lib/timeline.mjs` | `prepare-wiki.mjs` | 时间线校验、排序与派生数据的底层实现。 |
-| `verify-search-index.mjs` | `wiki:build`、CI | 验证 Pagefind 输出存在。 |
+| `verify-search-index.mjs` | `wiki:build`、CI | 验证 Hugo 正文索引的格式、唯一 URL 和页面目标。 |
 | `check-media-budget.mjs` | `quality:source`、`wiki:build`、CI | 阻止单个媒体超过 5 MiB 或内容/静态媒体总量超过 300 MiB，并报告空媒体文件。 |
 | `check-site-output.mjs` | `quality:site`、`wiki:build`、CI | 检查生成页面的标题与本地链接/资源目标；报告缺少图片替代文字。 |
 | `serve-public.mjs` + `tests/browser/` | `test:browser`、CI | 使用 Playwright/axe 对首页、搜索、时间线、地图、实体页、404、键盘与移动交互和 WCAG A/AA 规则进行浏览器检查。 |
@@ -42,3 +42,5 @@ validate-chronology.mjs
 ## 派生数据规则
 
 `data/generated/` 由 `wiki:prepare` 原子写入。需要提交这些 JSON 文件时，必须由内容变更后的生成命令产生，不能人工修订。
+
+正文索引由 `layouts/home.searchindex.json` 在 Hugo 构建时从公开 Markdown 页面生成到 `public/search-index.json`。`assets/scripts/search-core.mjs` 定义空格分词、全部关键词同时命中和连续字符串匹配规则；检索界面只负责加载、分页与展示，不再单独运行索引器。

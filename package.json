@@ -2,7 +2,7 @@
   "name": "worldbuilding-wiki",
   "version": "0.7.0",
   "private": true,
-  "description": "Hugo + Pagefind worldbuilding Wiki with portals, entity relations, backlinks, timeline generation, and GitHub Pages deployment.",
+  "description": "Hugo worldbuilding Wiki with body search, entity relations, backlinks, timeline generation, and GitHub Pages deployment.",
   "license": "UNLICENSED",
   "engines": {
     "node": ">=22 <23",
@@ -23,13 +23,12 @@
     "quality:all": "npm run wiki:validate && npm run quality:source && npm run quality:site",
     "test:browser": "playwright test",
     "wiki:preview": "node scripts/prepare-wiki.mjs --check --include-drafts && node scripts/prepare-wiki.mjs --include-drafts && hugo server -D",
-    "wiki:preview-search": "node scripts/prepare-wiki.mjs --check --include-drafts && node scripts/prepare-wiki.mjs --include-drafts && hugo --buildDrafts --gc --minify && pagefind --site public --serve",
-    "wiki:build": "npm run wiki:validate && npm run quality:source && npm run wiki:prepare && hugo --cleanDestinationDir --gc --minify && pagefind --site public && node scripts/verify-search-index.mjs && npm run quality:site"
+    "wiki:preview-search": "node scripts/prepare-wiki.mjs --check --include-drafts && node scripts/prepare-wiki.mjs --include-drafts && hugo --buildDrafts --cleanDestinationDir --gc --minify && node scripts/serve-public.mjs",
+    "wiki:build": "npm run wiki:validate && npm run quality:source && npm run wiki:prepare && hugo --cleanDestinationDir --gc --minify && node scripts/verify-search-index.mjs && npm run quality:site"
   },
   "devDependencies": {
     "@axe-core/playwright": "^4.10.2",
     "@playwright/test": "^1.55.1",
-    "pagefind": "1.5.2",
     "sharp": "^0.35.5",
     "yaml": "2.9.0"
   }

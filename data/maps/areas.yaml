@@ -51,6 +51,7 @@ areas:
     entity_id: nat.tar
     label: "塔罗萨尔"
     foreign_label: "𒋫𒊒𒊬"
+    icon_ref: "tarusar.svg"
     label_anchor: [26, 33]
     tile_source: generated
     style_token: country-tarusar
@@ -64,6 +65,7 @@ areas:
     entity_id: nat.esa
     label: "埃萨勒"
     foreign_label: "ऐशाल"
+    icon_ref: "elsae.svg"
     label_anchor: [48, 37]
     tile_source: generated
     style_token: country-esael
@@ -130,6 +132,7 @@ areas:
     entity_id: nat.dun
     label: "德诺尼塞"
     foreign_label: "Dunossai"
+    icon_ref: "dunossai.svg"
     label_anchor: [72, 17]
     tile_source: generated
     style_token: country-dunossai
@@ -142,6 +145,7 @@ areas:
     entity_id: nat.hav
     label: "赫芙伦特"
     foreign_label: "Havfrentyr"
+    icon_ref: "havfrentyr.svg"
     label_anchor: [102, 12]
     tile_source: generated
     style_token: country-havfrentyr
@@ -154,6 +158,7 @@ areas:
     entity_id: nat.kha
     label: "卡俄斯"
     foreign_label: "ΧΑΟΣ"
+    icon_ref: "khaos.svg"
     label_anchor: [72, 26]
     tile_source: generated
     style_token: country-khaos
@@ -179,7 +184,8 @@ areas:
     entity_id: nat.sir
     label: "塞壬"
     foreign_label: "Sírena"
-    label_anchor: [119, 9]
+    icon_ref: "sirena.svg"
+    label_anchor: [119, 13]
     tile_source: generated
     style_token: country-sirena
     detail_status: available
@@ -191,6 +197,7 @@ areas:
     entity_id: nat.ama
     label: "天照"
     foreign_label: "天照"
+    icon_ref: "amaturasu.svg"
     label_anchor: [111, 23]
     tile_source: generated
     style_token: country-amaterasu
@@ -216,6 +223,7 @@ areas:
     entity_id: nat.yur
     label: "尤拉卡萨"
     foreign_label: "Yuraqq'asa"
+    icon_ref: "yuraqqasa.svg"
     label_anchor: [115, 27]
     tile_source: generated
     style_token: country-yuraqqasa

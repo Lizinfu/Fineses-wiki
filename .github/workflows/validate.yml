@@ -68,10 +68,7 @@ jobs:
       - name: Build Hugo
         run: hugo --cleanDestinationDir --gc --minify
 
-      - name: Build Pagefind index
-        run: npx pagefind --site public
-
-      - name: Verify Pagefind bundle
+      - name: Verify body search index
         run: node scripts/verify-search-index.mjs
 
       - name: Check rendered site quality

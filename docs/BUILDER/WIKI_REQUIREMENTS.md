@@ -2,7 +2,7 @@
 
 > 文档用途：统一产品、世界观策划、内容编辑、前端、后端与运维人员对 Wiki 的理解，并作为后续设计、开发、验收和迭代的共同依据。
 >
-> 当前状态：已完成 Hugo + GitHub Pages 初版界面、内容模型/关系/时间线校验、Pagefind 搜索、媒体与站点输出检查，以及 PR 中的 Playwright/axe 浏览器检查。本文件描述的是完整 Wiki 的目标形态和验收基线；当前实际操作以根目录 `README.md`、`docs/` 专题规范和 `.github/workflows/` 为准。
+> 当前状态：已完成 Hugo + GitHub Pages 初版界面、内容模型/关系/时间线校验、正文多关键词检索、媒体与站点输出检查，以及 PR 中的 Playwright/axe 浏览器检查。本文件描述的是完整 Wiki 的目标形态和验收基线；其中元数据检索、复杂排序和分类筛选属于后续目标。当前实际操作以根目录 `README.md`、`docs/search-guide.md` 和 `.github/workflows/` 为准。
 
 ---
 

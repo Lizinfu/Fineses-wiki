@@ -1,4 +1,4 @@
-home = ['html']
+home = ['html', 'SearchIndex']
 page = ['html']
 section = ['html']
 taxonomy = ['html']

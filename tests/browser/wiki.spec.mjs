@@ -42,6 +42,63 @@ for (const route of routes) {
   });
 }
 
+test("body search matches every space-separated term literally", async ({ page }) => {
+  await page.goto("/search/");
+  const input = page.locator("[data-search-input]");
+  const results = page.locator(".search-result");
+  await expect(input).toBeEnabled();
+
+  await input.fill("卡夏");
+  await expect(page.locator("[data-search-count]")).toHaveText("1 RESULTS");
+  await expect(results).toHaveCount(1);
+  await expect(results.first().locator(".search-result__title")).toHaveText("伊琳沃克");
+  await expect(results.first().locator("mark").first()).toHaveText("卡夏");
+
+  await input.fill("卡夏 伊琳沃克");
+  await expect(page.locator("[data-search-count]")).toHaveText("1 RESULTS");
+  await expect(results.first().locator("mark", { hasText: "卡夏" }).first()).toBeVisible();
+  await expect(results.first().locator("mark", { hasText: "伊琳沃克" }).first()).toBeVisible();
+
+  await input.fill("卡夏 玛夏娜");
+  await expect(page.locator("[data-search-count]")).toHaveText("0 RESULTS");
+  await expect(results).toHaveCount(0);
+
+  await input.fill("国家目录保存");
+  await expect(page.locator("[data-search-count]")).toHaveText("1 RESULTS");
+  await expect(results.first().locator(".search-result__title")).toHaveText("国家");
+
+  await input.fill("星");
+  await expect(page.locator("[data-search-count]")).toHaveText("7 RESULTS");
+  await expect(page.locator(".search-result__title")).toContainText([
+    "塔罗萨尔占星泥版",
+    "堑渊",
+    "塔罗萨尔",
+    "卡什莫兰",
+    "塞壬",
+    "埃萨勒",
+    "天文学概述",
+  ]);
+});
+
+test("body search restores URL queries and paginates the full result set", async ({ page }) => {
+  await page.goto("/search/?q=%E5%9B%BD");
+  await expect(page.locator("[data-search-input]")).toHaveValue("国");
+  await expect(page.locator("[data-search-count]")).toHaveText("44 RESULTS");
+  await expect(page.locator(".search-result")).toHaveCount(10);
+  await page.locator("[data-search-more]").click();
+  await expect(page.locator(".search-result")).toHaveCount(20);
+  await expect(page.locator("[data-search-count]")).toHaveText("44 RESULTS");
+});
+
+test("search page has no serious automated accessibility violations", async ({ page }) => {
+  await page.goto("/search/");
+  await expect(page.locator("[data-search-input]")).toBeEnabled();
+  const results = await new AxeBuilder({ page })
+    .withTags(["wcag2a", "wcag2aa"])
+    .analyze();
+  expect(accessibilityViolationSummary(results.violations)).toEqual([]);
+});
+
 test("keyboard users can reach and activate the skip link", async ({
   page,
 }) => {
@@ -380,19 +437,20 @@ test("world countries show icon when available, then Chinese and foreign names",
   await page.goto("/portals/atlas/");
   const countries = [
     ["crushmora", "卡什莫兰", "Crushmora", "crushmora.svg"],
-    ["tarusar", "塔罗萨尔", "𒋫𒊒𒊬", null],
-    ["esael", "埃萨勒", "ऐशाल", null],
+    ["tarusar", "塔罗萨尔", "𒋫𒊒𒊬", "tarusar.svg"],
+    ["esael", "埃萨勒", "ऐशाल", "elsae.svg"],
     ["inibholc", "伊琳沃克", "Inibholc", "inibholc.svg"],
     ["muocils", "莫尔索斯", "Муоцилс", "muocils.svg"],
-    ["dunossai", "德诺尼塞", "Dunossai", null],
-    ["havfrentyr", "赫芙伦特", "Havfrentyr", null],
-    ["khaos", "卡俄斯", "ΧΑΟΣ", null],
+    ["dunossai", "德诺尼塞", "Dunossai", "dunossai.svg"],
+    ["havfrentyr", "赫芙伦特", "Havfrentyr", "havfrentyr.svg"],
+    ["khaos", "卡俄斯", "ΧΑΟΣ", "khaos.svg"],
     ["sivlanzio", "斯兰缇亚", "Sivlanzio", "sivlanzio.svg"],
-    ["sirena", "塞壬", "Sírena", null],
-    ["amaterasu", "天照", "天照", null],
+    ["sirena", "塞壬", "Sírena", "sirena.svg"],
+    ["amaterasu", "天照", "天照", "amaturasu.svg"],
     ["yin", "殷", "殷", "yin.svg"],
-    ["yuraqqasa", "尤拉卡萨", "Yuraqq'asa", null],
+    ["yuraqqasa", "尤拉卡萨", "Yuraqq'asa", "yuraqqasa.svg"],
   ];
+  await expect(page.locator(".atlas-country-label__icon img")).toHaveCount(13);
   for (const [id, chinese, foreign, icon] of countries) {
     const label = page.locator(`.atlas-country-label[data-atlas-area-focus='country.${id}']`);
     await expect(label).toHaveCSS("flex-direction", "column");
@@ -414,10 +472,14 @@ test("world countries show icon when available, then Chinese and foreign names",
 
 test("atlas detail tracks the viewed region instead of zoom alone", async ({ page }) => {
   await page.goto("/portals/atlas/");
+  const stage = page.locator("[data-atlas-stage]");
   const detail = page.locator("[data-atlas-detail-map='nation.inibholc']");
   await page.locator("[data-atlas-area-item] [data-atlas-area-focus='country.inibholc']").click();
+  // Let each camera flight finish before checking the region or manually zooming.
+  await expect(stage).not.toHaveAttribute("data-atlas-interacting", "true");
   await expect(detail).toHaveAttribute("data-detail-visible", "true");
   await page.locator("[data-atlas-area-item] [data-atlas-area-focus='country.sirena']").click();
+  await expect(stage).not.toHaveAttribute("data-atlas-interacting", "true");
   for (let attempt = 0; attempt < 12; attempt += 1) {
     const zoom = Number((await page.locator("[data-atlas-zoom-readout]").textContent()).replace("%", ""));
     if (zoom >= 75) break;

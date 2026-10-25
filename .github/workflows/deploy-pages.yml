@@ -88,10 +88,7 @@ jobs:
             --minify \
             --baseURL "${{ steps.pages.outputs.base_url }}/"
 
-      - name: Build Pagefind search index
-        run: npx pagefind --site public
-
-      - name: Verify Pagefind bundle
+      - name: Verify body search index
         run: node scripts/verify-search-index.mjs
 
       - name: Check rendered site quality
@@ -110,7 +107,7 @@ jobs:
             echo
             echo "- Content graph and timeline data generated"
             echo "- Hugo site built"
-            echo "- Pagefind search index generated and verified"
+            echo "- Body search index generated and verified"
             echo "- Deployment URL: ${{ steps.pages.outputs.base_url }}/"
           } >> "$GITHUB_STEP_SUMMARY"
 

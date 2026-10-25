@@ -2,7 +2,7 @@
   <div class="library-page">
     {{ partial "library/header.html" . }}
     {{ partial "library/nav.html" . }}
-    <main class="library-content" data-pagefind-body>
+    <main class="library-content">
       {{ .Content }}
       {{ if eq .File.BaseFileName "staff" }}
         {{ partial "library/staff-cards.html" . }}

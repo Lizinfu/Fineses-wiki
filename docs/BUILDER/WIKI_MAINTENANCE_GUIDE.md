@@ -6,7 +6,7 @@
 
 ## 1. 项目是什么
 
-这是一个由 Hugo 生成、Pagefind 提供全文搜索、GitHub Actions 校验并部署到 GitHub Pages 的公开静态世界观资料库。
+这是一个由 Hugo 生成正文检索索引、GitHub Actions 校验并部署到 GitHub Pages 的公开静态世界观资料库。
 
 - 源内容：`content/` 中的 Markdown + YAML Front Matter；
 - 受控配置：`data/` 中的词表、导航和页面数据；
@@ -67,8 +67,8 @@ package-lock.json
 | `npm run wiki:prepare` | 内容变更后需要更新派生数据 | 写入 `data/generated/`。 |
 | `npm run wiki:report` | 内容盘点 | 输出实体、关系、反向链接和时间线统计。 |
 | `npm run wiki:preview` | 本地写作预览 | 含草稿的 Hugo 服务；不生成真实搜索索引。 |
-| `npm run wiki:preview-search` | 调试搜索 | 含草稿构建并启动 Pagefind 搜索预览。 |
-| `npm run wiki:build` | 模板、搜索、发布前 | 完整校验、干净 Hugo 构建、Pagefind 和静态站点检查。 |
+| `npm run wiki:preview-search` | 调试搜索 | 含草稿构建并启动正文搜索预览。 |
+| `npm run wiki:build` | 模板、搜索、发布前 | 完整校验、干净 Hugo 构建、正文索引和静态站点检查。 |
 | `npm run quality:source` | 媒体变更 | 阻止单文件超过 5 MiB 或总媒体超过 300 MiB；空文件为警告。 |
 | `npm run quality:site` | 已构建站点 | 阻止无标题页面、失效站内链接和本地资源；缺失 `alt` 为警告。 |
 | `npm run test:browser` | 模板/交互变更 | Playwright + axe 检查关键页面、跳过链接、移动导航和 WCAG A/AA。 |
@@ -93,14 +93,14 @@ npm run test:browser
 7. 等待 PR 校验通过，审核后合并 `main`；
 8. GitHub Actions 构建并部署，线上抽查首页、实体页、搜索、时间线和 404。
 
-CI 会强制执行内容校验、媒体预算、干净构建、Pagefind、静态链接检查和 Playwright/axe 测试。空媒体和缺失图片 `alt` 当前会报警但不阻断；修改相关内容时不得新增此类警告。
+CI 会强制执行内容校验、媒体预算、干净构建、正文索引检查、静态链接检查和 Playwright/axe 测试。空媒体和缺失图片 `alt` 当前会报警但不阻断；修改相关内容时不得新增此类警告。
 
 ## 6. 常见问题
 
 | 现象 | 处理 |
 |---|---|
 | `wiki:validate` 报 ID、关系或时间线错误 | 读取终端定位的源文件，按内容模型和关系指南修正；不要手改 `data/generated/` 规避校验。 |
-| 本地预览中搜索不可用 | 使用 `npm run wiki:preview-search`，普通 Hugo 服务不生成 Pagefind 索引。 |
+| 本地预览中搜索不可用 | 使用 `npm run wiki:preview-search`，普通 Hugo 服务不会生成供静态服务器读取的 `public/search-index.json`。 |
 | 媒体预算失败 | 压缩/裁剪图片，或移除不使用的媒体；单文件限制 5 MiB。 |
 | `quality:site` 报失效链接 | 使用 Hugo 的相对链接函数或修正目标路径，然后重新构建。 |
 | 浏览器测试提示缺少 Chromium | 执行 `npx playwright install chromium`；CI 会自动安装。 |

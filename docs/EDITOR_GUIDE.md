@@ -26,11 +26,11 @@
 → 生成反向链接
 → 生成世界时间线
 → Hugo 构建
-→ Pagefind 重建搜索索引
+→ Hugo 生成正文检索索引
 → 发布 GitHub Pages
 ```
 
-编辑者不需要修改或提交 `public/`，也不需要手动运行 Pagefind。
+编辑者不需要修改或提交 `public/`，也不需要手动生成检索索引。
 
 ## 新增普通文档
 
@@ -183,12 +183,12 @@ name: "示例"
 | 字段 | 何时使用 |
 | --- | --- |
 | `title` | 每页必填；页面和列表的主要显示标题。 |
-| `description` | 强烈建议填写；用于列表、搜索结果和时间线摘要后备值。 |
+| `description` | 强烈建议填写；用于列表、页面说明和时间线摘要。当前正文检索不以它作为命中依据。 |
 | `draft` | `true` 时仅本地草稿预览可见，不进入正式实体、关系与时间线校验；发布前改为 `false` 或删除。 |
 | `weight` | 同一栏目内的人工排序值；数值越小越靠前。它与 `timeline.order_hint` 不是同一个字段。 |
 | `date` / `lastmod` | 现实世界的创建/最后编辑日期，使用 `YYYY-MM-DD`；不能代替世界内 `timeline` 日期。 |
 | `aliases` | 页面移动或改名时保留旧 URL，例如 `aliases: ["/history/old-name/"]`。 |
-| `keywords` | 搜索辅助词；放别名、旧称、外文名和常用检索词，不要用来代替正文。 |
+| `keywords` | 别名、旧称和外文名的预留字段；当前正文检索不以它作为命中依据。 |
 | `cultures`、`eras`、`topics` | Hugo 分类页使用的数组；必须与 `params.classifications` 中同名数组完全一致。 |
 
 ### `params` 实体字段
@@ -354,7 +354,7 @@ tools/setup-wiki.cmd
 tools/preview-wiki.cmd
 ```
 
-该预览包含真实 Pagefind 搜索。
+该预览包含真实正文关键词搜索。
 
 只检查内容：
 

@@ -2,18 +2,15 @@
   class="search-interface"
   data-search-root
   data-state="idle"
-  data-pagefind-url="{{ "pagefind/pagefind.js" | relURL }}"
-  data-pagefind-base-path="{{ "pagefind/" | relURL }}"
-  data-pagefind-base-url="{{ site.Home.RelPermalink }}"
-  aria-busy="false"
-  data-pagefind-ignore="all">
+  data-search-index-url="{{ "search-index.json" | relURL }}"
+  aria-busy="false">
 
   <noscript>
     <section class="search-nojs">
       <span class="ui-kicker">JavaScript unavailable</span>
       <h2>浏览器检索不可用</h2>
       <p>
-        当前页面仍可使用下方馆藏目录浏览内容。Pagefind 搜索需要
+        当前页面仍可使用下方馆藏目录浏览内容。关键词检索需要
         JavaScript，但正文、Section 和分类页面不依赖 JavaScript。
       </p>
     </section>
@@ -33,7 +30,7 @@
               id="archive-search-input"
               type="search"
               name="q"
-              placeholder="输入名称、别名、稳定 ID、馆藏编号或正文关键词"
+              placeholder="输入正文关键词，多个关键词用空格分开"
               autocomplete="off"
               autocapitalize="off"
               spellcheck="false"
@@ -52,11 +49,9 @@
 
         <div class="search-form__secondary">
           <div class="search-query-guide" aria-hidden="true">
-            <span>TITLE</span>
-            <span>ALIAS</span>
-            <span>STABLE ID</span>
-            <span>CATALOG</span>
-            <span>FULL TEXT</span>
+            <span>BODY TEXT</span>
+            <span>SPACE = AND</span>
+            <span>EXACT SUBSTRING</span>
           </div>
 
           <button
@@ -71,41 +66,15 @@
     </section>
 
     <div class="search-workspace">
-      <aside class="search-filters" aria-label="检索筛选">
+      <aside class="search-filters" aria-label="检索规则">
         <header class="search-filters__header">
-          <strong class="search-filters__title">筛选协议</strong>
-          <span class="search-filters__status" data-filter-status>
+          <strong class="search-filters__title">检索规则</strong>
+          <span class="search-filters__status" data-search-status>
             LOADING
           </span>
         </header>
-
-        <div class="search-filter">
-          <label for="search-filter-kind">实体类型</label>
-          <select
-            id="search-filter-kind"
-            data-filter-kind
-            disabled>
-            <option value="">正在读取索引</option>
-          </select>
-        </div>
-
-        <div class="search-filter">
-          <label for="search-filter-section">内容目录</label>
-          <select
-            id="search-filter-section"
-            data-filter-section
-            disabled>
-            <option value="">正在读取索引</option>
-          </select>
-        </div>
-
-        <button
-          class="search-filter-reset"
-          type="button"
-          data-filter-reset
-          disabled>
-          重置筛选
-        </button>
+        <p>仅检索公开文档的正文。多个关键词用空格分开；结果必须同时包含每个关键词，词序不限。</p>
+        <p>每个关键词按连续文字匹配。标题和档案编号只用于展示，不参与命中。</p>
       </aside>
 
       <section
@@ -137,8 +106,8 @@
             <span class="search-state__code">READY / 00</span>
             <h2>等待检索指令</h2>
             <p>
-              输入关键词，或只选择实体类型与内容目录进行无关键词浏览。
-              标题、稳定 ID 和馆藏编号会获得更高排序权重。
+              输入一个或多个正文关键词。多个关键词用空格分开，
+              结果必须同时包含全部关键词。
             </p>
           </section>
 
@@ -148,7 +117,7 @@
             <div class="search-loader" aria-hidden="true"></div>
             <span class="search-state__code">PROCESSING / 01</span>
             <h2>正在读取馆藏索引</h2>
-            <p>首次搜索需要加载必要的分块索引，后续请求会复用缓存。</p>
+            <p>首次搜索需要加载公开文档的正文索引。</p>
           </section>
 
           <section
@@ -157,7 +126,7 @@
             <span class="search-state__code">NO MATCH / 02</span>
             <h2>未发现匹配档案</h2>
             <p>
-              尝试使用旧称、简称、稳定 ID，或重置实体类型与目录筛选。
+              请检查关键词是否出现在正文中，或减少关键词数量。
             </p>
           </section>
 
@@ -167,9 +136,8 @@
             <span class="search-state__code">INDEX ABSENT / 03</span>
             <h2>搜索索引尚未生成</h2>
             <p>
-              这是直接运行 <code>hugo server</code> 时的正常状态。
-              使用静态构建命令生成 <code>public/</code>，再运行
-              Pagefind 即可启用完整检索。
+              请运行站点构建，确认 <code>public/search-index.json</code>
+              已生成。
             </p>
           </section>
 
@@ -179,8 +147,8 @@
             <span class="search-state__code">SYSTEM ERROR / 04</span>
             <h2>检索系统加载失败</h2>
             <p>
-              请检查浏览器控制台、Pagefind 构建输出和
-              <code>public/pagefind/</code> 是否完整。
+              请检查浏览器控制台和
+              <code>public/search-index.json</code> 是否完整。
             </p>
           </section>
         </div>
