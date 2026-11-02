@@ -11,8 +11,9 @@ sources:
     crop:
       left: 0.007
       right: 0.007
-      top: 0.007
-      bottom: 0.007
+      # 原图白框约 28 px；竖向按 2048 px 高度裁去，避免生成两排假陆地。
+      top: 0.015
+      bottom: 0.015
     region_sampling:
       samples: 7
       radius_x: 0.46
@@ -45,7 +46,7 @@ sources:
         color: [241, 255, 14]
       country.yin:
         color: [255, 0, 0]
-      country.yuraqqasa:
+      country.gkrk:
         color: [169, 205, 0]
       special.uninhabited:
         color: [255, 255, 255]
@@ -197,7 +198,7 @@ sources:
       area_id: country.yin
       detail_area_id: country.yin.nation
 
-  nation.yuraqqasa:
+  nation.gkrk:
     output: "data/maps/tiles.yaml"
     grid:
       columns: 32
@@ -205,8 +206,8 @@ sources:
     # 暂定国家细格直接继承世界国界；未来专题数据独立叠加。
     derive_from_parent:
       mask_id: world
-      area_id: country.yuraqqasa
-      detail_area_id: country.yuraqqasa.nation
+      area_id: country.gkrk
+      detail_area_id: country.gkrk.nation
 
   # 白色圆点只确定城市位置；城区外缘是可替换的暂定示意范围。
   city.cathair:

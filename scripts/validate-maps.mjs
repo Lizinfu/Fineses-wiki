@@ -2,36 +2,17 @@ import { readFile, stat } from "node:fs/promises";
 import path from "node:path";
 import { parse as parseYaml } from "yaml";
 import { walkMarkdown } from "./lib/files.mjs";
+import { validateMapFeatures } from "./lib/map-features.mjs";
 
 const root = process.cwd();
 const errors = [];
 const stableIdPattern = /^[a-z0-9]+(?:[.-][a-z0-9]+)*$/;
 const locationKinds = new Set(["capital", "city", "region", "ruin", "landmark"]);
 const areaLayers = new Set(["continent", "country", "special", "city"]);
-const areaStyles = new Set([
-  "country-crushmora",
-  "country-tarusar",
-  "country-esael",
-  "country-inibholc",
-  "country-muocils",
-  "country-dunossai",
-  "country-havfrentyr",
-  "country-khaos",
-  "country-sivlanzio",
-  "country-sirena",
-  "country-amaterasu",
-  "country-yin",
-  "country-yuraqqasa",
-  "unexplored",
-  "urban-cathair",
-]);
 const politicalStatuses = new Set(["active", "unruled"]);
 const detailStatuses = new Set(["available", "awaiting-source"]);
 const areaTargets = new Set(["land", "ocean", "any"]);
 const tileSources = new Set(["generated"]);
-const palettes = new Set(["monochrome", "political-pastel"]);
-const reliefModes = new Set(["none", "subtle"]);
-const materials = new Set(["none", "paper"]);
 const mapLevels = new Set([0, 1, 2]);
 const readYaml = async (relativePath) => parseYaml(await readFile(path.join(root, relativePath), "utf8")) ?? {};
 
@@ -148,7 +129,7 @@ for (const map of mapList) {
   if (typeof map.wrap_x !== "boolean") errors.push(`maps.${map.id}: wrap_x must be explicitly true or false.`);
   if (typeof map.page_ref !== "string" || !map.page_ref.trim()) errors.push(`maps.${map.id}: page_ref is required.`);
   if (!map.mask_id || !masks[map.mask_id]) errors.push(`maps.${map.id}: mask_id must reference a generated tile mask.`);
-  const { columns, rows, hex_size: hexSize, gap, orientation } = map.grid ?? {};
+  const { columns, rows, hex_size: hexSize, orientation } = map.grid ?? {};
   if (!Number.isInteger(columns) || columns < 1 || !Number.isInteger(rows) || rows < 1) {
     errors.push(`maps.${map.id}: grid columns and rows must be positive integers.`);
   } else if (columns * rows > 10000 && map.land_only !== true) {
@@ -156,9 +137,6 @@ for (const map of mapList) {
   }
   if (map.land_only === true) {
     if (map.wrap_x) errors.push(`maps.${map.id}: land-only detail maps cannot wrap horizontally.`);
-    if (!Number.isInteger(map.chunk_size) || map.chunk_size < 4 || map.chunk_size > 32) {
-      errors.push(`maps.${map.id}: land-only maps need a chunk_size between 4 and 32.`);
-    }
     const target = map.target_land_tiles;
     const landCount = maskTiles.get(map.mask_id)?.size ?? 0;
     if (!Array.isArray(target) || target.length !== 2 || !target.every(Number.isInteger) || target[0] < 1 || target[1] < target[0]) {
@@ -170,28 +148,10 @@ for (const map of mapList) {
   if (!Number.isFinite(hexSize) || hexSize < 12 || hexSize > 64) {
     errors.push(`maps.${map.id}: hex_size must be between 12 and 64.`);
   }
-  if (!Number.isFinite(gap) || gap < 0 || gap >= hexSize) {
-    errors.push(`maps.${map.id}: gap must be non-negative and smaller than hex_size.`);
-  }
   if (orientation !== "flat") errors.push(`maps.${map.id}: orientation must currently be "flat".`);
   if (map.wrap_x === true && Number.isInteger(columns) && columns % 2 !== 0) {
     errors.push(`maps.${map.id}: odd-q horizontal wrapping requires an even column count.`);
   }
-  const minZoom = Number(map.min_zoom);
-  const maxZoom = Number(map.max_zoom);
-  const defaultZoom = Number(map.default_zoom);
-  if (!(minZoom > 0 && maxZoom >= minZoom && defaultZoom >= minZoom && defaultZoom <= maxZoom)) {
-    errors.push(`maps.${map.id}: zoom values must satisfy 0 < min_zoom <= default_zoom <= max_zoom.`);
-  }
-  if (map.default_center) {
-    const { col, row } = map.default_center;
-    if (!Number.isFinite(col) || !Number.isFinite(row) || col < 0 || row < 0 || col >= columns || row >= rows) {
-      errors.push(`maps.${map.id}: default_center must be inside the map bounds.`);
-    }
-  }
-  if (!palettes.has(map.appearance?.palette)) errors.push(`maps.${map.id}: unsupported appearance palette.`);
-  if (!reliefModes.has(map.appearance?.relief)) errors.push(`maps.${map.id}: unsupported relief mode.`);
-  if (!materials.has(map.appearance?.material)) errors.push(`maps.${map.id}: unsupported material.`);
   const mask = masks[map.mask_id];
   if (mask && (mask.grid?.columns !== columns || mask.grid?.rows !== rows)) {
     errors.push(`maps.${map.id}: grid must match mask ${map.mask_id}.`);
@@ -271,6 +231,7 @@ for (const filePath of await walkMarkdown(path.join(root, "content"))) {
   if (parsed?.params?.id && parsed.draft !== true) entityIds.add(String(parsed.params.id));
 }
 
+errors.push(...validateMapFeatures(featureMaps, mapIds, entityIds));
 
 const areaIds = new Set();
 for (const area of areaList) {
@@ -301,7 +262,6 @@ for (const area of areaList) {
   if ((area.layer === "continent" || area.layer === "country") && !area.entity_id) {
     errors.push(`areas.${area.id}: ${area.layer} areas must reference an entity_id.`);
   }
-  if (area.style_token && !areaStyles.has(area.style_token)) errors.push(`areas.${area.id}: style_token "${area.style_token}" is not registered.`);
   if (area.political_status && !politicalStatuses.has(area.political_status)) errors.push(`areas.${area.id}: political_status is not registered.`);
   if (area.detail_status && !detailStatuses.has(area.detail_status)) errors.push(`areas.${area.id}: detail_status is not registered.`);
   if (area.detail_status === "available" && !mapIds.has(area.detail_map_id)) {
@@ -324,9 +284,9 @@ for (const area of areaList) {
 
   const map = mapList.find((item) => item.id === area.map_id);
   const { columns, rows } = map?.grid ?? {};
-  if (!Array.isArray(area.label_anchor) || area.label_anchor.length !== 2 || !area.label_anchor.every(Number.isInteger)) {
+  if (area.label_anchor !== undefined && (!Array.isArray(area.label_anchor) || area.label_anchor.length !== 2 || !area.label_anchor.every(Number.isInteger))) {
     errors.push(`areas.${area.id}: label_anchor must contain integer col and row values.`);
-  } else if (map && (area.label_anchor[0] < 0 || area.label_anchor[0] >= columns || area.label_anchor[1] < 0 || area.label_anchor[1] >= rows)) {
+  } else if (area.label_anchor && map && (area.label_anchor[0] < 0 || area.label_anchor[0] >= columns || area.label_anchor[1] < 0 || area.label_anchor[1] >= rows)) {
     errors.push(`areas.${area.id}: label_anchor must be inside map ${area.map_id}.`);
   }
   if (area.tile_source === "generated" && map && !generatedAreaTiles.has(`${map.mask_id}:${area.id}`)) {
@@ -357,47 +317,6 @@ for (const area of areaList) {
     const target = area.applies_to ?? "land";
     if (target === "land" && !anchorIsLand) errors.push(`areas.${area.id}: land label_anchor must be placed on a land tile.`);
     if (target === "ocean" && anchorIsLand) errors.push(`areas.${area.id}: ocean label_anchor must be placed on an ocean tile.`);
-  }
-}
-
-for (const map of mapList) {
-  const context = map.context;
-  if (!context) continue;
-  if (!map.parent_map_id || context.map_id !== map.parent_map_id) {
-    errors.push(`maps.${map.id}.context: context map must be the immediate parent.`);
-  }
-  const focus = areaList.find((area) => area.id === context.focus_area_id);
-  if (!focus || focus.map_id !== context.map_id || focus.entity_id !== map.parent_entity_id) {
-    errors.push(`maps.${map.id}.context: focus_area_id must be its parent entity on the context map.`);
-  }
-  const parentMap = mapList.find((item) => item.id === context.map_id);
-  const alignment = masks[map.mask_id]?.alignment;
-  if (!parentMap || !alignment || alignment.parent_mask_id !== parentMap.mask_id ||
-    alignment.parent_area_id !== context.focus_area_id ||
-    alignment.parent_source_sha256 !== masks[parentMap.mask_id]?.source_sha256 ||
-    !Array.isArray(alignment.transform) || alignment.transform.length !== 4 ||
-    !alignment.transform.every(Number.isFinite) || alignment.transform[0] <= 0 || alignment.transform[1] <= 0) {
-    errors.push(`maps.${map.id}.context: generated detail border must align with the current parent mask and focus area.`);
-  }
-  if (!Array.isArray(context.labels) || context.labels.length > 12) {
-    errors.push(`maps.${map.id}.context: labels must be an array of at most 12 items.`);
-    continue;
-  }
-  for (const label of context.labels) {
-    const area = label.area_id ? areaList.find((item) => item.id === label.area_id) : undefined;
-    if (label.area_id && (!area || area.map_id !== context.map_id)) {
-      errors.push(`maps.${map.id}.context: label area_id must belong to the parent map.`);
-    }
-    if (!label.area_id && (typeof label.label !== "string" || !label.label.trim())) {
-      errors.push(`maps.${map.id}.context: a text label needs non-empty label.`);
-    }
-    if (!Array.isArray(label.position) || label.position.length !== 2 ||
-      !label.position.every((value) => Number.isFinite(value) && value >= 0 && value <= 1)) {
-      errors.push(`maps.${map.id}.context: label position must be normalized [x, y].`);
-    }
-    if (!["overview", "region", "detail"].includes(label.tier)) {
-      errors.push(`maps.${map.id}.context: label tier is invalid.`);
-    }
   }
 }
 

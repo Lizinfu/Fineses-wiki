@@ -51,6 +51,10 @@ try {
 
 const errors = [];
 const warnings = [];
+for (const reference of ["ultimate_reference.png", "tactical-sandbox-reference.png"]) {
+  if (await exists(path.join(publicDirectory, "images", reference)))
+    errors.push("Local-only map art reference must not be included in published output.");
+}
 for (const filePath of htmlFiles) {
   const relative = path.relative(projectRoot, filePath).split(path.sep).join("/");
   const source = await readFile(filePath, "utf8");

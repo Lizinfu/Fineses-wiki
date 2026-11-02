@@ -1,9 +1,9 @@
 ---
-title: 尤拉卡萨
-description: Yuraqq'asa
+title: 冈穹嘉卡
+description: གང་ཁྱོང་རྒྱལ་ཁབ
 weight: 07
 keywords:
-  - 尤拉卡萨
+  - 冈穹嘉卡
   - 文明古国
 cultures:
   - 齐黄文化圈
@@ -14,7 +14,7 @@ topics:
   - 贸易
   - 外交
 params:
-  id: nat.yur
+  id: nat.gkrk
   entity_kind: nation
   library:
     catalog_no: NAT-0007
@@ -24,12 +24,12 @@ params:
   schema: nation.v1
   canon_status: canon
   names:
-    official: 尤拉卡萨
+    official: 冈穹嘉卡
     short: ""
     native: []
     former: []
     aliases:
-      - 尤拉卡萨
+      - 冈穹嘉卡
       - 文明古国
   classifications:
     cultures:
@@ -46,12 +46,12 @@ params:
   allow_orphan: true
 ---
 
-“寒冷的雪境”，这是第一批流浪至此的开拓者对这片群山的第一印象。
+གང་ཁྱོང་རྒྱལ་ཁབ，Gang Khyong Rgyal Khab。“未来的雪境”，有许多人曾来到过这里，跨域极东，想要抵达这个世界的另一侧。
 
 {{< figure
   src="media/thelake.png"
   alt="圣湖"
-  caption="尤拉卡萨“圣湖”。摄于■■■■。"
+  caption="冈穹嘉卡“圣湖”。摄于■■■■。"
   credit=""
   layout="bleed"
   size="full"
@@ -69,7 +69,7 @@ params:
 - 俗世地域
 - 未开发区
     
-    尤拉卡萨的未开发土地较少，大多属于正在计划开发的建设区和无法开发的冻土雪原地区。后者并不属于圣山的管辖范畴，而极端恶劣的自然环境也让这里的生产生活难以进行。
+    冈穹嘉卡的未开发土地较少，大多属于正在计划开发的建设区和无法开发的冻土雪原地区。后者并不属于圣山的管辖范畴，而极端恶劣的自然环境也让这里的生产生活难以进行。
     
     当然，极端恶劣并不意味着杳无人烟。在人类最初产生时，这里便散布有零散的原住民。长时间高寒缺氧的环境塑造了他们对巫系拓云的适应性。在被移民者招安或驱逐后，在雪原砾漠中仍有少量的移动帐篷，里面居住着流浪的无家者。
     

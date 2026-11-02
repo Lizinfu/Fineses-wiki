@@ -8,7 +8,7 @@
 |---|---|---|
 | `validate-content-model.mjs` | `wiki:validate` | 校验公开实体的最小字段契约、Schema 命名、受控枚举和顶层 taxonomy 同步。 |
 | `generate-hex-map.mjs` | `map:generate`、`map:check`、`wiki:validate` | 从政治参考图生成世界、伊琳沃克掩膜；其余 12 国从世界政治掩膜派生国家细格；城市示意范围从伊琳沃克父层派生。保存来源哈希、共享边界与坐标变换。 |
-| `validate-maps.mjs` | `wiki:validate` | 校验地图层级、L0 网格及 L1 国土预算、区域与地点、父子地图、专题空接口、实体引用、视觉令牌和关键拓扑关系。 |
+| `validate-maps.mjs` | `wiki:validate` | 校验地图层级、L0 网格及 L1 国土预算、区域与地点、父子地图、专题与整数地形层级、实体引用和关键拓扑关系。 |
 | `prepare-wiki.mjs` | `wiki:validate`、`wiki:prepare`、预览与构建 | 构建内容关系图和时间线；检查 ID、关系目标/类型、来源和孤立实体；生成 `data/generated/`。 |
 | `lib/content-graph.mjs` | `prepare-wiki.mjs` | 内容图、ID 索引、反向链接和关系报告的底层实现。 |
 | `lib/timeline.mjs` | `prepare-wiki.mjs` | 时间线校验、排序与派生数据的底层实现。 |
@@ -41,6 +41,10 @@ validate-chronology.mjs
 
 ## 派生数据规则
 
+地图专题契约由 `scripts/lib/map-features.mjs` 配合 `validate-maps.mjs` 校验；`npm run test:maps` 检查平整块面、整数层级、侧壁、升高后拾取、城市对称与分层河床方向，已纳入 `wiki:validate`。浏览器检查见 `tests/browser/pixi-atlas.spec.mjs`。地形配置使用 `elevation` 整数层级，旧 `relief` 连续起伏字段会被拒绝。
+
 `data/generated/` 由 `wiki:prepare` 原子写入。需要提交这些 JSON 文件时，必须由内容变更后的生成命令产生，不能人工修订。
 
 正文索引由 `layouts/home.searchindex.json` 在 Hugo 构建时从公开 Markdown 页面生成到 `public/search-index.json`。`assets/scripts/search-core.mjs` 定义空格分词、全部关键词同时命中和连续字符串匹配规则；检索界面只负责加载、分页与展示，不再单独运行索引器。
+
+地图入口 `map-entry.ts` 只加载 PixiJS 实现。`typecheck:atlas` 与 `test:maps` 均已接入 `wiki:validate`；依赖版本以 package-lock.json 为准，`npm ci` 安装。

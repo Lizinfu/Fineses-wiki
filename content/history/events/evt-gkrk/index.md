@@ -1,8 +1,8 @@
 ---
-title: 尤拉卡萨史诗
+title: 冈穹嘉卡史诗
 description: ཡུ་ར་ཀ་ས་སྐྲུན
 keywords:
-  - 尤拉卡萨
+  - 冈穹嘉卡
   - “圣山”
 
 eras:
@@ -15,12 +15,12 @@ topics:
 cultures: []
 
 params:
-  id: evt.yuraqqasa
+  id: evt.gkrk
   entity_kind: event
   schema: event.v1
   canon_status: canon
   names:
-    official: 尤拉卡萨建立
+    official: 冈穹嘉卡建立
     short: ""
     native: []
     former: []

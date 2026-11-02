@@ -1,9 +1,62 @@
-# 国家级专题数据接口。未有可靠资料前保持空数组，不据参考图推断地名。
+# 归一化地图坐标，y 向南。离散层级不代表海拔米数；provisional 几何可独立替换。
+# 来源：2026-10-30 作者说明及伊琳沃克参考图，详见地图维护手册。
 maps:
   nation.inibholc:
     administrative_regions: []
-    terrain: []
-    waterways: []
+    terrain:
+      - id: terrain.inibholc.lowlands
+        kind: low-hills
+        label: 丘陵与平原
+        source: owner-2026-10-30
+        geometry_status: provisional
+        description: 伊琳沃克整体海拔不高，以丘陵和平原为主。图示仅表达地形的相对高低。
+        geometry: {type: ellipse, center: [0.48, 0.52], radius: [0.65, 0.65]}
+        elevation:
+          level: 1
+      - id: terrain.inibholc.highwind
+        entity_id: reg.ini.mg
+        kind: upland
+        label: 高风原野
+        source: owner-2026-10-30
+        geometry_status: provisional
+        description: 相对周围地带较高的宽缓原野，并非高原。范围与相对高低为示意。
+        geometry: {type: ellipse, center: [0.36, 0.63], radius: [0.34, 0.28]}
+        label_position: [0.36, 0.63]
+        elevation:
+          level: 2
+      - id: terrain.inibholc.clare
+        kind: plain
+        label: 克莱尔平原
+        source: owner-2026-10-30
+        geometry_status: provisional
+        description: 参考图北部的平原。当前仅表达大致分布，不代表行政区边界。
+        geometry: {type: ellipse, center: [0.66, 0.21], radius: [0.34, 0.17]}
+        label_position: [0.66, 0.21]
+        elevation:
+          level: 0
+      - id: terrain.inibholc.capital-rise
+        kind: hill
+        label: 首都高地
+        source: owner-2026-10-30
+        geometry_status: provisional
+        description: 卡夏·欧尔莱特位于高风原野最高处。具体海拔尚未定义。
+        geometry: {type: ellipse, center: [0.458, 0.736], radius: [0.12, 0.12]}
+        elevation:
+          level: 3
+          core_level: 4
+          core_ratio: 0.35
+    waterways:
+      - id: waterway.inibholc.central
+        kind: river
+        label: 原野河流
+        source: owner-2026-10-30
+        geometry_status: provisional
+        description: 高风原野中部由西南流向东北的河流。“原野河流”为描述标签，尚无正式名称；河道、源头与河口未定。
+        geometry:
+          type: polyline
+          points: [[0.16, 0.77], [0.22, 0.71], [0.27, 0.68], [0.29, 0.62], [0.36, 0.59], [0.40, 0.54], [0.46, 0.51], [0.49, 0.46], [0.55, 0.42]]
+        flow_direction: southwest-to-northeast
+        label_position: [0.39, 0.59]
     routes: []
     settlements: []
   nation.crushmora:
@@ -72,7 +125,7 @@ maps:
     waterways: []
     routes: []
     settlements: []
-  nation.yuraqqasa:
+  nation.gkrk:
     administrative_regions: []
     terrain: []
     waterways: []
@@ -80,7 +133,28 @@ maps:
     settlements: []
   city.cathair:
     administrative_regions: []
-    terrain: []
+    terrain:
+      - id: terrain.cathair.hill
+        kind: hill
+        label: 城区缓丘
+        source: owner-2026-10-30
+        geometry_status: provisional
+        description: 城市所在高点的分级示意，非实际测绘高程。
+        geometry: {type: ellipse, center: [0.5, 0.5], radius: [0.48, 0.48]}
+        elevation:
+          level: 1
+          core_level: 2
+          core_ratio: 0.35
     waterways: []
     routes: []
-    settlements: []
+    settlements:
+      - id: settlement.cathair.plan
+        entity_id: reg.ini.col
+        kind: concentric-city
+        label: 皇宫与中央城区
+        source: owner-2026-10-30
+        geometry_status: provisional
+        description: 皇宫位于中心，城区高度中心对称。环路、放射道路、街区、绿地及建筑为可替换的布局示意，采用现代爱尔兰城市的石材、坡屋顶与绿地意象。
+        geometry: {type: ellipse, center: [0.5, 0.5], radius: [0.40, 0.37]}
+        layout: {rings: [0.28, 0.52, 0.76, 1], spokes: 12, seed: 19}
+        label_position: [0.5, 0.5]

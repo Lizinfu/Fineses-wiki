@@ -1,0 +1,768 @@
+import { createBlockBoard } from "../../assets/scripts/atlas/blocks.mjs";
+import { test, expect } from "@playwright/test";
+import AxeBuilder from "@axe-core/playwright";
+import sharp from "sharp";
+import {
+  createSpace,
+  project,
+  unproject,
+} from "../../assets/scripts/atlas/space.mjs";
+
+async function ready(page, query = "entity=nat.ini") {
+  await page.goto("/portals/atlas/?" + query);
+  await expect(page.locator("[data-atlas]")).toHaveAttribute(
+    "data-atlas-renderer",
+    "webgl",
+  );
+  await expect(page.locator("[data-atlas]")).toHaveAttribute(
+    "data-atlas-draws",
+    /\d+/,
+  );
+}
+const root = (page) => page.locator("[data-atlas]");
+const camera = (page) =>
+  root(page).getAttribute("data-atlas-camera").then(JSON.parse);
+
+async function model(page) {
+  return page.locator("#atlas-map-data").evaluate((node) => {
+    const value = JSON.parse(node.textContent);
+    return typeof value === "string" ? JSON.parse(value) : value;
+  });
+}
+
+async function pointViewAt(page, point, zoom, period) {
+  const host = page.locator("[data-atlas-canvas]");
+  await host.scrollIntoViewIfNeeded();
+  const box = await host.boundingBox(),
+    before = await camera(page),
+    center = { x: box.x + box.width / 2, y: box.y + box.height / 2 };
+  await page.mouse.move(center.x, center.y);
+  await page.mouse.wheel(0, Math.log(before.zoom / zoom) / 0.0015);
+  await expect
+    .poll(async () => Math.abs((await camera(page)).zoom - zoom))
+    .toBeLessThan(0.001);
+  // Keep every drag within the viewport, including on a narrow touch device.
+  for (let step = 0; step < 40; step++) {
+    const view = await camera(page),
+      dx =
+        (view.x - point.x - Math.round((view.x - point.x) / period) * period) *
+        view.zoom,
+      dy = (view.y - point.y) * view.zoom * view.tilt;
+    if (Math.hypot(dx, dy) < 0.05) break;
+    const sx = Math.max(-box.width * 0.55, Math.min(box.width * 0.55, dx)),
+      sy = Math.max(-box.height * 0.55, Math.min(box.height * 0.55, dy)),
+      start = {
+        x: box.x + box.width * (sx >= 0 ? 0.2 : 0.8),
+        y: box.y + box.height * (sy >= 0 ? 0.2 : 0.8),
+      };
+    await page.mouse.move(start.x, start.y);
+    await page.mouse.down();
+    if (Math.hypot(sx, sy) <= 4.5) {
+      // Cross the drag threshold before a subpixel correction; this must not become a tap.
+      await page.mouse.move(start.x + 8, start.y + 8);
+    }
+    await page.mouse.move(start.x + sx, start.y + sy, { steps: 2 });
+    await page.mouse.up();
+    await expect
+      .poll(async () => {
+        const after = await camera(page);
+        return Math.hypot(
+          after.x -
+            view.x +
+            sx / view.zoom -
+            Math.round((after.x - view.x + sx / view.zoom) / period) * period,
+          after.y - view.y + sy / (view.zoom * view.tilt),
+        );
+      })
+      .toBeLessThan(0.1);
+  }
+  await expect
+    .poll(async () => {
+      const current = await camera(page);
+      return Math.hypot(
+        current.x -
+          point.x -
+          Math.round((current.x - point.x) / period) * period,
+        current.y - point.y,
+      );
+    })
+    .toBeLessThan(0.1);
+}
+
+test("all 13 country emblems load at the same zoom, including the country at the camera center", async ({
+  page,
+}) => {
+  await page.emulateMedia({ reducedMotion: "reduce" });
+  await ready(page, "");
+  const data = await model(page),
+    space = createSpace(data),
+    board = createBlockBoard(data, space);
+  for (const country of data.areas.filter((area) => area.layer === "country")) {
+    await page.locator(`[data-atlas-area-focus="${country.id}"]`).click();
+    await expect(root(page)).toHaveAttribute(
+      "data-atlas-nation",
+      country.detail_map_id,
+    );
+    const anchor = board.raise(space.areaCenter(country));
+    await pointViewAt(page, anchor, 0.8, space.period);
+    const label = page.locator(`[data-atlas-label="${country.id}"]`),
+      icon = label.locator("img");
+    await expect(label).toBeVisible();
+    await expect
+      .poll(() => icon.evaluate((img) => img.complete && img.naturalWidth > 0))
+      .toBe(true);
+    const size = await icon.boundingBox();
+    expect(size.width).toBeCloseTo(30, 0);
+    expect(size.height).toBeCloseTo(30, 0);
+    const host = await page.locator("[data-atlas-canvas]").boundingBox(),
+      expected = project(await camera(page), anchor, host.width, host.height);
+    expect(
+      Math.abs(size.x + size.width / 2 - host.x - expected.x),
+    ).toBeLessThan(1);
+    expect(
+      Math.abs(size.y + size.height / 2 - host.y - expected.y),
+    ).toBeLessThan(1);
+    await expect(label).toHaveAccessibleName(`查看${country.label}`);
+  }
+});
+
+test("continent and terrain names center on their region rather than on the caption box", async ({
+  page,
+}) => {
+  await page.emulateMedia({ reducedMotion: "reduce" });
+  await ready(page, "");
+  const data = await model(page),
+    space = createSpace(data),
+    board = createBlockBoard(data, space);
+  const centered = async (label, point) => {
+    await expect(label).toBeVisible();
+    const title = await label.locator("strong").boundingBox(),
+      host = await page.locator("[data-atlas-canvas]").boundingBox(),
+      expected = project(await camera(page), point, host.width, host.height);
+    expect(
+      Math.abs(title.x + title.width / 2 - host.x - expected.x),
+    ).toBeLessThan(1);
+    expect(
+      Math.abs(title.y + title.height / 2 - host.y - expected.y),
+    ).toBeLessThan(1);
+  };
+  for (const area of data.areas.filter((a) => a.layer === "continent")) {
+    const point = board.raise(space.areaCenter(area));
+    await pointViewAt(page, point, 0.2, space.period);
+    await centered(page.locator(`[data-atlas-label="${area.id}"]`), point);
+  }
+  await ready(page);
+  for (const feature of data.feature_maps["nation.inibholc"].terrain.filter(
+    (f) => f.label_position,
+  )) {
+    const point = board.raise(
+      space.normalized("nation.inibholc", feature.geometry.center),
+    );
+    await pointViewAt(page, point, 1.3, space.period);
+    const label = page.locator(`[data-atlas-label="${feature.id}"]`);
+    await centered(label, point);
+    await page.locator("[data-atlas-tilt]").click();
+    await expect.poll(async () => (await camera(page)).tilt).toBe(1);
+    await centered(label, point);
+    await page.locator("[data-atlas-tilt]").click();
+  }
+  const capital = data.detail_locations.find((loc) => loc.id === "loc.cathair"),
+    point = board.raise(
+      space.normalized(capital.map_id, [
+        capital.position.x,
+        capital.position.y,
+      ]),
+    );
+  await pointViewAt(page, point, 1.3, space.period);
+  const label = page.locator('[data-atlas-label="loc.cathair"]');
+  await expect(label).toBeVisible();
+  const host = await page.locator("[data-atlas-canvas]").boundingBox(),
+    expected = project(await camera(page), point, host.width, host.height),
+    positions = await label.evaluate((el) => {
+      const r = el.getBoundingClientRect(),
+        title = el.querySelector("strong").getBoundingClientRect(),
+        marker = getComputedStyle(el, "::before");
+      return {
+        x: r.x + parseFloat(marker.left) + parseFloat(marker.width) / 2,
+        y: r.y + parseFloat(marker.top),
+        titleY: title.y + title.height / 2,
+      };
+    });
+  expect(Math.abs(positions.x - host.x - expected.x)).toBeLessThan(1);
+  expect(Math.abs(positions.y - host.y - expected.y)).toBeLessThan(1);
+  expect(Math.abs(positions.titleY - host.y - expected.y)).toBeLessThan(1);
+});
+
+test("emblems follow the camera during animated navigation without a separate button transition", async ({
+  page,
+}) => {
+  await page.emulateMedia({ reducedMotion: "no-preference" });
+  await ready(page, "");
+  const data = await model(page),
+    space = createSpace(data),
+    board = createBlockBoard(data, space),
+    point = board.raise(
+      space.areaCenter(data.areas.find((a) => a.id === "country.inibholc")),
+    );
+  await page.locator('[data-atlas-area-focus="country.inibholc"]').click();
+  const errors = await page.evaluate(async (point) => {
+    const root = document.querySelector("[data-atlas]"),
+      host = document.querySelector("[data-atlas-canvas]"),
+      label = document.querySelector('[data-atlas-label="country.inibholc"]'),
+      errors = [];
+    for (let frame = 0; frame < 25; frame++) {
+      await new Promise(requestAnimationFrame);
+      if (label.hidden) continue;
+      const view = JSON.parse(root.dataset.atlasCamera),
+        rect = host.getBoundingClientRect(),
+        img = label.querySelector("img").getBoundingClientRect();
+      errors.push(
+        Math.hypot(
+          img.x +
+            img.width / 2 -
+            rect.x -
+            host.clientWidth / 2 -
+            (point.x - view.x) * view.zoom,
+          img.y +
+            img.height / 2 -
+            rect.y -
+            host.clientHeight / 2 -
+            (point.y - view.y) * view.zoom * view.tilt,
+        ),
+      );
+    }
+    return errors;
+  }, point);
+  expect(errors.length).toBeGreaterThan(5);
+  expect(Math.max(...errors)).toBeLessThan(1);
+});
+
+test("country text can collapse near an edge while its emblem stays anchored and clickable", async ({
+  page,
+}) => {
+  await page.emulateMedia({ reducedMotion: "reduce" });
+  await ready(page);
+  const data = await model(page),
+    space = createSpace(data),
+    board = createBlockBoard(data, space),
+    country = data.areas.find((a) => a.id === "country.inibholc"),
+    anchor = board.raise(space.areaCenter(country)),
+    box = await page.locator("[data-atlas-canvas]").boundingBox();
+  // Put the emblem 34 px from the left edge, with insufficient room for its name.
+  await pointViewAt(
+    page,
+    { x: anchor.x + (box.width / 2 - 34) / 0.8, y: anchor.y },
+    0.8,
+    space.period,
+  );
+  const label = page.locator('[data-atlas-label="country.inibholc"]'),
+    icon = label.locator("img");
+  await expect(label).toBeVisible();
+  await expect(label).toHaveAttribute("data-label-mode", "icon");
+  await expect(label.locator("strong")).toBeHidden();
+  const position = await icon.boundingBox();
+  expect(Math.abs(position.x + position.width / 2 - box.x - 34)).toBeLessThan(
+    1,
+  );
+  await label.click();
+  await expect(page.locator("[data-feature-card-title]")).toHaveText(
+    "伊琳沃克",
+  );
+});
+
+test("dragging an emblem pans without activating it and keyboard activation remains available", async ({
+  page,
+}) => {
+  await page.emulateMedia({ reducedMotion: "reduce" });
+  await ready(page);
+  await expect(
+    page.locator('[data-atlas-label="country.inibholc"]'),
+  ).toBeVisible();
+  const data = await model(page),
+    space = createSpace(data),
+    board = createBlockBoard(data, space),
+    country = data.areas.find((a) => a.id === "country.inibholc");
+  await pointViewAt(
+    page,
+    board.raise(space.areaCenter(country)),
+    0.8,
+    space.period,
+  );
+  await page.locator("[data-feature-card-close]").click();
+  await page.locator("[data-atlas-canvas]").scrollIntoViewIfNeeded();
+  const before = await camera(page),
+    label = page.locator('[data-atlas-label="country.inibholc"]'),
+    box = await label.locator("img").boundingBox();
+  await page.mouse.move(box.x + box.width / 2, box.y + box.height / 2);
+  await page.mouse.down();
+  await page.mouse.move(box.x + box.width / 2 + 45, box.y + box.height / 2, {
+    steps: 3,
+  });
+  await page.mouse.up();
+  await expect
+    .poll(async () =>
+      Math.abs((await camera(page)).x - before.x + 45 / before.zoom),
+    )
+    .toBeLessThan(0.1);
+  await expect(page.locator("[data-atlas-feature-card]")).toBeHidden();
+  await label.focus();
+  await page.keyboard.press("Enter");
+  await expect(page.locator("[data-feature-card-title]")).toHaveText(
+    "伊琳沃克",
+  );
+  await expect(page.locator("[data-atlas-feature-card]")).toBeVisible();
+});
+
+test("shared country borders remain distinct over terrain at world and national zoom", async ({
+  page,
+}) => {
+  await page.emulateMedia({ reducedMotion: "reduce" });
+  await ready(page, "");
+  const data = await model(page),
+    space = createSpace(data),
+    board = createBlockBoard(data, space),
+    country = data.areas.find((a) => a.id === "country.inibholc");
+  let boundary;
+  for (const poly of space.countryPolygons(country)) {
+    for (let i = 0; i < poly.length; i++) {
+      const a = poly[i],
+        b = poly[(i + 1) % poly.length],
+        middle = { x: (a.x + b.x) / 2, y: (a.y + b.y) / 2 },
+        length = Math.hypot(b.x - a.x, b.y - a.y),
+        normal = { x: -(b.y - a.y) / length, y: (b.x - a.x) / length };
+      const left = space.countryAt({
+          x: middle.x + normal.x,
+          y: middle.y + normal.y,
+        }),
+        right = space.countryAt({
+          x: middle.x - normal.x,
+          y: middle.y - normal.y,
+        });
+      if (
+        left?.layer === "country" &&
+        right?.layer === "country" &&
+        left.id !== right.id
+      ) {
+        const sign = left.id === country.id ? 1 : -1,
+          inside = {
+            x: middle.x + normal.x * sign,
+            y: middle.y + normal.y * sign,
+          };
+        boundary = {
+          middle: { x: middle.x, y: middle.y - board.heightAt(inside) },
+          normal,
+        };
+        break;
+      }
+    }
+    if (boundary) break;
+  }
+  expect(boundary).toBeTruthy();
+  for (const zoom of [0.36, 3.2]) {
+    await pointViewAt(page, boundary.middle, zoom, space.period);
+    const canvas = page.locator(".atlas-pixi-canvas"),
+      box = await canvas.boundingBox(),
+      view = await camera(page),
+      p = project(view, boundary.middle, box.width, box.height),
+      image = await sharp(await canvas.screenshot())
+        .ensureAlpha()
+        .raw()
+        .toBuffer({ resolveWithObject: true });
+    const brightness = (offset) => {
+      const x = Math.round(
+          ((p.x + boundary.normal.x * offset) * image.info.width) / box.width,
+        ),
+        y = Math.round(
+          ((p.y + boundary.normal.y * offset) * image.info.height) / box.height,
+        ),
+        i = (y * image.info.width + x) * 4;
+      return (image.data[i] + image.data[i + 1] + image.data[i + 2]) / 3;
+    };
+    const background = (brightness(-6) + brightness(6)) / 2;
+    expect(
+      background - Math.min(...[-1, 0, 1].map(brightness)),
+    ).toBeGreaterThan(35);
+  }
+});
+
+test("extruded land leaves the open sea clear", async ({ page }) => {
+  await ready(page);
+  const model = await page.locator("#atlas-map-data").evaluate((node) => {
+    let data = JSON.parse(node.textContent);
+    return typeof data === "string" ? JSON.parse(data) : data;
+  });
+  const space = createSpace(model),
+    board = createBlockBoard(model, space),
+    view = await camera(page),
+    canvas = page.locator(".atlas-pixi-canvas"),
+    box = await canvas.boundingBox();
+  const image = await sharp(await canvas.screenshot())
+    .ensureAlpha()
+    .raw()
+    .toBuffer({ resolveWithObject: true });
+  let checked = 0;
+  for (let y = 100; y < box.height - 65; y += 45)
+    for (let x = 35; x < box.width - 35; x += 45) {
+      const p = unproject(view, { x, y }, box.width, box.height);
+      if (
+        [
+          [0, 0],
+          [6, 0],
+          [-6, 0],
+          [0, 6],
+          [0, -6],
+        ].some(([dx, dy]) => board.pick({ x: p.x + dx, y: p.y + dy }))
+      )
+        continue;
+      const i =
+        (Math.floor((y * image.info.height) / box.height) * image.info.width +
+          Math.floor((x * image.info.width) / box.width)) *
+        4;
+      const r = image.data[i],
+        b = image.data[i + 2];
+      expect({ x, y, r, b }).toMatchObject({ r: expect.any(Number) });
+      expect(r).toBeLessThan(110);
+      expect(b - r).toBeGreaterThan(25);
+      checked++;
+    }
+  expect(checked).toBeGreaterThan(2);
+});
+
+test("block tops are flat colors and exposed side walls provide the volume", async ({
+  page,
+}) => {
+  await page.emulateMedia({ reducedMotion: "reduce" });
+  await ready(page, "");
+  await expect(root(page)).toHaveAttribute("data-atlas-scene", "hex-blocks");
+  const data = await model(page),
+    space = createSpace(data),
+    board = createBlockBoard(data, space),
+    cell = board.cells.find(
+      (c) =>
+        c.owner?.layer === "special" &&
+        !board.logicalCell({
+          x: c.point.x,
+          y: c.point.y + (c.radius * Math.sqrt(3)) / 2 + 1,
+        }),
+    );
+  expect(cell).toBeTruthy();
+  const top = board.raise(cell.point);
+  await pointViewAt(page, top, 1.6, space.period);
+  const canvas = page.locator(".atlas-pixi-canvas"),
+    box = await canvas.boundingBox(),
+    view = await camera(page),
+    shot = await sharp(await canvas.screenshot())
+      .ensureAlpha()
+      .raw()
+      .toBuffer({ resolveWithObject: true }),
+    pixel = (point) => {
+      const p = project(view, point, box.width, box.height),
+        x = Math.round((p.x * shot.info.width) / box.width),
+        y = Math.round((p.y * shot.info.height) / box.height),
+        i = (y * shot.info.width + x) * 4;
+      return [...shot.data.subarray(i, i + 3)];
+    };
+  const colors = [
+    top,
+    { x: top.x - 3, y: top.y },
+    { x: top.x + 3, y: top.y },
+    { x: top.x, y: top.y - 3 },
+    { x: top.x, y: top.y + 3 },
+  ].map(pixel);
+  for (let channel = 0; channel < 3; channel++)
+    expect(
+      Math.max(...colors.map((c) => c[channel])) -
+        Math.min(...colors.map((c) => c[channel])),
+    ).toBeLessThan(3);
+  const face = board.geometry(cell).faces.find((f) => f.index === 1).points,
+    wall = pixel({
+      x: face.reduce((s, p) => s + p.x, 0) / 4,
+      y: face.reduce((s, p) => s + p.y, 0) / 4,
+    });
+  expect(
+    colors[0].reduce((s, v) => s + v, 0) / 3 -
+      wall.reduce((s, v) => s + v, 0) / 3,
+  ).toBeGreaterThan(20);
+});
+
+test("two-finger zoom follows the moving midpoint without a spurious selection", async ({
+  page,
+  isMobile,
+}) => {
+  test.skip(!isMobile, "Touch gesture on the mobile profile");
+  await ready(page);
+  await page.locator("[data-atlas-canvas]").scrollIntoViewIfNeeded();
+  const box = await page.locator("[data-atlas-canvas]").boundingBox(),
+    before = await camera(page),
+    cx = box.x + box.width / 2,
+    cy = box.y + box.height / 2;
+  const client = await page.context().newCDPSession(page);
+  await client.send("Input.dispatchTouchEvent", {
+    type: "touchStart",
+    touchPoints: [
+      { id: 1, x: cx - 35, y: cy },
+      { id: 2, x: cx + 35, y: cy },
+    ],
+  });
+  await client.send("Input.dispatchTouchEvent", {
+    type: "touchMove",
+    touchPoints: [
+      { id: 1, x: cx - 60, y: cy + 10 },
+      { id: 2, x: cx + 60, y: cy + 10 },
+    ],
+  });
+  await expect
+    .poll(async () => (await camera(page)).zoom)
+    .toBeGreaterThan(before.zoom * 1.4);
+  await client.send("Input.dispatchTouchEvent", {
+    type: "touchEnd",
+    touchPoints: [],
+  });
+  const after = await camera(page);
+  expect(
+    Math.abs((before.y - after.y) * after.zoom * after.tilt - 10),
+  ).toBeLessThan(2);
+  await expect(page).toHaveURL(/entity=nat\.ini/);
+  await client.detach();
+});
+
+test("PixiJS renders a real WebGL canvas with no SVG map and keeps country deep links on resize", async ({
+  page,
+}) => {
+  const errors = [];
+  page.on("pageerror", (e) => errors.push(e.message));
+  await ready(page);
+  await expect(root(page)).toHaveAttribute("data-atlas-level", "1");
+  await expect(
+    page.locator('[data-atlas-label="country.inibholc"]'),
+  ).toBeVisible();
+  await expect(page.locator(".atlas-pixi-canvas")).toBeVisible();
+  await expect(page.locator("[data-atlas-stage] svg")).toHaveCount(0);
+  await expect(page.locator("[data-atlas-area-item]")).toHaveCount(13);
+  await expect(page.locator("[data-feature-card-title]")).toHaveText(
+    "伊琳沃克",
+  );
+  await page.setViewportSize({ width: 820, height: 940 });
+  await expect(root(page)).toHaveAttribute("data-atlas-level", "1");
+  const { channels } = await sharp(
+    await page.locator(".atlas-pixi-canvas").screenshot(),
+  ).stats();
+  expect(channels[0].max - channels[0].min).toBeGreaterThan(50);
+  expect(errors).toEqual([]);
+});
+
+test("city, country and world use one persistent canvas, history and exclusive label levels", async ({
+  page,
+}) => {
+  await ready(page);
+  await page
+    .locator(".atlas-pixi-canvas")
+    .evaluate((canvas) => (canvas.dataset.probe = "persistent"));
+  await expect(
+    page.locator('[data-atlas-label="settlement.cathair.plan"]'),
+  ).toBeHidden();
+  await page.locator("[data-atlas-city-item] button").click();
+  await expect(root(page)).toHaveAttribute("data-atlas-level", "2");
+  await expect(page).toHaveURL(/loc=loc\.cathair/);
+  await expect(
+    page.locator('[data-atlas-label="settlement.cathair.plan"]'),
+  ).toBeVisible();
+  await expect(
+    page.locator('[data-atlas-label="terrain.inibholc.highwind"]'),
+  ).toBeHidden();
+  await expect(page.locator(".atlas-pixi-canvas")).toHaveAttribute(
+    "data-probe",
+    "persistent",
+  );
+  await page.goBack();
+  await expect(root(page)).toHaveAttribute("data-atlas-level", "1");
+  await page.locator("[data-atlas-reset]").click();
+  await expect(root(page)).toHaveAttribute("data-atlas-level", "0");
+  await expect(page.locator(".atlas-pixi-canvas")).toHaveAttribute(
+    "data-probe",
+    "persistent",
+  );
+});
+
+test("all registered countries can be focused without rebuilding the canvas", async ({
+  page,
+}) => {
+  await ready(page, "");
+  const buttons = page.locator("[data-atlas-area-item] button");
+  for (let i = 0; i < (await buttons.count()); i++) {
+    const id = await buttons.nth(i).getAttribute("data-atlas-area-focus");
+    await buttons.nth(i).click();
+    await expect(root(page)).toHaveAttribute(
+      "data-atlas-nation",
+      id.replace("country.", "nation."),
+    );
+    await expect(page.locator("[data-atlas-runtime-status]")).toBeHidden();
+  }
+  await expect(page.locator(".atlas-pixi-canvas")).toHaveCount(1);
+});
+
+test("tilt and wheel zoom keep screen labels aligned with the same world projection", async ({
+  page,
+}) => {
+  await ready(page, "loc=loc.cathair");
+  const label = page.locator('[data-atlas-label="settlement.cathair.plan"]');
+  await page.locator("[data-atlas-tilt]").click();
+  await expect.poll(async () => (await camera(page)).tilt).toBe(1);
+  const error = await label.evaluate((element) => {
+    const r = element.querySelector("strong").getBoundingClientRect(),
+      host = element.closest("[data-atlas-canvas]").getBoundingClientRect();
+    const p = JSON.parse(element.dataset.anchor);
+    return Math.max(
+      Math.abs(r.left + r.width / 2 - host.left - p.x),
+      Math.abs(r.top + r.height / 2 - host.top - p.y),
+    );
+  });
+  expect(error).toBeLessThan(1);
+  await page.locator("[data-atlas-canvas]").scrollIntoViewIfNeeded();
+  const bounds = await page.locator("[data-atlas-canvas]").boundingBox(),
+    anchor = { x: bounds.width * 0.32, y: bounds.height * 0.35 };
+  const before = await camera(page),
+    world = {
+      x: before.x + (anchor.x - bounds.width / 2) / before.zoom,
+      y:
+        before.y + (anchor.y - bounds.height / 2) / (before.zoom * before.tilt),
+    };
+  await page.mouse.move(bounds.x + anchor.x, bounds.y + anchor.y);
+  await page.mouse.wheel(0, -120);
+  await expect
+    .poll(async () => (await camera(page)).zoom)
+    .toBeGreaterThan(before.zoom);
+  const after = await camera(page);
+  expect(
+    Math.abs(world.x - after.x - (anchor.x - bounds.width / 2) / after.zoom),
+  ).toBeLessThan(0.05);
+  expect(
+    Math.abs(
+      world.y -
+        after.y -
+        (anchor.y - bounds.height / 2) / (after.zoom * after.tilt),
+    ),
+  ).toBeLessThan(0.05);
+});
+
+test("GPU terrain, grids, waterways and city layers respond to controls", async ({
+  page,
+}) => {
+  await ready(page);
+  const image = () => page.locator(".atlas-pixi-canvas").screenshot();
+  const before = await sharp(await image())
+    .raw()
+    .toBuffer();
+  await page.locator(".atlas-feature-controls summary").click();
+  await page.locator('[data-feature-toggle="terrain"]').uncheck();
+  const after = await sharp(await image())
+    .raw()
+    .toBuffer();
+  let difference = 0;
+  for (let i = 0; i < Math.min(before.length, after.length); i++)
+    difference += Math.abs(before[i] - after[i]);
+  expect(difference / before.length).toBeGreaterThan(1);
+  await page.locator('[data-feature-toggle="terrain"]').check();
+  await page.locator('[data-feature-toggle="waterways"]').uncheck();
+  await expect(
+    page.locator('[data-atlas-label="waterway.inibholc.central"]'),
+  ).toBeHidden();
+  await page.locator("[data-atlas-city-item] button").click();
+  await expect(root(page)).toHaveAttribute("data-atlas-level", "2");
+  await page.locator('[data-feature-toggle="settlements"]').uncheck();
+  await expect(
+    page.locator('[data-atlas-label="settlement.cathair.plan"]'),
+  ).toBeHidden();
+  await page.locator('[data-feature-toggle="settlements"]').check();
+  await expect(
+    page.locator('[data-atlas-label="settlement.cathair.plan"]'),
+  ).toBeVisible();
+});
+
+test("search, keyboard controls and archive access work independently of rendering", async ({
+  page,
+  browser,
+}) => {
+  await ready(page, "");
+  await page.locator("[data-atlas-search]").fill("高风原野");
+  await expect(page.locator("[data-atlas-count]")).toHaveText("1 个地图条目");
+  await page
+    .locator('[data-atlas-feature-focus="terrain.inibholc.highwind"]')
+    .click();
+  await expect(root(page)).toHaveAttribute("data-atlas-level", "1");
+  await expect(page.locator("[data-feature-card-title]")).toHaveText(
+    "高风原野",
+  );
+  await expect(page.locator("[data-feature-card-link]")).toHaveAttribute(
+    "href",
+    /Machaire-Gaoithe/i,
+  );
+  const z = (await camera(page)).zoom;
+  await page.locator("[data-atlas-stage]").focus();
+  await page.keyboard.press("+");
+  await expect.poll(async () => (await camera(page)).zoom).toBeGreaterThan(z);
+  await page.keyboard.press("Escape");
+  await expect(page.locator("[data-atlas-feature-card]")).toBeHidden();
+  const context = await browser.newContext({ javaScriptEnabled: false });
+  try {
+    const fallback = await context.newPage();
+    await fallback.goto(new URL("/portals/atlas/", page.url()).href);
+    const item = fallback.locator('[data-feature-search="高风原野"]');
+    await expect(item.locator("[data-feature-description]")).toContainText(
+      "并非高原",
+    );
+    await expect(item.locator("a")).toBeVisible();
+  } finally {
+    await context.close();
+  }
+});
+
+test("WebGL failure is explicit and leaves the readable directory available", async ({
+  page,
+}) => {
+  await page.addInitScript(() => {
+    const original = HTMLCanvasElement.prototype.getContext;
+    HTMLCanvasElement.prototype.getContext = function (kind, ...args) {
+      if (String(kind).includes("webgl")) return null;
+      return original.call(this, kind, ...args);
+    };
+  });
+  await page.goto("/portals/atlas/");
+  await expect(root(page)).toHaveAttribute(
+    "data-atlas-renderer",
+    "unavailable",
+  );
+  await expect(page.locator("[data-atlas-runtime-status]")).toContainText(
+    "WebGL",
+  );
+  await expect(
+    page.locator("[data-atlas-area-item]").first().locator("a"),
+  ).toBeVisible();
+});
+
+test("map labels and controls are accessible and avoid each other on a small screen", async ({
+  page,
+}) => {
+  await ready(page, "loc=loc.cathair");
+  await page.locator('[data-atlas-label="settlement.cathair.plan"]').click();
+  await expect(page.locator("[data-feature-card-title]")).toHaveText(
+    "皇宫与中央城区",
+  );
+  const violations = (
+    await new AxeBuilder({ page })
+      .withTags(["wcag2a", "wcag2aa", "wcag21aa"])
+      .analyze()
+  ).violations.filter((v) => ["critical", "serious"].includes(v.impact));
+  expect(
+    violations.map((v) => ({
+      id: v.id,
+      targets: v.nodes.map((n) => n.target),
+    })),
+  ).toEqual([]);
+});
+
+test("non-map pages do not load PixiJS", async ({ page }) => {
+  await page.goto("/nations/nat-inibholc/");
+  await expect(page.locator('script[src*="atlas."]')).toHaveCount(0);
+  await expect(page.locator(".atlas-pixi-canvas")).toHaveCount(0);
+});

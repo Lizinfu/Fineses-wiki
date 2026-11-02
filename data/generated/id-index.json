@@ -149,6 +149,20 @@
       "乱潮年代"
     ]
   },
+  "evt.gkrk": {
+    "title": "冈穹嘉卡史诗",
+    "page_ref": "/history/events/evt-gkrk",
+    "content_path": "history/events/evt-gkrk/index.md",
+    "section": "history",
+    "entity_kind": "event",
+    "schema": "event.v1",
+    "catalog_no": "EVT-0646-001",
+    "aliases": [
+      "冈穹嘉卡",
+      "“圣山”",
+      "冈穹嘉卡建立"
+    ]
+  },
   "evt.la-guerre-des-cendres.480": {
     "title": "灰烬战争",
     "page_ref": "/history/events/evt-la-guerre-des-cendres",
@@ -314,20 +328,6 @@
       "特洛恩汗国"
     ]
   },
-  "evt.yuraqqasa": {
-    "title": "尤拉卡萨史诗",
-    "page_ref": "/history/events/evt-yuraqqasa",
-    "content_path": "history/events/evt-yuraqqasa/index.md",
-    "section": "history",
-    "entity_kind": "event",
-    "schema": "event.v1",
-    "catalog_no": "EVT-0646-001",
-    "aliases": [
-      "尤拉卡萨",
-      "“圣山”",
-      "尤拉卡萨建立"
-    ]
-  },
   "evt.zhaocheng": {
     "title": "“殷兆”",
     "page_ref": "/history/events/evt-zhaocheng",
@@ -390,6 +390,19 @@
     "aliases": [
       "埃萨勒",
       "热带部族联盟"
+    ]
+  },
+  "nat.gkrk": {
+    "title": "冈穹嘉卡",
+    "page_ref": "/nations/nat-gkrk",
+    "content_path": "nations/nat-gkrk/_index.md",
+    "section": "nations",
+    "entity_kind": "nation",
+    "schema": "nation.v1",
+    "catalog_no": "NAT-0007",
+    "aliases": [
+      "冈穹嘉卡",
+      "文明古国"
     ]
   },
   "nat.hav": {
@@ -538,19 +551,6 @@
       "殷国"
     ]
   },
-  "nat.yur": {
-    "title": "尤拉卡萨",
-    "page_ref": "/nations/nat-yuraqqasa",
-    "content_path": "nations/nat-yuraqqasa/_index.md",
-    "section": "nations",
-    "entity_kind": "nation",
-    "schema": "nation.v1",
-    "catalog_no": "NAT-0007",
-    "aliases": [
-      "尤拉卡萨",
-      "文明古国"
-    ]
-  },
   "org.fas": {
     "title": "联邦缉魔局",
     "page_ref": "/organizations/org-FAS",
@@ -641,8 +641,8 @@
   },
   "per.lapla": {
     "title": "拉普拉·楚亚·维拉克",
-    "page_ref": "/characters/yuraqqasa/per-lapla",
-    "content_path": "characters/yuraqqasa/per-lapla/index.md",
+    "page_ref": "/characters/gkrk/per-lapla",
+    "content_path": "characters/gkrk/per-lapla/index.md",
     "section": "characters",
     "entity_kind": "person",
     "schema": "person.v1",

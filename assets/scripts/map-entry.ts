@@ -1,7 +1,7 @@
-import { initAtlas } from "./map";
+import { initAtlas } from "./atlas/app";
 
 function bootAtlas(): void {
-  initAtlas();
+  void initAtlas();
 }
 
 if (document.readyState === "loading") {

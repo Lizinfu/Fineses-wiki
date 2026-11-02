@@ -10,7 +10,7 @@ eras:
   - 古代
 topics:
   - 神代
-  - 尤拉卡萨
+  - 冈穹嘉卡
 params:
   id: per.lapla
   entity_kind: person
@@ -38,11 +38,11 @@ params:
     government_forms: []
     topics:
       - 神代
-      - 尤拉卡萨
+      - 冈穹嘉卡
   relations: []
   allow_orphan: 
     - type: related_to
-      target: nat.yur
+      target: nat.gkrk
   
 ---
 

@@ -60,9 +60,9 @@ Every listed file is required. Missing resources stop the Hugo build.
   crossorigin="anonymous">
 
 {{- if eq .Layout "atlas" -}}
-  {{- $atlasStyles := resources.Get "styles/pages/atlas.css" -}}
+  {{- $atlasStyles := resources.Get "styles/pages/atlas-pixi.css" -}}
   {{- if not $atlasStyles -}}
-    {{- errorf "Required stylesheet not found: assets/styles/pages/atlas.css" -}}
+    {{- errorf "Required stylesheet not found: assets/styles/pages/atlas-pixi.css" -}}
   {{- end -}}
   {{- $atlasStyles = $atlasStyles | minify | fingerprint "sha384" -}}
   <link
