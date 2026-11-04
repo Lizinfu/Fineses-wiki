@@ -1,3 +1,5 @@
+import { readFileSync } from "node:fs";
+import { parse } from "yaml";
 import { createBlockBoard } from "../../assets/scripts/atlas/blocks.mjs";
 import { test, expect } from "@playwright/test";
 import AxeBuilder from "@axe-core/playwright";
@@ -7,6 +9,12 @@ import {
   project,
   unproject,
 } from "../../assets/scripts/atlas/space.mjs";
+
+// Declare one test per source geography: each keeps the default 30s budget on software WebGL.
+const sourceYaml = (name) => parse(readFileSync(new URL(`../../data/maps/${name}.yaml`, import.meta.url), "utf8"));
+const worldAreas = sourceYaml("areas").areas.filter((area) => area.map_id === "world");
+const countryCases = worldAreas.filter((area) => area.layer === "country");
+const labelledTerrain = sourceYaml("features").maps["nation.inibholc"].terrain.filter((feature) => feature.label_position);
 
 async function ready(page, query = "entity=nat.ini") {
   await page.goto("/portals/atlas/?" + query);
@@ -31,6 +39,8 @@ async function model(page) {
 }
 
 async function pointViewAt(page, point, zoom, period) {
+  // Camera setup uses CSS pixels at every zoom; the actual label assertions remain < 1px.
+  const positionTolerance = 0.25;
   const host = page.locator("[data-atlas-canvas]");
   await host.scrollIntoViewIfNeeded();
   const box = await host.boundingBox(),
@@ -48,7 +58,7 @@ async function pointViewAt(page, point, zoom, period) {
         (view.x - point.x - Math.round((view.x - point.x) / period) * period) *
         view.zoom,
       dy = (view.y - point.y) * view.zoom * view.tilt;
-    if (Math.hypot(dx, dy) < 0.05) break;
+    if (Math.hypot(dx, dy) < positionTolerance) break;
     const sx = Math.max(-box.width * 0.55, Math.min(box.width * 0.55, dx)),
       sy = Math.max(-box.height * 0.55, Math.min(box.height * 0.55, dy)),
       start = {
@@ -67,42 +77,38 @@ async function pointViewAt(page, point, zoom, period) {
       .poll(async () => {
         const after = await camera(page);
         return Math.hypot(
-          after.x -
+          (after.x -
             view.x +
             sx / view.zoom -
-            Math.round((after.x - view.x + sx / view.zoom) / period) * period,
-          after.y - view.y + sy / (view.zoom * view.tilt),
+            Math.round((after.x - view.x + sx / view.zoom) / period) * period) * view.zoom,
+          (after.y - view.y) * view.zoom * view.tilt + sy,
         );
       })
-      .toBeLessThan(0.1);
+      .toBeLessThan(positionTolerance);
   }
   await expect
     .poll(async () => {
       const current = await camera(page);
       return Math.hypot(
-        current.x -
+        (current.x -
           point.x -
-          Math.round((current.x - point.x) / period) * period,
-        current.y - point.y,
+          Math.round((current.x - point.x) / period) * period) * current.zoom,
+        (current.y - point.y) * current.zoom * current.tilt,
       );
     })
-    .toBeLessThan(0.1);
+    .toBeLessThan(positionTolerance);
 }
 
-test("all 13 country emblems load at the same zoom, including the country at the camera center", async ({
-  page,
-}) => {
-  await page.emulateMedia({ reducedMotion: "reduce" });
-  await ready(page, "");
-  const data = await model(page),
-    space = createSpace(data),
-    board = createBlockBoard(data, space);
-  for (const country of data.areas.filter((area) => area.layer === "country")) {
+for (const source of countryCases) {
+  test(`country emblem loads at the common zoom and stays anchored: ${source.id}`, async ({ page }) => {
+    await page.emulateMedia({ reducedMotion: "reduce" });
+    await ready(page, "");
+    const data = await model(page),
+      space = createSpace(data),
+      board = createBlockBoard(data, space),
+      country = data.areas.find((area) => area.id === source.id);
     await page.locator(`[data-atlas-area-focus="${country.id}"]`).click();
-    await expect(root(page)).toHaveAttribute(
-      "data-atlas-nation",
-      country.detail_map_id,
-    );
+    await expect(root(page)).toHaveAttribute("data-atlas-nation", country.detail_map_id);
     const anchor = board.raise(space.areaCenter(country));
     await pointViewAt(page, anchor, 0.8, space.period);
     const label = page.locator(`[data-atlas-label="${country.id}"]`),
@@ -116,63 +122,58 @@ test("all 13 country emblems load at the same zoom, including the country at the
     expect(size.height).toBeCloseTo(30, 0);
     const host = await page.locator("[data-atlas-canvas]").boundingBox(),
       expected = project(await camera(page), anchor, host.width, host.height);
-    expect(
-      Math.abs(size.x + size.width / 2 - host.x - expected.x),
-    ).toBeLessThan(1);
-    expect(
-      Math.abs(size.y + size.height / 2 - host.y - expected.y),
-    ).toBeLessThan(1);
+    expect(Math.abs(size.x + size.width / 2 - host.x - expected.x)).toBeLessThan(1);
+    expect(Math.abs(size.y + size.height / 2 - host.y - expected.y)).toBeLessThan(1);
     await expect(label).toHaveAccessibleName(`查看${country.label}`);
-  }
-});
+  });
+}
 
-test("continent and terrain names center on their region rather than on the caption box", async ({
-  page,
-}) => {
-  await page.emulateMedia({ reducedMotion: "reduce" });
-  await ready(page, "");
-  const data = await model(page),
-    space = createSpace(data),
-    board = createBlockBoard(data, space);
-  const centered = async (label, point) => {
-    await expect(label).toBeVisible();
-    const title = await label.locator("strong").boundingBox(),
-      host = await page.locator("[data-atlas-canvas]").boundingBox(),
-      expected = project(await camera(page), point, host.width, host.height);
-    expect(
-      Math.abs(title.x + title.width / 2 - host.x - expected.x),
-    ).toBeLessThan(1);
-    expect(
-      Math.abs(title.y + title.height / 2 - host.y - expected.y),
-    ).toBeLessThan(1);
-  };
-  for (const area of data.areas.filter((a) => a.layer === "continent")) {
-    const point = board.raise(space.areaCenter(area));
+async function expectTitleCentered(page, label, point) {
+  await expect(label).toBeVisible();
+  const title = await label.locator("strong").boundingBox(),
+    host = await page.locator("[data-atlas-canvas]").boundingBox(),
+    expected = project(await camera(page), point, host.width, host.height);
+  expect(Math.abs(title.x + title.width / 2 - host.x - expected.x)).toBeLessThan(1);
+  expect(Math.abs(title.y + title.height / 2 - host.y - expected.y)).toBeLessThan(1);
+}
+
+for (const source of worldAreas.filter((area) => area.layer === "continent")) {
+  test(`continent title centers on its region: ${source.id}`, async ({ page }) => {
+    await page.emulateMedia({ reducedMotion: "reduce" });
+    await ready(page, "");
+    const data = await model(page), space = createSpace(data), board = createBlockBoard(data, space),
+      area = data.areas.find((entry) => entry.id === source.id),
+      point = board.raise(space.areaCenter(area));
     await pointViewAt(page, point, 0.13, space.period);
-    await centered(page.locator(`[data-atlas-label="${area.id}"]`), point);
-  }
-  await ready(page);
-  for (const feature of data.feature_maps["nation.inibholc"].terrain.filter(
-    (f) => f.label_position,
-  )) {
-    const point = board.raise(
-      space.normalized("nation.inibholc", feature.geometry.center),
-    );
+    await expectTitleCentered(page, page.locator(`[data-atlas-label="${area.id}"]`), point);
+  });
+}
+
+for (const source of labelledTerrain) {
+  test(`terrain title centers on its region at both tilts: ${source.id}`, async ({ page }) => {
+    await page.emulateMedia({ reducedMotion: "reduce" });
+    await ready(page);
+    const data = await model(page), space = createSpace(data), board = createBlockBoard(data, space),
+      feature = data.feature_maps["nation.inibholc"].terrain.find((entry) => entry.id === source.id),
+      point = board.raise(space.normalized("nation.inibholc", feature.geometry.center)),
+      label = page.locator(`[data-atlas-label="${feature.id}"]`);
     await pointViewAt(page, point, 1.3, space.period);
-    const label = page.locator(`[data-atlas-label="${feature.id}"]`);
-    await centered(label, point);
+    await expectTitleCentered(page, label, point);
     await page.locator("[data-atlas-tilt]").click();
     await expect.poll(async () => (await camera(page)).tilt).toBe(1);
-    await centered(label, point);
+    await expectTitleCentered(page, label, point);
     await page.locator("[data-atlas-tilt]").click();
-  }
-  const capital = data.detail_locations.find((loc) => loc.id === "loc.cathair"),
-    point = board.raise(
-      space.normalized(capital.map_id, [
-        capital.position.x,
-        capital.position.y,
-      ]),
-    );
+    await expect.poll(async () => (await camera(page)).tilt).toBe(0.78);
+    await expectTitleCentered(page, label, point);
+  });
+}
+
+test("capital marker and title stay centered on its geographical anchor", async ({ page }) => {
+  await page.emulateMedia({ reducedMotion: "reduce" });
+  await ready(page);
+  const data = await model(page), space = createSpace(data), board = createBlockBoard(data, space),
+    capital = data.detail_locations.find((loc) => loc.id === "loc.cathair"),
+    point = board.raise(space.normalized(capital.map_id, [capital.position.x, capital.position.y]));
   await pointViewAt(page, point, 1.3, space.period);
   const label = page.locator('[data-atlas-label="loc.cathair"]');
   await expect(label).toBeVisible();
@@ -630,22 +631,22 @@ test("city, country and world use one persistent canvas, history and exclusive l
   );
 });
 
-test("all registered countries can be focused without rebuilding the canvas", async ({
-  page,
-}) => {
-  await ready(page, "");
-  const buttons = page.locator("[data-atlas-area-item] button");
-  for (let i = 0; i < (await buttons.count()); i++) {
-    const id = await buttons.nth(i).getAttribute("data-atlas-area-focus");
-    await buttons.nth(i).click();
-    await expect(root(page)).toHaveAttribute(
-      "data-atlas-nation",
-      id.replace("country.", "nation."),
-    );
-    await expect(page.locator("[data-atlas-runtime-status]")).toBeHidden();
-  }
-  await expect(page.locator(".atlas-pixi-canvas")).toHaveCount(1);
-});
+// Overlap one country so every original consecutive transition is still exercised.
+for (let start = 0; start < countryCases.length; start += 4) {
+  const group = countryCases.slice(Math.max(0, start - 1), start + 4);
+  test(`country navigation keeps one canvas: ${group[0].id} to ${group.at(-1).id}`, async ({ page }) => {
+    await ready(page, "");
+    const canvas = page.locator(".atlas-pixi-canvas");
+    await canvas.evaluate(el => el.dataset.countryProbe = "persistent");
+    for (const country of group) {
+      await page.locator(`[data-atlas-area-focus="${country.id}"]`).click();
+      await expect(root(page)).toHaveAttribute("data-atlas-nation", country.detail_map_id);
+      await expect(page.locator("[data-atlas-runtime-status]")).toBeHidden();
+      await expect(canvas).toHaveCount(1);
+      await expect(canvas).toHaveAttribute("data-country-probe", "persistent");
+    }
+  });
+}
 
 test("tilt and wheel zoom keep screen labels aligned with the same world projection", async ({
   page,
