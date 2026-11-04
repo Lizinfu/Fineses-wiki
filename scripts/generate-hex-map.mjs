@@ -4,6 +4,7 @@ import path from "node:path";
 import process from "node:process";
 import sharp from "sharp";
 import { parse as parseYaml, stringify as stringifyYaml } from "yaml";
+import { applySchematicIslands } from "./lib/map-islands.mjs";
 
 const root = process.cwd();
 const checkOnly = process.argv.includes("--check");
@@ -505,6 +506,7 @@ async function generateSource(id, source) {
       }
     }
 
+    applySchematicIslands(regionTiles, source.schematic_islands, columns, rows);
     const landTiles = new Set([...regionTiles.values()].flatMap((tiles) => [...tiles]));
     const areaMasks = Object.fromEntries([...regionTiles].map(([regionId, tiles]) => [regionId, {
       tile_count: tiles.size,
@@ -524,6 +526,7 @@ async function generateSource(id, source) {
         white_annotation_holes_filled: whiteAnnotationHolesFilled,
         fill_enclosed_annotation_holes: sampling.fill_enclosed_annotation_holes === true,
         enclosed_annotation_holes_filled: enclosedAnnotationHolesFilled,
+        ...(source.schematic_islands ? { schematic_islands: source.schematic_islands } : {}),
       },
       grid: { columns, rows, orientation: "flat", offset: "odd-q" },
       land_tile_count: landTiles.size,

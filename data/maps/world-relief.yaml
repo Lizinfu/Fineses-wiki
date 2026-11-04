@@ -1,0 +1,132 @@
+# 世界尺度的美术示意。位置按各国政治掩膜包围盒归一化，不是经纬度。
+# 同一国的 zones 按顺序覆盖；level 是离散艺术层级，不是实际海拔。
+version: 1
+source: owner-2026-11-02
+geometry_status: provisional
+# 跨国地貌覆盖，不参与政治归属。格号与现有世界掩膜一致。
+regions:
+  - id: terrain.aotelaisi
+    entity_id: reg.aotelaisi
+    label: 奥特莱斯
+    foreign_label: ΑΟΤΕΛΑΙΣΙ
+    source: owner-2026-11-03
+    geometry_status: provisional
+    description: 卡俄斯、德诺尼塞与斯兰缇亚交界的深紫色下沉地块，谷底低于海平面。10 格中有 8 格位于卡俄斯，另两国各占 1 格；不改变国界归属。
+    level: -4
+    material: abyss
+    label_cell: [75, 21]
+    cells_by_country:
+      country.khaos: [[74, 20], [75, 20], [74, 21], [75, 21], [73, 22], [74, 22], [75, 22], [74, 23]]
+      country.dunossai: [[73, 21]]
+      country.sivlanzio: [[76, 21]]
+countries:
+  country.amaterasu:
+    summary: 西部和北部低缓，东南丘陵渐高；破碎海岸沿用政治源图。
+    border: '#917db4'
+    base: {level: 0, material: temperate}
+    zones:
+      - {shape: ellipse, center: [0.76, 0.82], radius: [0.55, 0.65], level: 1}
+      - {shape: ellipse, center: [0.86, 0.87], radius: [0.32, 0.40], level: 2}
+  country.yin:
+    summary: 东北高、西南低；以台阶概括平原、丘陵、山地和高原。
+    border: '#bb775f'
+    base: {level: 0, material: temperate}
+    zones:
+      - {shape: ellipse, center: [0.76, 0.22], radius: [0.80, 0.75], level: 1}
+      - {shape: ellipse, center: [0.85, 0.12], radius: [0.58, 0.52], level: 2, material: stone}
+      - {shape: ridge, points: [[0.52, 0.1], [0.71, 0.26], [0.86, 0.42]], width: 0.14, level: 3, material: stone}
+  country.gkrk:
+    summary: 低纬度的极高雪山高原；整体抬升，为本轮世界模型的最高地形。
+    border: '#9e9853'
+    base: {level: 5, material: snow}
+    zones:
+      - {shape: ridge, points: [[0.24, 0.13], [0.56, 0.46], [0.68, 0.85]], width: 0.22, level: 6, material: snow}
+  country.crushmora:
+    summary: 北部温湿平原、南北向山地，中部偏大陆性，南部接荒漠。未定义正式河道。
+    border: '#548f91'
+    base: {level: 0, material: temperate}
+    zones:
+      - {shape: ellipse, center: [0.51, 0.98], radius: [1, 0.39], level: 0, material: desert}
+      - {shape: ridge, points: [[0.33, 0.12], [0.43, 0.37], [0.34, 0.61], [0.45, 0.84]], width: 0.19, level: 1, material: stone}
+      - {shape: ridge, points: [[0.33, 0.12], [0.43, 0.37], [0.34, 0.61]], width: 0.075, level: 2, material: stone}
+  country.tarusar:
+    summary: 大片干旱荒漠，少量河谷绿洲；只作带状意象，不定义两河的正式位置。
+    border: '#b79b60'
+    base: {level: 0, material: desert}
+    zones:
+      - {shape: ellipse, center: [0.32, 0.43], radius: [0.25, 0.43], level: 1, material: desert}
+      - {shape: ridge, points: [[0.67, 0.24], [0.59, 0.48], [0.62, 0.73]], width: 0.035, level: 0, material: temperate}
+  country.esael:
+    summary: 北部荒漠，向南过渡为热带平原雨林。中南部水系丰富，暂不绘制未经确认的河网。
+    border: '#678e70'
+    base: {level: 0, material: rainforest}
+    zones:
+      - {shape: ellipse, center: [0.45, 0.02], radius: [1, 0.28], level: 0, material: desert}
+      - {shape: ellipse, center: [0.52, 0.31], radius: [0.38, 0.16], level: 1, material: rainforest}
+  country.dunossai:
+    summary: 温和湿润的平原国家，西南面向海洋。
+    border: '#b88c66'
+    base: {level: 0, material: temperate}
+    zones:
+      - {shape: ellipse, center: [0.73, 0.2], radius: [0.30, 0.25], level: 1}
+  country.inibholc:
+    summary: 平原丘陵为主；保留既有高风原野、克莱尔平原与首都高点示意。
+    border: '#718baa'
+    base: {level: 0, material: temperate}
+    zones: []
+  country.muocils:
+    summary: 横贯北方的寒温带国土，北部积雪，中南部为断续山带。
+    border: '#8e7e9c'
+    base: {level: 0, material: tundra}
+    zones:
+      - {shape: ellipse, center: [0.5, 0.02], radius: [1, 0.43], level: 1, material: snow}
+      - {shape: ridge, points: [[0.09, 0.70], [0.23, 0.61], [0.37, 0.75]], width: 0.16, level: 2, material: stone}
+      - {shape: ridge, points: [[0.48, 0.68], [0.62, 0.71], [0.70, 0.84]], width: 0.14, level: 2, material: stone}
+      - {shape: ridge, points: [[0.79, 0.64], [0.91, 0.61]], width: 0.15, level: 3, material: snow}
+  country.havfrentyr:
+    summary: 整体低洼的沿海平原，东北略高。
+    border: '#5c9c9d'
+    base: {level: 0, material: temperate}
+    zones:
+      - {shape: ellipse, center: [0.88, 0.08], radius: [0.43, 0.44], level: 1}
+  country.khaos:
+    summary: 西部破碎地形以少量错落丘陵概括，沿海轮廓采用政治源图。
+    border: '#6698ae'
+    base: {level: 0, material: temperate}
+    zones:
+      - {shape: ridge, points: [[0.20, 0.08], [0.32, 0.36], [0.15, 0.56]], width: 0.22, level: 2, material: stone}
+      - {shape: ellipse, center: [0.31, 0.81], radius: [0.23, 0.17], level: 1, material: stone}
+  country.sivlanzio:
+    summary: 西南近卡俄斯一侧地形破碎；沿海岛屿沿用来源轮廓，不推断正式岛名。
+    border: '#9383b8'
+    base: {level: 0, material: temperate}
+    zones:
+      - {shape: ridge, points: [[0.18, 0.50], [0.31, 0.72], [0.22, 0.91]], width: 0.22, level: 2, material: stone}
+  country.sirena:
+    summary: 寒带破碎岛国，中北部高原山地，南部低缓平原。
+    border: '#6a8ea8'
+    base: {level: 0, material: tundra}
+    zones:
+      - {shape: ellipse, center: [0.50, 0.26], radius: [0.85, 0.46], level: 2, material: snow}
+      - {shape: ridge, points: [[0.38, 0.05], [0.56, 0.24], [0.47, 0.48]], width: 0.19, level: 3, material: snow}
+# 无人区按世界 0–1 坐标取样，并严格裁切在既有无人区掩膜内。
+wilderness:
+  base: {level: 1, material: stone}
+  zones:
+    - {shape: ellipse, center: [0.18, 0.04], radius: [0.28, 0.14], level: 1, material: ice}
+    - {shape: ellipse, center: [0.96, 0.49], radius: [0.16, 0.25], level: 3, material: stone}
+    - {shape: ridge, points: [[0.90, 0.39], [0.95, 0.49], [0.96, 0.63]], width: 0.055, level: 4, material: snow}
+# 浮冰是非政治、不可拾取的环境符号，坐标为世界逻辑格；不增加陆地。
+ice:
+  - [30, 1]
+  - [35, 0]
+  - [39, 1]
+  - [47, 1]
+  - [55, 2]
+  - [60, 1]
+  - [71, 1]
+  - [83, 0]
+  - [93, 1]
+  - [109, 2]
+  - [115, 2]
+  - [124, 4]

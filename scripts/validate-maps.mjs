@@ -3,6 +3,8 @@ import path from "node:path";
 import { parse as parseYaml } from "yaml";
 import { walkMarkdown } from "./lib/files.mjs";
 import { validateMapFeatures } from "./lib/map-features.mjs";
+import { validateWorldRelief } from "../assets/scripts/atlas/world-relief.mjs";
+import { expandRows } from "../assets/scripts/atlas/space.mjs";
 
 const root = process.cwd();
 const errors = [];
@@ -232,6 +234,29 @@ for (const filePath of await walkMarkdown(path.join(root, "content"))) {
 }
 
 errors.push(...validateMapFeatures(featureMaps, mapIds, entityIds));
+const worldRelief = await readYaml("data/maps/world-relief.yaml");
+errors.push(...validateWorldRelief(
+  worldRelief,
+  new Set(areaList.filter(a => a.map_id === "world" && a.layer === "country").map(a => a.id)),
+  mapList.find(m => m.id === "world").grid,
+  new Map(areaList.filter(a => a.map_id === "world" && a.layer === "country")
+    .flatMap(a => expandRows(masks.world.area_masks[a.id]?.tile_rows).map(c => [`${c.col}:${c.row}`, a.id]))),
+  entityIds,
+));
+
+// Reader copy is separate from authoring metadata, but uses the same stable map identities.
+const reader = await readYaml("data/maps/reader.yaml");
+const readerIds = new Set([
+  ...areaList.filter(a => a.map_id === "world" && ["country", "continent"].includes(a.layer)).map(a => a.id),
+  ...locationList.map(l => l.id),
+  ...Object.values(featureMaps).flatMap(set => Object.values(set).flat()).map(f => f.id),
+  ...(worldRelief.regions ?? []).map(r => r.id),
+]);
+for (const [id, entry] of Object.entries(reader.entries ?? {})) {
+  if (!readerIds.has(id)) errors.push(`reader.${id}: unknown map entry.`);
+  if (![entry?.category, entry?.description].every(value => typeof value === "string" && value.trim()))
+    errors.push(`reader.${id}: category and description must be nonempty text.`);
+}
 
 const areaIds = new Set();
 for (const area of areaList) {

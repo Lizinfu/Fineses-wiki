@@ -101,7 +101,7 @@ params:
 ---
 ```
 
-如果章节不需要被其他条目引用、没有独立来源或时间线，可不设置 `params.id`；但一旦设置 ID，就必须符合 [内容模型](docs/content-model.md) 的完整公开实体契约。
+如果章节不需要被其他条目引用、没有独立来源或时间线，可不设置 `params.id`；但一旦设置 ID，就必须符合 [内容模型](content-model.md) 的完整公开实体契约。
 
 ## 编辑正文：Markdown 排版速查
 
@@ -163,6 +163,8 @@ name: "示例"
 
 #### 图片、地图与图集
 
+本节介绍词条中的静态图版。交互式世界地图的文本、徽记、源图和地貌配置见[地图功能与维护指南](BUILDER/MAP_MAINTENANCE.md)。
+
 把媒体文件放入词条所在目录，例如 `content/history/events/evt-example/map.webp`，然后按下列方式引用。所有有意义的图片都必须提供准确的 `alt`，不要写“图片”“地图”等无信息文字。
 
 | 用途 | 写法与可选参数 |
@@ -205,11 +207,11 @@ name: "示例"
 | `classifications` | 必须包含数组 `cultures`、`eras`、`regions`、`government_forms`、`topics`。使用既有词表值；前三者中的 `cultures`、`eras`、`topics` 必须同步到顶层字段。 |
 | `relations` | 数组；每项至少写 `type` 和 `target`，可选 `note`、`period`、`reliability`、`source_refs`。只维护事实的正向一侧，反向链接会自动生成。 |
 | `allow_orphan` | 仅在实体暂时或确实不应关联其他公开实体时设为 `true`，用于消除孤立实体警告；应在提交说明中解释原因。 |
-| `timeline` | 将实体加入世界内时间线。完整可选参数、日期格式、公元前排序与案例见 [`docs/stage-7-timeline-editor-workflow.md`](docs/stage-7-timeline-editor-workflow.md)。 |
+| `timeline` | 将实体加入世界内时间线。完整可选参数、日期格式、公元前排序与案例见[时间线编辑工作流](stage-7-timeline-editor-workflow.md)。 |
 
-`relations[].type` 必须使用已登记关系类型，例如 `located_in`、`part_of`、`member_of`、`founded_by`、`ruled_by`、`allied_with`、`participated_in`、`caused`、`affected`、`documented_by`、`related_to`。不确定语义时先查阅 [`docs/relationship-guide.md`](docs/relationship-guide.md)，不要临时发明类型。
+`relations[].type` 必须使用已登记关系类型，例如 `located_in`、`part_of`、`member_of`、`founded_by`、`ruled_by`、`allied_with`、`participated_in`、`caused`、`affected`、`documented_by`、`related_to`。不确定语义时先查阅[关系指南](relationship-guide.md)，不要临时发明类型。
 
-分类、访问等级、可信度等受控值以 `data/vocabularies/` 为准。没有合适值时，不要先在词条中自由填写；应先按 [`docs/taxonomy-guide.md`](docs/taxonomy-guide.md) 的流程新增词表。
+分类、访问等级、可信度等受控值以 `data/vocabularies/` 为准。没有合适值时，不要先在词条中自由填写；应先按[分类词表指南](taxonomy-guide.md)的流程新增词表。
 
 ## 加入世界时间线
 

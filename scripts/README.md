@@ -1,6 +1,6 @@
 # 脚本职责与兼容状态
 
-`npm run wiki:*` 是普通内容维护的统一入口；修改地图参考图、父级派生配置或网格时使用 `npm run map:generate`，只检查同步状态时使用 `npm run map:check`。文件级操作步骤见 [`MAP_MAINTENANCE.md`](../docs/BUILDER/MAP_MAINTENANCE.md)。不要在 CI、文档或编辑教程中自行串联底层脚本。
+`npm run wiki:*` 是普通内容维护的统一入口；修改地图政治源图、父级派生配置或网格时使用 `npm run map:generate`，只检查同步状态时使用 `npm run map:check`。文本、资产与文件级操作步骤见[地图功能与维护指南](../docs/BUILDER/MAP_MAINTENANCE.md)。不要在 CI、文档或编辑教程中自行串联底层脚本。
 
 ## 当前生效的脚本
 

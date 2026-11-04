@@ -2,6 +2,7 @@ import { Application, Container, Graphics } from "pixi.js";
 import { cityGeometry } from "./terrain.mjs";
 import { hexCenter, hexagon } from "./space.mjs";
 import { prismGeometry } from "./blocks.mjs";
+import { MATERIALS } from "./world-relief.mjs";
 
 export type Point = { x: number; y: number };
 type Polygon = Point[];
@@ -90,7 +91,7 @@ export async function createRenderer(
     resolution: Math.min(devicePixelRatio || 1, 2),
     autoDensity: true,
     autoStart: false,
-    backgroundColor: 0x233c4d,
+    backgroundColor: 0x355568,
   });
   host.prepend(app.canvas);
   app.canvas.className = "atlas-pixi-canvas";
@@ -99,22 +100,32 @@ export async function createRenderer(
   app.stage.addChild(root);
   const countries = data.areas.filter((a: any) => a.layer === "country"),
     countryColors = new Map(
-      countries.map((a: any, i: number) => [a.id, palette[i % palette.length]]),
+      countries.map((a: any, i: number) => [a.id,
+        data.world_relief?.countries[a.id]?.border
+          ? parseInt(data.world_relief.countries[a.id].border.slice(1), 16)
+          : palette[i % palette.length]]),
     );
   const sea = new Graphics(),
     worldGrid = space.root.grid;
   for (let col = 0; col < worldGrid.columns; col++)
-    for (let row = 0; row < worldGrid.rows; row++) {
+    for (let row = -40; row < worldGrid.rows + 40; row++) {
       const p = hexCenter(col, row, worldGrid);
       path(
         sea,
         hexagon(p, worldGrid.hex_size * 0.98),
-        0x3b596a,
-        0.5,
-        0.42,
+        0x7394a4,
+        0.7,
+        0.24,
         true,
       );
     }
+  // Floating ice is a cartographic environment symbol, never a political land tile.
+  for (const [col, row] of data.world_relief?.ice ?? []) {
+    const p = hexCenter(col, row, worldGrid);
+    if (board.logicalCell(p)) continue;
+    const geometry = prismGeometry(hexagon(p, worldGrid.hex_size * 0.48), 2);
+    prism(sea, geometry, 0xa9c4d2);
+  }
   const seaCopies = [0, -1, 1].map((direction) => {
     const g = direction ? new Graphics(sea.context) : sea;
     g.x = direction * space.period;
@@ -134,26 +145,27 @@ export async function createRenderer(
     for (const cell of board.cells) {
       const g = board.geometry(cell, elevated),
         level = elevated ? cell.level : 0,
-        neutral = mix(0xa8beca, 0xe1e8e5, level * 0.11),
-        color = political
+        material = MATERIALS[cell.material as keyof typeof MATERIALS] ?? MATERIALS.temperate,
+        neutral = mix(material, 0xf2f4ed, Math.max(0, level) * 0.035),
+        color = political && !cell.region
           ? mix(
               neutral,
               (countryColors.get(cell.owner?.id) as number) ?? neutral,
-              0.35,
+              0.26,
             )
           : neutral;
-      polygon(
+      if (level >= 0) polygon(
         shadow,
         hexagon(
-          { x: cell.point.x + 2, y: cell.point.y + 3 },
-          cell.radius * 0.97,
+          { x: cell.point.x + 3, y: cell.point.y + 5 },
+          cell.radius * 0.99,
         ),
         0x0c202e,
-        0.3,
+        0.23,
       );
       prism(body, g, color);
-      bevel(body, g.top, 0.48);
-      path(seams, g.top, 0x527486, 0.35, 0.48, true);
+      if (level >= 0) bevel(body, g.top, 0.6);
+      path(seams, g.top, 0x668392, 0.45, 0.46, true);
     }
     const copies: Container[] = [],
       seamCopies: Graphics[] = [];
@@ -179,7 +191,7 @@ export async function createRenderer(
     selected = new Graphics();
   const borders = countries.map((area: any, i: number) => ({
     area,
-    color: mix(0x344f63, palette[i % palette.length], 0.45),
+    color: mix(0x233c4d, countryColors.get(area.id) as number, 0.8),
     graphic: new Graphics(),
   }));
   borderLayer.addChild(...borders.map((b: any) => b.graphic));
@@ -372,7 +384,7 @@ export async function createRenderer(
       const selectionKey = `${area?.id}:${borderKey}`;
       if (selectionKey !== lastSelection) {
         selected.clear();
-        if (area) outline(selected, board.outline(area), 0x507e92, 2.6, scale);
+        if (area) outline(selected, board.outline(area), 0x294c61, 2.6, scale);
         lastSelection = selectionKey;
       }
       selected.visible = !city;

@@ -1,0 +1,81 @@
+# 面向地图读者的地理摘要；制作来源、坐标与确定性仍由地图源数据维护。
+# 键名沿用地图稳定 ID。只摘录已有档案与作者地理设定，不补写世界事实。
+entries:
+  continent.kukulcan:
+    category: 大陆
+    description: 世界文明环带西部的狭长大地。自北向南，卡什莫兰、塔罗萨尔与埃萨勒依次展开。
+  continent.cressida:
+    category: 大陆
+    description: 当今已知世界最为辽阔的土地。无数文明曾在这片“广袤的大地”上兴盛与衰落。
+  continent.qihuang:
+    category: 大陆
+    description: 东方的辽阔土地，以殷为主要国家的诸多文明散布其间。
+  country.crushmora:
+    category: 国家
+    description: 世界西部的年轻联邦。温湿的北部平原向内陆延伸，南北向山带与南方荒漠构成截然不同的风貌。
+  country.tarusar:
+    category: 地区
+    description: 昔日的“星源沃土”，如今多被称为“荒乱焦土”。干旱荒漠间散布河谷绿洲，旧日遗迹与持续的纷争交织于此。
+  country.esael:
+    category: 国家
+    description: 世界以南，遍布雨林与溪流的广阔土地。北部为荒漠，中南部则是湿热的平原与丰沛水系。
+  country.inibholc:
+    category: 国家
+    description: 丘陵与平原交错的国土。高风原野与克莱尔平原铺展其间，首都卡夏·欧尔莱特坐落于原野高处。
+  country.muocils:
+    category: 国家
+    description: 克里希达北方幅员辽阔的帝国。严寒、积雪与断续的山带，构成这片国土的北境风貌。
+  country.dunossai:
+    category: 国家
+    description: 大陆西侧历史悠久的帝国。气候温和湿润，平原向西南海岸延伸。
+  country.havfrentyr:
+    category: 国家
+    description: 被称作“人鱼的童话”的沿海国度。低缓平原与海岸相接，吸引着来自各方的旅人。
+  country.khaos:
+    category: 国家
+    description: 克里希达西南的古老国度，继承着拉门斯的悠久遗产。破碎丘陵之间，奥特莱斯的阴影仍在缓慢扩张。
+  country.sivlanzio:
+    category: 国家
+    description: 国土由克里希达大陆上的诸区与斯诺西图组成。西南地形破碎，海岸之外散布着岛屿与礁石。
+  country.sirena:
+    category: 国家
+    description: 克里希达东北海面上狭长而破碎的离岸国度。南部为火山平原，封锁线以北的土地仍鲜为人知。
+  country.amaterasu:
+    category: 国家
+    description: 世界极东，齐黄大地半岛上的国家。西部与北部低缓，地势向东南丘陵逐渐抬升。
+  country.yin:
+    category: 国家
+    description: 屹立于世界东方的古老国度。东北山地与高原向西南低地过渡，平原与丘陵相间。
+  country.gkrk:
+    category: 国家
+    description: 极东的“未来的雪境”。低纬度的高寒山地与雪域高原相连，冻土、雪原与砾漠间仍有人迹。
+  loc.muocils:
+    category: 地区
+    description: 克里希达北方的辽阔帝国，北部积雪，中南部山带断续。
+  loc.cathair:
+    category: 首都
+    description: “熔金之城”，伊琳沃克的首都。淬金石柱矗立于高风原野之上，金火与术法在此留下印记。
+  terrain.aotelaisi:
+    category: 特殊地理
+    description: 克里希达西南的巨大无人区，绝大部分位于卡俄斯，边缘伸入德诺尼塞与斯兰缇亚。深紫色的土地沉于海平面以下，科考记录显示其范围仍在缓慢扩大。
+  terrain.inibholc.lowlands:
+    category: 地貌
+    description: 伊琳沃克的低缓地带，丘陵与平原彼此交错。
+  terrain.inibholc.highwind:
+    category: 地貌
+    description: 伊琳沃克丘陵与平原之间的宽缓原野，地势高于周围地区。熔金之城坐落于原野高处。
+  terrain.inibholc.clare:
+    category: 平原
+    description: 伊琳沃克北部的平原地带。
+  terrain.inibholc.capital-rise:
+    category: 高地
+    description: 高风原野的最高处，卡夏·欧尔莱特在此落成。
+  waterway.inibholc.central:
+    category: 河流
+    description: 流经高风原野中部的水道，由西南流向东北。
+  terrain.cathair.hill:
+    category: 高地
+    description: 卡夏·欧尔莱特所在的缓丘，位于高风原野的高处。
+  settlement.cathair.plan:
+    category: 城区
+    description: 熔金之城的中央城区，皇宫坐落于城市中心。

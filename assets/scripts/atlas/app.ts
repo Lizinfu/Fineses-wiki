@@ -82,6 +82,8 @@ export async function initAtlas(): Promise<void> {
     for (const list of Object.values(set) as any)
       for (const feature of list)
         featureIndex.set(feature.id, { feature, mapId });
+  for (const region of data.world_relief?.regions ?? [])
+    featureIndex.set(region.id, { feature: region, mapId: space.root.id });
   let camera: Camera = {
     x: (worldBox.minX + worldBox.maxX) / 2,
     y: (worldBox.minY + worldBox.maxY) / 2,
@@ -123,19 +125,22 @@ export async function initAtlas(): Promise<void> {
     title: string,
     description: string,
     entityId?: string,
-    provisional = false,
+    entryId?: string,
   ) {
+    returnFocus?.setAttribute("aria-expanded", "false");
     returnFocus =
       document.activeElement instanceof HTMLElement
         ? document.activeElement
         : null;
     cardTitle.textContent = title;
-    cardDescription.textContent = description;
-    cardStatus.textContent = provisional ? "范围与布局示意" : "地图档案";
     const entity = data.entities[entityId ?? ""];
+    const entry = data.reader?.[entryId ?? ""];
+    cardDescription.textContent = entry?.description ?? description;
+    cardStatus.textContent = [entry?.category ?? "地理档案", entity?.catalog_no].filter(Boolean).join(" / ");
     cardLink.hidden = !entity?.page_ref;
     if (entity?.page_ref) cardLink.href = entity.page_ref;
     featureCard.hidden = false;
+    root.querySelector<HTMLElement>(".atlas-directory__body")!.scrollTop = 0;
     returnFocus?.setAttribute("aria-expanded", "true");
   }
   function updateUrl(query: Record<string, string>, push = true) {
@@ -190,15 +195,16 @@ export async function initAtlas(): Promise<void> {
   function markSelection(id?: string) {
     root
       .querySelectorAll<HTMLElement>(
-        "[data-atlas-area-focus],[data-atlas-city-focus],[data-atlas-focus]",
+        "[data-atlas-area-focus],[data-atlas-city-focus],[data-atlas-focus],[data-atlas-feature-focus]",
       )
       .forEach((button) => {
-        const yes = [
+        const yes = !!id && [
           button.dataset.atlasAreaFocus,
           button.dataset.atlasCityFocus,
           button.dataset.atlasFocus,
+          button.dataset.atlasFeatureFocus,
         ].includes(id);
-        button.setAttribute("aria-pressed", String(yes));
+        button.setAttribute(button.dataset.atlasFeatureFocus ? "aria-expanded" : "aria-pressed", String(yes));
         button.closest("li")?.toggleAttribute("data-selected", yes);
       });
   }
@@ -208,10 +214,9 @@ export async function initAtlas(): Promise<void> {
     markSelection(area.id);
     info(
       area.label,
-      area.political_status === "unruled"
-        ? "当前没有现行政权。"
-        : "浏览区域地貌、地点与关联档案。",
+      "调阅区域档案，了解这里的山川与风土。",
       area.entity_id,
+      area.id,
     );
     go(fit(board.bounds(area), 0.54), animate);
     if (write)
@@ -237,11 +242,9 @@ export async function initAtlas(): Promise<void> {
       );
     info(
       loc.label,
-      loc.detail_map_id
-        ? "皇宫居中，城区高度中心对称。街区与路网为可替换的示意。"
-        : "地图位置与关联档案。",
+      "调阅地点档案，了解这里的历史与风土。",
       loc.entity_id,
-      loc.footprint_status === "provisional",
+      loc.id,
     );
     if (write) updateUrl({ loc: loc.id });
   }
@@ -249,7 +252,7 @@ export async function initAtlas(): Promise<void> {
     selected = selectedLocation = undefined;
     markSelection();
     featureCard.hidden = true;
-    go(fit(worldBox), false);
+    go(fit(worldBox, host.clientWidth < 600 ? 0.16 : 0.07), false);
     manuallyAdjusted = false;
     if (write) updateUrl({}, false);
   }
@@ -264,11 +267,22 @@ export async function initAtlas(): Promise<void> {
     else if (map.level === 2)
       focusLocation(locations.find((loc: any) => loc.detail_map_id === map.id));
     const f = entry.feature;
+    if (f.cells_by_country) {
+      const cells = board.cells.filter((c: any) => c.region?.id === f.id);
+      const box = boundsOf(cells.flatMap((c: any) => board.geometry(c).top));
+      const target = fit(box);
+      target.zoom = Math.min(target.zoom, 1.8);
+      selected = undefined;
+      selectedLocation = undefined;
+      updateUrl({});
+      go(target);
+    }
+    markSelection(id);
     info(
       f.label,
-      f.description,
+      "山川与城域的地理记录。",
       f.entity_id,
-      f.geometry_status === "provisional",
+      id,
     );
   }
   const labelHost = document.createElement("div");
@@ -355,7 +369,7 @@ export async function initAtlas(): Promise<void> {
         area.label,
         "",
         () => {
-          info(area.label, "大陆与地理区域档案。", area.entity_id);
+          info(area.label, "大陆与地理区域档案。", area.entity_id, area.id);
           go(
             fit(
               boundsOf(
@@ -387,6 +401,11 @@ export async function initAtlas(): Promise<void> {
     );
   }
   for (const [id, { feature: f, mapId }] of featureIndex) {
+    if (f.cells_by_country) {
+      addLabel(id, hexCenter(...f.label_cell as [number, number], space.root.grid),
+        "world-terrain", 85, f.label, f.foreign_label, () => focusFeature(id));
+      continue;
+    }
     if (!f.label_position) continue;
     const level = space.maps.get(mapId).level;
     addLabel(
@@ -399,13 +418,13 @@ export async function initAtlas(): Promise<void> {
         ? "CENTRAL PALACE"
         : f.kind === "river"
           ? "西南 → 东北"
-          : "地貌示意",
+          : "地貌",
       () =>
         info(
           f.label,
-          f.description,
+          "山川与城域的地理记录。",
           f.entity_id,
-          f.geometry_status === "provisional",
+          id,
         ),
     );
   }
@@ -493,7 +512,7 @@ export async function initAtlas(): Promise<void> {
       ? "城区"
       : nationId
         ? "国家详图"
-        : camera.zoom < 0.3
+        : camera.zoom < 0.16
           ? "世界总览"
           : "世界地图";
     root.dataset.atlasLevel = String(cityId ? 2 : nationId ? 1 : 0);
@@ -504,7 +523,7 @@ export async function initAtlas(): Promise<void> {
     root.querySelector<HTMLElement>("[data-atlas-view-level]")!.textContent =
       tier;
     root.querySelector<HTMLElement>("[data-atlas-view-region]")!.textContent =
-      cityId ? city.label : nationId ? candidate.label : "菲恩尼斯";
+      cityId ? city.label : nationId ? candidate.label : "全球";
     root.querySelector<HTMLElement>("[data-atlas-zoom-readout]")!.textContent =
       `${Math.round(camera.zoom * 100)}%`;
     (
@@ -513,10 +532,13 @@ export async function initAtlas(): Promise<void> {
     (
       root.querySelector('[data-atlas-zoom="out"]') as HTMLButtonElement
     ).disabled = camera.zoom <= 0.07;
-    const occupied: ScreenRect[] = [
-      { x: host.clientWidth - 280, y: 0, width: 280, height: 78 },
-      { x: 0, y: host.clientHeight - 48, width: 240, height: 48 },
-    ];
+    const hostBox = host.getBoundingClientRect();
+    const occupied: ScreenRect[] = Array.from(stage.querySelectorAll<HTMLElement>(
+      '.atlas-stage__toolbar,.atlas-view-indicator,.atlas-cartouche,.atlas-compass,.atlas-legend',
+    )).filter(el => el.offsetWidth && el.offsetHeight).map(el => {
+      const box = el.getBoundingClientRect();
+      return {x: box.left - hostBox.left, y: box.top - hostBox.top, width: box.width, height: box.height};
+    });
     const fits = (r: ScreenRect, ignore?: ScreenRect) =>
       r.x >= 8 &&
       r.y >= 8 &&
@@ -541,19 +563,21 @@ export async function initAtlas(): Promise<void> {
     for (const label of ordered) {
       let show =
         label.tier === "continent"
-          ? camera.zoom < 0.3
+          ? camera.zoom < 0.16
           : label.tier === "country"
-            ? !cityId && camera.zoom >= 0.28
+            ? !cityId && camera.zoom >= 0.16
             : label.tier === "capital"
               ? !!nationId && !cityId
               : label.tier === "palace"
                 ? !!cityId
                 : label.tier === "place"
                   ? !cityId && camera.zoom >= 0.3
+                  : label.tier === "world-terrain"
+                    ? !cityId && camera.zoom >= 0.65 && switches.terrain
                   : !!nationId && !cityId;
       const entry = featureIndex.get(label.id);
       if (entry) {
-        show &&= entry.mapId === (cityId ?? nationId);
+        show &&= entry.mapId === space.root.id || entry.mapId === (cityId ?? nationId);
         if (label.tier === "terrain") show &&= switches.terrain;
         if (label.tier === "river") show &&= switches.waterways;
         if (label.tier === "palace") show &&= switches.settlements;
@@ -710,28 +734,37 @@ export async function initAtlas(): Promise<void> {
         focusFeature(button.dataset.atlasFeatureFocus!),
       ),
     );
-  listen(
-    root.querySelector("[data-atlas-search]")!,
-    "input",
-    (event: Event) => {
-      const query = (event.target as HTMLInputElement).value
-        .trim()
-        .toLocaleLowerCase();
-      let count = 0;
-      root
-        .querySelectorAll<HTMLElement>(
-          "[data-atlas-area-item],[data-atlas-location-item],[data-atlas-city-item],[data-atlas-feature-item]",
-        )
-        .forEach((item) => {
-          item.hidden = !(item.dataset.featureSearch ?? item.textContent ?? "")
-            .toLocaleLowerCase()
-            .includes(query);
-          if (!item.hidden) count++;
-        });
-      root.querySelector<HTMLElement>("[data-atlas-count]")!.textContent =
-        `${count} 个地图条目`;
-    },
-  );
+  const search = root.querySelector<HTMLInputElement>("[data-atlas-search]")!;
+  const directoryItems = [...root.querySelectorAll<HTMLElement>("[data-directory-kind]")];
+  const filterButtons = [...root.querySelectorAll<HTMLButtonElement>("[data-directory-filter]")];
+  let directoryFilter = "all";
+  function filterDirectory() {
+    const query = search.value.trim().toLocaleLowerCase();
+    let count = 0;
+    for (const item of directoryItems) {
+      const text = item.dataset.featureSearch ?? item.querySelector('button')?.textContent ?? "";
+      const matchesKind = directoryFilter === "all" || item.dataset.directoryKind === directoryFilter;
+      item.hidden = !matchesKind || !text.toLocaleLowerCase().includes(query);
+      if (!item.hidden) count++;
+    }
+    root.querySelector<HTMLElement>("[data-atlas-count]")!.textContent =
+      `${count} 处${query ? "匹配" : "收录"}`;
+    root.querySelector<HTMLElement>("[data-atlas-empty]")!.hidden = count > 0;
+    for (const group of root.querySelectorAll<HTMLElement>("[data-directory-group]")) {
+      const visible = [...group.querySelectorAll<HTMLElement>("[data-directory-kind]")].filter(item => !item.hidden).length;
+      group.hidden = visible === 0;
+      group.querySelector<HTMLElement>("[data-directory-group-count]")!.textContent = String(visible).padStart(2, "0");
+    }
+    filterButtons.forEach(button => button.setAttribute("aria-pressed", String(button.dataset.directoryFilter === directoryFilter)));
+  }
+  listen(search, "input", filterDirectory);
+  for (const button of filterButtons) listen(button, "click", () => {
+    directoryFilter = button.dataset.directoryFilter!;
+    filterDirectory();
+    root.querySelector<HTMLElement>(".atlas-directory__body")!.scrollTop = 0;
+  });
+  root.querySelector<HTMLElement>("[data-atlas-filters]")!.hidden = false;
+  filterDirectory();
   const pointers = new Map<number, Point>();
   let drag: any;
   const point = (event: PointerEvent | WheelEvent) => {
@@ -814,9 +847,9 @@ export async function initAtlas(): Promise<void> {
         if (plan)
           info(
             plan.feature.label,
-            plan.feature.description,
+            "城市与中央城区的地理记录。",
             plan.feature.entity_id,
-            true,
+            plan.feature.id,
           );
       } else if (area?.layer === "country") focusCountry(area);
     }
@@ -891,7 +924,7 @@ export async function initAtlas(): Promise<void> {
   listen(window, "popstate", restore);
   const observer = new ResizeObserver(() => {
     renderer.resize();
-    if (!manuallyAdjusted) camera = fit(worldBox);
+    if (!manuallyAdjusted) camera = fit(worldBox, host.clientWidth < 600 ? 0.16 : 0.07);
     measureLabels();
   });
   observer.observe(host);

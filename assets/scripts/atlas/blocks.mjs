@@ -1,10 +1,11 @@
 import { boundsOf, expandRows, hexCenter, hexagon } from "./space.mjs";
 import { terraceLevelAt } from "./terrain.mjs";
+import { createWorldRelief } from "./world-relief.mjs";
 
-export const BASE_HEIGHT = 6;
+export const BASE_HEIGHT = 9;
 export const TERRACE_STEP = 5;
 export const BOARD_TILT = 0.78;
-export const BLOCK_INSET = 0.967;
+export const BLOCK_INSET = 0.991;
 const SQRT3 = Math.sqrt(3);
 const key = (col, row) => `${col}:${row}`;
 const insideHex = (point, center, radius) => {
@@ -85,6 +86,16 @@ export function createBlockBoard(data, space) {
       return cell;
     })
     .sort((a, b) => a.point.y - b.point.y || a.point.x - b.point.x);
+
+  const worldRelief = createWorldRelief(data.world_relief, cells, grid.columns, grid.rows);
+  for (const cell of cells) {
+    const relief = worldRelief(cell);
+    // Existing local surveys take precedence over the broad world study.
+    if (relief.region || (data.world_relief && !(data.feature_maps[cell.owner?.detail_map_id]?.terrain?.length)))
+      cell.level = relief.level;
+    cell.material = relief.material;
+    cell.region = relief.region;
+  }
 
   function logicalCell(point) {
     const raw = (point.x - radius * 2.25) / (radius * 1.5);
@@ -225,11 +236,29 @@ export function createBlockBoard(data, space) {
   }
   function geometry(cell, enabled = terrainEnabled, cityId) {
     const city = cities.get(cityId);
-    return prismGeometry(
+    const height = city ? localHeight(city, cell, enabled) : cellHeight(cell, enabled);
+    const g = prismGeometry(
       hexagon(cell.point, cell.radius * BLOCK_INSET),
-      city ? localHeight(city, cell, enabled) : cellHeight(cell, enabled),
-      city ? foundationHeight(city, enabled) : 0,
+      height,
+      city ? foundationHeight(city, enabled) : Math.min(0, height),
     );
+    if (!city) {
+      // Extend exposed cliffs down to a neighbouring depression floor. Never invert a prism.
+      const polygon = hexagon(cell.point, cell.radius);
+      g.faces = g.faces.flatMap(face => {
+        const i = face.index, j = (i + 1) % 6;
+        const neighbour = logicalCell({
+          x: polygon[i].x + polygon[j].x - cell.point.x,
+          y: polygon[i].y + polygon[j].y - cell.point.y,
+        });
+        const bottom = Math.min(0, height, cellHeight(neighbour, enabled));
+        if (bottom === height) return [];
+        return [{ index: i, points: [g.top[i], g.top[j],
+          { x: g.top[j].x, y: g.top[j].y + height - bottom },
+          { x: g.top[i].x, y: g.top[i].y + height - bottom }] }];
+      });
+    }
+    return g;
   }
   function cityFoundation(cityId, enabled = terrainEnabled) {
     const city = cities.get(cityId);
@@ -287,7 +316,9 @@ export function createBlockBoard(data, space) {
             city: undefined,
           });
         else {
-          const g = prismGeometry(hexagon(center, radius * BLOCK_INSET), h);
+          const g = geometry(cell);
+          const offset = center.x - cell.point.x;
+          if (offset) g.faces = g.faces.map(f => ({ ...f, points: f.points.map(p => ({ x: p.x + offset, y: p.y })) }));
           if (g.faces.some((f) => inPolygon(point, f.points)))
             candidates.push({
               cell,

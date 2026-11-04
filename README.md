@@ -11,9 +11,10 @@
 - 正文关键词检索：空格分隔多个关键词，返回正文同时包含全部关键词的公开文档；
 - 通过稳定 ID 构建关系与自动反向链接；
 - PixiJS 六边形战术沙盘：世界、13 国与首都共用 WebGL2 场景；以平整顶面、可见侧壁和离散台阶表现地形，支持斜俯视、图层、检索、档案联动与目录回退。伊琳沃克有分层地貌与河流，卡夏·欧尔莱特有六边形基座和皇宫居中的对称城区；连续起伏着色器与旧 SVG 渲染器已撤下。
+- 世界总图使用独立的地貌美术配置，概括 13 国的雪域、荒漠、雨林及高低走向；离岸岛屿补充通过生成器同步到世界与国家层。具体范围与形状均为暂定示意，详见 `docs/decisions/0006-world-atlas-art-direction.md`。
 - GitHub Actions 在 Pull Request 校验内容，并在 `main` 分支自动部署到 GitHub Pages。
 
-完整目标和长期路线见 [`docs/BUILDER/PLAN.MD`](docs/BUILDER/PLAN.MD)。该文件是架构蓝图；**日常编辑与当前实现规则以 `docs/` 下的专题文档和本 README 为准。**
+产品目标和后续需求见[需求基线](docs/BUILDER/WIKI_REQUIREMENTS.md)。当前实现与日常维护以本 README 和 `docs/` 下的专题指南为准；地图的功能、文本编辑与美术资产入口统一见[地图功能与维护指南](docs/BUILDER/MAP_MAINTENANCE.md)。
 
 ## 快速开始
 
@@ -71,8 +72,7 @@ Hugo 生成 `public/search-index.json`，由检索页按需加载。该文件是
 - [设计系统](docs/design-system.md)
 - [发布流程](docs/release-process.md)
 - [面向编辑者的维护手册](docs/BUILDER/WIKI_MAINTENANCE_GUIDE.md)
-- [交互式六边形地图实施方案](docs/BUILDER/MAP_IMPLEMENTATION_PLAN.md)
-- [地图维护手册：按文件新增、修改、删除区域和标识](docs/BUILDER/MAP_MAINTENANCE.md)
+- [地图功能与维护指南：文本、档案关联、美术资产与地理配置](docs/BUILDER/MAP_MAINTENANCE.md)
 - [脚本职责与兼容状态](scripts/README.md)
 
 ## 目录职责

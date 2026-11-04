@@ -15,7 +15,7 @@
     "content:migrate-v1": "node scripts/migrate-frontmatter-v1.mjs --write",
     "map:generate": "node scripts/generate-hex-map.mjs",
     "map:check": "node scripts/generate-hex-map.mjs --check",
-    "test:maps": "node --test tests/unit/map-features.test.mjs tests/unit/atlas-space.test.mjs tests/unit/atlas-blocks.test.mjs",
+    "test:maps": "node --test tests/unit/map-features.test.mjs tests/unit/atlas-space.test.mjs tests/unit/atlas-blocks.test.mjs tests/unit/world-relief.test.mjs",
     "typecheck:atlas": "tsc -p tsconfig.atlas.json",
     "wiki:prepare": "node scripts/prepare-wiki.mjs",
     "wiki:validate": "node scripts/validate-content-model.mjs && npm run map:check && node scripts/validate-maps.mjs && npm run typecheck:atlas && npm run test:maps && node scripts/prepare-wiki.mjs --check",

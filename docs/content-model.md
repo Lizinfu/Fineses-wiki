@@ -1,6 +1,6 @@
 # 内容模型（当前实施规范）
 
-本文件定义当前公开实体的最小数据契约。它以 `scripts/validate-content-model.mjs`、`scripts/lib/content-graph.mjs` 和 `scripts/lib/timeline.mjs` 的实际行为为准；架构愿景和未来字段见 [`BUILDER/PLAN.MD`](BUILDER/PLAN.MD)。
+本文件定义当前公开实体的最小数据契约。它以 `scripts/validate-content-model.mjs`、`scripts/lib/content-graph.mjs` 和 `scripts/lib/timeline.mjs` 的实际行为为准；产品目标和后续需求见[需求基线](BUILDER/WIKI_REQUIREMENTS.md)。
 
 ## 独立实体与子页面
 

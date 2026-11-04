@@ -46,98 +46,149 @@
   {{- range $id, $entity := $entities -}}
     {{- $mapEntities = merge $mapEntities (dict $id (merge $entity (dict "page_ref" (strings.TrimPrefix "/" $entity.page_ref | relURL)))) -}}
   {{- end -}}
-  {{- $mapData := dict "maps" $renderMaps "map_urls" $mapURLs "locations" $locations "detail_locations" $detailLocations "areas" $areas "feature_maps" $featureMaps "entities" $mapEntities "tile_masks" $tileMasks -}}
+  {{- $worldRelief := index site.Data.maps "world-relief" -}}
+  {{- $reader := site.Data.maps.reader.entries | default (dict) -}}
+  {{- $directoryLocations := slice -}}
+  {{- range $locations -}}
+    {{- if not (and (eq .kind "region") (gt (len (where $countryAreas "entity_id" .entity_id)) 0)) -}}
+      {{- $directoryLocations = $directoryLocations | append . -}}
+    {{- end -}}
+  {{- end -}}
+  {{- $placeCount := add (len $directoryLocations) (len $detailLocations) -}}
+  {{- $featureCount = add $featureCount (len ($worldRelief.regions | default (slice))) -}}
+  {{- $indexedCount = add (add (len $countryAreas) $placeCount) $featureCount -}}
+  {{- $mapData := dict "maps" $renderMaps "map_urls" $mapURLs "locations" $locations "detail_locations" $detailLocations "areas" $areas "feature_maps" $featureMaps "entities" $mapEntities "tile_masks" $tileMasks "world_relief" $worldRelief "reader" $reader -}}
   <div class="page-main__inner atlas-page" data-atlas>
     {{ partial "navigation/breadcrumbs.html" . }}
 
     <header class="atlas-hero">
       <div>
-        <span class="ui-label">ATLAS / MAP SYSTEM</span>
+        <span class="ui-label">WORLD MAP / GEOGRAPHICAL ARCHIVE</span>
         <h1 class="list-hero__title">{{ .Title }}</h1>
       </div>
+      <p class="atlas-hero__note">山海之间，循图入藏。<span>诸国疆域 · 山川地理 · 城市档案</span></p>
     </header>
 
     <section class="atlas-workspace" aria-label="交互式地图工作区">
       <aside class="atlas-directory" aria-label="地图地点目录">
-        <label class="atlas-search-label" for="atlas-location-search">地点检索</label>
-        <input id="atlas-location-search" class="atlas-search" type="search" placeholder="输入地点或实体名称" data-atlas-search>
-        <div class="atlas-directory__meta">
-          <span data-atlas-count aria-live="polite">{{ $indexedCount }} 个地图条目</span>
-          <button class="atlas-text-button" type="button" data-atlas-reset>重置视野</button>
-        </div>
+        <header class="atlas-directory__header">
+          <div class="atlas-directory__eyebrow"><span class="atlas-reticle" aria-hidden="true">⌖</span> GEOGRAPHIC ARCHIVE <span aria-hidden="true">/ 01</span></div>
+          <h2>地理导航<span>世界地图</span></h2>
+          <dl class="atlas-directory__stats" aria-label="地图收录">
+            <div><dt>诸国</dt><dd>{{ printf "%02d" (len $countryAreas) }}</dd></div>
+            <div><dt>地点</dt><dd>{{ printf "%02d" $placeCount }}</dd></div>
+            <div><dt>地貌</dt><dd>{{ printf "%02d" $featureCount }}</dd></div>
+          </dl>
+          <label class="atlas-search-label" for="atlas-location-search">检索目的地 <span>FIND A PLACE</span></label>
+          <input id="atlas-location-search" class="atlas-search" type="search" placeholder="名称 / 外文名" data-atlas-search>
+          <nav class="atlas-directory__filters" aria-label="地点分类" data-atlas-filters hidden>
+            <button type="button" data-directory-filter="all" aria-pressed="true">全部</button>
+            <button type="button" data-directory-filter="country" aria-pressed="false">诸国</button>
+            <button type="button" data-directory-filter="place" aria-pressed="false">地点</button>
+            <button type="button" data-directory-filter="feature" aria-pressed="false">地貌</button>
+          </nav>
+          <div class="atlas-directory__meta">
+            <span data-atlas-count role="status">{{ $indexedCount }} 处收录</span>
+            <button class="atlas-text-button" type="button" data-atlas-reset><span aria-hidden="true">↖</span> 全球视野</button>
+          </div>
+        </header>
+        <div class="atlas-directory__body">
         {{ with $activeMap.parent_map_id }}
           <a class="atlas-parent-link" data-atlas-parent href="{{ index $mapURLs . }}?entity={{ $activeMap.parent_entity_id }}">← 返回世界总图</a>
         {{ end }}
-        <details class="atlas-feature-controls">
-          <summary>地图图层</summary>
-          <label><input type="checkbox" checked data-feature-toggle="grid"> 块面描边</label>
-          <label><input type="checkbox" checked data-feature-toggle="terrain"> 地形层级</label>
-          <label><input type="checkbox" checked data-feature-toggle="waterways"> 河流与水系</label>
-          <label><input type="checkbox" checked data-feature-toggle="settlements"> 城区与建筑</label>
-          <label><input type="checkbox" checked data-feature-toggle="routes"> 道路</label>
-        </details>
         <section id="atlas-feature-card" class="atlas-feature-card" data-atlas-feature-card hidden aria-label="地图要素资料">
-          <button class="atlas-text-button" type="button" data-feature-card-close aria-label="关闭要素资料">关闭</button>
+          <button class="atlas-text-button" type="button" data-feature-card-close aria-label="关闭要素资料">×</button>
+          <span class="atlas-feature-card__eyebrow">区域情报 / FIELD NOTES</span>
           <span data-feature-card-status></span>
           <h2 data-feature-card-title></h2>
           <p data-feature-card-description></p>
-          <a data-feature-card-link hidden>查看档案 →</a>
+          <a data-feature-card-link hidden>调阅档案 <span aria-hidden="true">↗</span></a>
         </section>
+        <p class="atlas-directory__empty" data-atlas-empty hidden>未找到目的地<span>尝试其他名称，或切换至“全部”。</span></p>
+        <section data-directory-group="country" class="atlas-directory__group" aria-labelledby="atlas-countries-title">
+        <h3 id="atlas-countries-title" class="atlas-directory__group-title"><span>01 / 诸国档案</span><span data-directory-group-count>{{ len $countryAreas }}</span></h3>
         <ul class="atlas-location-list" data-atlas-list>
           {{ range $countryAreas }}
             {{- $entity := index $entities .entity_id -}}
-            <li data-atlas-area-item data-area-id="{{ .id }}" data-entity-id="{{ .entity_id }}">
+            <li data-atlas-area-item data-directory-kind="country" data-feature-search="{{ .label }} {{ .foreign_label }}" data-area-id="{{ .id }}" data-entity-id="{{ .entity_id }}">
               <button type="button" class="atlas-location" data-atlas-area-focus="{{ .id }}" aria-pressed="false">
-                <span class="atlas-location__kind">{{ if eq .political_status "unruled" }}无政权地区{{ else }}国家{{ end }}</span>
-                <strong>{{ .label }}</strong>
+                {{ with .icon_ref }}<span class="atlas-location__emblem" aria-hidden="true"><img src="{{ . | relURL }}" alt="" loading="lazy" width="30" height="30"></span>{{ end }}
+                <span class="atlas-location__body"><span class="atlas-location__kind">{{ if eq .political_status "unruled" }}无政权地区{{ else }}国家{{ end }}</span><strong>{{ .label }}</strong>{{ with .foreign_label }}<span class="atlas-location__foreign">{{ . }}</span>{{ end }}</span>
               </button>
-              {{ with $entity }}<a class="atlas-entry-link" href="{{ .page_ref | relURL }}">打开条目</a>{{ end }}
+              {{ with index $reader .id }}<p class="atlas-feature-fallback">{{ .description }}</p>{{ end }}
+              {{ with $entity }}<a class="atlas-entry-link" href="{{ .page_ref | relURL }}" aria-label="调阅{{ .title }}档案" title="调阅{{ .title }}档案">↗</a>{{ end }}
             </li>
           {{ end }}
-          {{ range $locations }}
+        </ul>
+        </section>
+        <section data-directory-group="place" class="atlas-directory__group" aria-labelledby="atlas-places-title">
+        <h3 id="atlas-places-title" class="atlas-directory__group-title"><span>02 / 地点坐标</span><span data-directory-group-count>{{ $placeCount }}</span></h3>
+        <ul class="atlas-location-list">
+          {{ range $directoryLocations }}
             {{- $entity := index $entities .entity_id -}}
-            <li data-atlas-location-item data-location-id="{{ .id }}" data-entity-id="{{ .entity_id }}">
+            <li data-atlas-location-item data-directory-kind="place" data-location-id="{{ .id }}" data-entity-id="{{ .entity_id }}">
               <button type="button" class="atlas-location" data-atlas-focus="{{ .id }}" aria-pressed="false">
-                <span class="atlas-location__kind">{{ .kind | default "地点" }}</span>
-                <strong>{{ .label }}</strong>
-                {{ with $entity }}<span>{{ .title }}</span>{{ end }}
+                <span class="atlas-location__symbol" aria-hidden="true">⌖</span><span class="atlas-location__body"><span class="atlas-location__kind">地点</span><strong>{{ .label }}</strong></span>
               </button>
+              {{ with index $reader .id }}<p class="atlas-feature-fallback">{{ .description }}</p>{{ end }}
+              {{ with $entity }}<a class="atlas-entry-link" href="{{ .page_ref | relURL }}" aria-label="调阅{{ .title }}档案" title="调阅{{ .title }}档案">↗</a>{{ end }}
             </li>
           {{ end }}
           {{ range $detailLocations }}
             {{- $entity := index $entities .entity_id -}}
-            <li data-atlas-city-item data-location-id="{{ .id }}" data-entity-id="{{ .entity_id }}">
+            <li data-atlas-city-item data-directory-kind="place" data-location-id="{{ .id }}" data-entity-id="{{ .entity_id }}">
               <button type="button" class="atlas-location" data-atlas-city-focus="{{ .id }}" aria-pressed="false">
-                <span class="atlas-location__kind">{{ if eq .kind "capital" }}首都城区{{ else }}城市城区{{ end }}</span>
-                <strong>{{ .label }}</strong>
+                <span class="atlas-location__symbol" aria-hidden="true">⌖</span><span class="atlas-location__body"><span class="atlas-location__kind">{{ if eq .kind "capital" }}首都{{ else }}城市{{ end }}</span><strong>{{ .label }}</strong></span>
               </button>
-              {{ with $entity }}<a class="atlas-entry-link" href="{{ .page_ref | relURL }}">打开条目</a>{{ end }}
+              {{ with index $reader .id }}<p class="atlas-feature-fallback">{{ .description }}</p>{{ end }}
+              {{ with $entity }}<a class="atlas-entry-link" href="{{ .page_ref | relURL }}" aria-label="调阅{{ .title }}档案" title="调阅{{ .title }}档案">↗</a>{{ end }}
             </li>
           {{ end }}
           {{ if eq $indexedCount 0 }}
             <li class="atlas-empty">地图地点资料尚未录入。</li>
           {{ end }}
         </ul>
-        <details class="atlas-feature-catalog" open>
-          <summary>地貌与城区</summary>
+        </section>
+        <section class="atlas-feature-catalog atlas-directory__group" data-directory-group="feature" aria-labelledby="atlas-features-title">
+          <h3 id="atlas-features-title" class="atlas-directory__group-title"><span>03 / 山川与城域</span><span data-directory-group-count>{{ $featureCount }}</span></h3>
           <ul class="atlas-location-list">
+          {{ range $worldRelief.regions }}
+            {{- $entity := index $entities (.entity_id | default "") -}}
+            <li data-atlas-feature-item data-directory-kind="feature" data-feature-search="{{ .label }} {{ .foreign_label }}">
+              <button class="atlas-location" type="button" data-atlas-feature-focus="{{ .id }}" aria-controls="atlas-feature-card" aria-expanded="false">
+                <span class="atlas-location__symbol" aria-hidden="true">◇</span><span class="atlas-location__body"><span class="atlas-location__kind">跨国地貌</span><strong>{{ .label }}</strong><span class="atlas-location__foreign">{{ .foreign_label }}</span></span>
+              </button>
+              {{ with index $reader .id }}<p class="atlas-feature-fallback" data-feature-description>{{ .description }}</p>{{ end }}
+              {{ with $entity }}<a class="atlas-feature-archive" href="{{ strings.TrimPrefix "/" .page_ref | relURL }}">查看档案</a>{{ end }}
+            </li>
+          {{ end }}
           {{ range $renderMaps }}
             {{- $map := . -}}
             {{ range (index $featureMaps .id | default (dict)) }}
               {{ range . }}
                 {{- $entity := index $entities (.entity_id | default "") -}}
-                <li data-atlas-feature-item data-feature-search="{{ .label }}">
+                <li data-atlas-feature-item data-directory-kind="feature" data-feature-search="{{ .label }}">
                   <button class="atlas-location" type="button" data-atlas-feature-focus="{{ .id }}" aria-controls="atlas-feature-card" aria-expanded="false">
-                    <span class="atlas-location__kind">{{ $map.title }} · {{ if eq .geometry_status "provisional" }}示意{{ else }}已核实{{ end }}</span>
-                    <strong>{{ .label }}</strong>
+                    <span class="atlas-location__symbol" aria-hidden="true">◇</span><span class="atlas-location__body"><span class="atlas-location__kind">{{ $map.title }}</span><strong>{{ .label }}</strong></span>
                   </button>
-                  <p class="atlas-feature-fallback" data-feature-description>{{ .description }}</p>
+                  {{ with index $reader .id }}<p class="atlas-feature-fallback" data-feature-description>{{ .description }}</p>{{ end }}
                   {{ with $entity }}<a class="atlas-feature-archive" href="{{ strings.TrimPrefix "/" .page_ref | relURL }}">查看档案</a>{{ end }}
                 </li>
               {{ end }}
             {{ end }}
           {{ end }}
           </ul>
+        </section>
+        </div>
+        <details class="atlas-feature-controls">
+          <summary><span>显示设置</span><span aria-hidden="true">LAYERS /</span></summary>
+          <div class="atlas-feature-controls__grid">
+          <label><input type="checkbox" checked data-feature-toggle="grid"> 六角网格</label>
+          <label><input type="checkbox" checked data-feature-toggle="terrain"> 地形起伏</label>
+          <label><input type="checkbox" checked data-feature-toggle="waterways"> 河流与水系</label>
+          <label><input type="checkbox" checked data-feature-toggle="settlements"> 城区与建筑</label>
+          <label><input type="checkbox" checked data-feature-toggle="routes"> 道路</label>
+          </div>
         </details>
       </aside>
 
@@ -149,6 +200,9 @@
           <button type="button" class="atlas-preset-toggle" data-atlas-preset-toggle aria-pressed="false">政治配色</button>
           <button type="button" class="atlas-tilt-toggle" data-atlas-tilt aria-pressed="true">沙盘视角</button>
         </div>
+        <div class="atlas-cartouche" aria-hidden="true"><span>{{ .Title }}</span><strong>WORLD<br>MAP</strong><small>地理概览 / GENERAL ATLAS</small></div>
+        <div class="atlas-compass" aria-hidden="true">N<span>↑</span></div>
+        <div class="atlas-legend" aria-label="地图图例"><span><i class="atlas-legend__border"></i>国界</span><span><i class="atlas-legend__snow"></i>雪域</span><span><i class="atlas-legend__desert"></i>荒漠</span><span><i class="atlas-legend__forest"></i>林地</span><small>地貌与高低为概略示意</small></div>
         <div class="atlas-view-indicator" aria-label="当前地图范围">
           <span data-atlas-view-level>世界总览</span>
           <strong data-atlas-view-region>全球</strong>

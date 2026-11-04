@@ -148,7 +148,7 @@ test("continent and terrain names center on their region rather than on the capt
   };
   for (const area of data.areas.filter((a) => a.layer === "continent")) {
     const point = board.raise(space.areaCenter(area));
-    await pointViewAt(page, point, 0.2, space.period);
+    await pointViewAt(page, point, 0.13, space.period);
     await centered(page.locator(`[data-atlas-label="${area.id}"]`), point);
   }
   await ready(page);
@@ -248,10 +248,10 @@ test("country text can collapse near an edge while its emblem stays anchored and
     country = data.areas.find((a) => a.id === "country.inibholc"),
     anchor = board.raise(space.areaCenter(country)),
     box = await page.locator("[data-atlas-canvas]").boundingBox();
-  // Put the emblem 34 px from the left edge, with insufficient room for its name.
+  // Captions extend right of the emblem; reserve the emblem at the right edge.
   await pointViewAt(
     page,
-    { x: anchor.x + (box.width / 2 - 34) / 0.8, y: anchor.y },
+    { x: anchor.x - (box.width / 2 - 34) / 0.8, y: anchor.y },
     0.8,
     space.period,
   );
@@ -261,7 +261,7 @@ test("country text can collapse near an edge while its emblem stays anchored and
   await expect(label).toHaveAttribute("data-label-mode", "icon");
   await expect(label.locator("strong")).toBeHidden();
   const position = await icon.boundingBox();
-  expect(Math.abs(position.x + position.width / 2 - box.x - 34)).toBeLessThan(
+  expect(Math.abs(position.x + position.width / 2 - box.x - (box.width - 34))).toBeLessThan(
     1,
   );
   await label.click();
@@ -428,6 +428,48 @@ test("extruded land leaves the open sea clear", async ({ page }) => {
   expect(checked).toBeGreaterThan(2);
 });
 
+test("Aotelaisi can be found in Greek, keeps its dark floor in political mode and retains country picking", async ({ page }) => {
+  await page.emulateMedia({ reducedMotion: "reduce" });
+  await ready(page, "loc=loc.cathair");
+  await page.locator('[data-atlas-search]').fill('ΑΟΤΕΛΑΙΣΙ');
+  await page.locator('[data-atlas-feature-focus="terrain.aotelaisi"]').click();
+  await expect(page.locator('[data-feature-card-title]')).toHaveText('奥特莱斯');
+  const archiveLink = page.locator('[data-feature-card-link]');
+  await expect(archiveLink).toBeVisible();
+  await expect(archiveLink).toHaveAttribute('href', /\/regions\/reg-aotelaisi\/?$/);
+  await expect(page.locator('[data-atlas-feature-focus="terrain.aotelaisi"]').locator('..').locator('.atlas-feature-archive'))
+    .toHaveAttribute('href', /\/regions\/reg-aotelaisi\/?$/);
+  const label = page.locator('[data-atlas-label="terrain.aotelaisi"]');
+  await expect(label).toBeVisible();
+  await expect(label).toContainText('ΑΟΤΕΛΑΙΣΙ');
+  expect(new URL(page.url()).searchParams.has('loc')).toBe(false);
+  const data = await model(page), space = createSpace(data), board = createBlockBoard(data, space);
+  const cell = board.cellIndex.get('74:20'), top = board.raise(cell.point);
+  const canvas = page.locator('.atlas-pixi-canvas');
+  await canvas.scrollIntoViewIfNeeded();
+  const box = await canvas.boundingBox(), view = await camera(page);
+  const p = project(view, top, box.width, box.height);
+  async function floorColor() {
+    const shot = await sharp(await canvas.screenshot()).ensureAlpha().raw().toBuffer({ resolveWithObject: true });
+    const x = Math.round(p.x * shot.info.width / box.width), y = Math.round(p.y * shot.info.height / box.height);
+    return [...shot.data.subarray((y * shot.info.width + x) * 4, (y * shot.info.width + x) * 4 + 3)];
+  }
+  const neutral = await floorColor();
+  expect(neutral[0]).toBeLessThan(50);
+  expect(neutral[2]).toBeGreaterThan(neutral[0]);
+  await page.locator('[data-atlas-preset-toggle]').click();
+  expect(await floorColor()).toEqual(neutral);
+  await page.locator('.atlas-feature-controls summary').click();
+  await page.locator('[data-feature-toggle="terrain"]').uncheck();
+  await expect(label).toBeHidden();
+  await page.locator('[data-feature-toggle="terrain"]').check();
+  await expect(label).toBeVisible();
+  await canvas.scrollIntoViewIfNeeded();
+  const after = await canvas.boundingBox();
+  await page.mouse.click(after.x + p.x, after.y + p.y);
+  await expect(page.locator('[data-feature-card-title]')).toHaveText('卡俄斯');
+});
+
 test("block tops are flat colors and exposed side walls provide the volume", async ({
   page,
 }) => {
@@ -578,6 +620,10 @@ test("city, country and world use one persistent canvas, history and exclusive l
   await expect(root(page)).toHaveAttribute("data-atlas-level", "1");
   await page.locator("[data-atlas-reset]").click();
   await expect(root(page)).toHaveAttribute("data-atlas-level", "0");
+  await expect(page.locator('.atlas-hero h1')).toHaveText('世界地图');
+  await expect(page.locator('[data-atlas-view-region]')).toHaveText('全球');
+  await expect(page.locator('.atlas-cartouche > span')).toHaveText('世界地图');
+  await expect(page.locator('.atlas-cartouche strong')).toHaveText('WORLDMAP');
   await expect(page.locator(".atlas-pixi-canvas")).toHaveAttribute(
     "data-probe",
     "persistent",
@@ -685,7 +731,7 @@ test("search, keyboard controls and archive access work independently of renderi
 }) => {
   await ready(page, "");
   await page.locator("[data-atlas-search]").fill("高风原野");
-  await expect(page.locator("[data-atlas-count]")).toHaveText("1 个地图条目");
+  await expect(page.locator("[data-atlas-count]")).toHaveText("1 处匹配");
   await page
     .locator('[data-atlas-feature-focus="terrain.inibholc.highwind"]')
     .click();
@@ -709,7 +755,7 @@ test("search, keyboard controls and archive access work independently of renderi
     await fallback.goto(new URL("/portals/atlas/", page.url()).href);
     const item = fallback.locator('[data-feature-search="高风原野"]');
     await expect(item.locator("[data-feature-description]")).toContainText(
-      "并非高原",
+      "丘陵与平原",
     );
     await expect(item.locator("a")).toBeVisible();
   } finally {

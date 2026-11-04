@@ -21,12 +21,71 @@ masks:
       white_annotation_holes_filled: 0
       fill_enclosed_annotation_holes: true
       enclosed_annotation_holes_filled: 2
+      schematic_islands:
+        source: owner-2026-11-02
+        geometry_status: provisional
+        groups:
+          - id: island.sivlanzio.east
+            area_id: country.sivlanzio
+            cells:
+              - - 88
+                - 22
+              - - 89
+                - 22
+              - - 88
+                - 23
+              - - 89
+                - 23
+          - id: island.sivlanzio.southeast
+            area_id: country.sivlanzio
+            cells:
+              - - 85
+                - 27
+              - - 86
+                - 27
+              - - 85
+                - 28
+          - id: island.sivlanzio.south
+            area_id: country.sivlanzio
+            cells:
+              - - 79
+                - 30
+              - - 80
+                - 30
+              - - 79
+                - 31
+              - - 80
+                - 31
+          - id: island.inibholc.coast
+            area_id: country.inibholc
+            cells:
+              - - 64
+                - 16
+          - id: island.dunossai.coast
+            area_id: country.dunossai
+            cells:
+              - - 64
+                - 24
+              - - 65
+                - 24
+          - id: island.khaos.coast
+            area_id: country.khaos
+            cells:
+              - - 69
+                - 30
+              - - 70
+                - 30
+          - id: island.havfrentyr.coast
+            area_id: country.havfrentyr
+            cells:
+              - - 108
+                - 14
     grid:
       columns: 136
       rows: 60
       orientation: flat
       offset: odd-q
-    land_tile_count: 2671
+    land_tile_count: 2688
     land_rows:
       - row: 0
         ranges:
@@ -236,6 +295,8 @@ masks:
             - 102
           - - 106
             - 106
+          - - 108
+            - 108
           - - 115
             - 120
       - row: 15
@@ -268,6 +329,8 @@ masks:
             - 45
           - - 54
             - 62
+          - - 64
+            - 64
           - - 67
             - 98
       - row: 17
@@ -332,6 +395,8 @@ masks:
             - 47
           - - 68
             - 83
+          - - 88
+            - 89
           - - 102
             - 115
           - - 117
@@ -344,12 +409,16 @@ masks:
             - 47
           - - 69
             - 84
+          - - 88
+            - 89
           - - 101
             - 125
       - row: 24
         ranges:
           - - 13
             - 47
+          - - 64
+            - 65
           - - 68
             - 84
           - - 101
@@ -378,6 +447,8 @@ masks:
             - 78
           - - 80
             - 80
+          - - 85
+            - 86
           - - 102
             - 131
       - row: 28
@@ -390,6 +461,8 @@ masks:
             - 49
           - - 72
             - 73
+          - - 85
+            - 85
           - - 99
             - 133
       - row: 29
@@ -410,6 +483,10 @@ masks:
             - 49
           - - 51
             - 53
+          - - 69
+            - 70
+          - - 79
+            - 80
           - - 97
             - 134
       - row: 31
@@ -422,6 +499,8 @@ masks:
             - 55
           - - 57
             - 57
+          - - 79
+            - 80
           - - 84
             - 85
           - - 97
@@ -877,7 +956,7 @@ masks:
               - - 66
                 - 66
       country.inibholc:
-        tile_count: 65
+        tile_count: 66
         tile_rows:
           - row: 10
             ranges:
@@ -915,6 +994,8 @@ masks:
             ranges:
               - - 54
                 - 62
+              - - 64
+                - 64
           - row: 17
             ranges:
               - - 54
@@ -1047,7 +1128,7 @@ masks:
               - - 92
                 - 92
       country.dunossai:
-        tile_count: 118
+        tile_count: 120
         tile_rows:
           - row: 11
             ranges:
@@ -1099,8 +1180,12 @@ masks:
             ranges:
               - - 68
                 - 72
+          - row: 24
+            ranges:
+              - - 64
+                - 65
       country.havfrentyr:
-        tile_count: 31
+        tile_count: 32
         tile_rows:
           - row: 10
             ranges:
@@ -1128,8 +1213,10 @@ masks:
                 - 102
               - - 106
                 - 106
+              - - 108
+                - 108
       country.khaos:
-        tile_count: 45
+        tile_count: 47
         tile_rows:
           - row: 20
             ranges:
@@ -1167,8 +1254,12 @@ masks:
             ranges:
               - - 72
                 - 73
+          - row: 30
+            ranges:
+              - - 69
+                - 70
       country.sivlanzio:
-        tile_count: 96
+        tile_count: 107
         tile_rows:
           - row: 14
             ranges:
@@ -1208,10 +1299,14 @@ masks:
             ranges:
               - - 76
                 - 83
+              - - 88
+                - 89
           - row: 23
             ranges:
               - - 76
                 - 84
+              - - 88
+                - 89
           - row: 24
             ranges:
               - - 76
@@ -1229,6 +1324,20 @@ masks:
               - - 75
                 - 78
               - - 80
+                - 80
+              - - 85
+                - 86
+          - row: 28
+            ranges:
+              - - 85
+                - 85
+          - row: 30
+            ranges:
+              - - 79
+                - 80
+          - row: 31
+            ranges:
+              - - 79
                 - 80
       country.sirena:
         tile_count: 51
@@ -1684,7 +1793,7 @@ masks:
       rows: 28
       orientation: flat
       offset: odd-q
-    land_tile_count: 771
+    land_tile_count: 792
     land_rows: &a1
       - row: 0
         ranges:
@@ -1800,24 +1909,34 @@ masks:
         ranges:
           - - 1
             - 30
+          - - 33
+            - 36
       - row: 19
         ranges:
           - - 1
             - 30
+          - - 33
+            - 37
       - row: 20
         ranges:
           - - 0
-            - 31
+            - 37
       - row: 21
         ranges:
           - - 1
             - 30
+          - - 33
+            - 36
       - row: 22
         ranges:
           - - 1
             - 28
           - - 30
             - 30
+          - - 34
+            - 34
+          - - 36
+            - 36
       - row: 23
         ranges:
           - - 0
@@ -1854,7 +1973,7 @@ masks:
             - 20
     area_masks:
       country.inibholc.nation:
-        tile_count: 771
+        tile_count: 792
         tile_rows: *a1
       city.cathair.nation:
         tile_count: 13
@@ -2454,10 +2573,18 @@ masks:
       rows: 22
       orientation: flat
       offset: odd-q
-    land_tile_count: 463
+    land_tile_count: 420
     land_rows: &a7
       - row: 0
         ranges:
+          - - 7
+            - 7
+          - - 9
+            - 9
+          - - 11
+            - 11
+          - - 15
+            - 15
           - - 18
             - 21
       - row: 1
@@ -2465,30 +2592,24 @@ masks:
           - - 7
             - 9
           - - 11
-            - 13
-          - - 15
-            - 20
+            - 21
       - row: 2
         ranges:
-          - - 7
-            - 21
+          - - 6
+            - 20
       - row: 3
         ranges:
           - - 7
-            - 21
+            - 22
       - row: 4
-        ranges:
-          - - 6
-            - 23
-          - - 27
-            - 27
-          - - 31
-            - 31
-      - row: 5
         ranges:
           - - 5
             - 5
           - - 7
+            - 31
+      - row: 5
+        ranges:
+          - - 5
             - 31
       - row: 6
         ranges:
@@ -2501,70 +2622,70 @@ masks:
       - row: 8
         ranges:
           - - 5
-            - 31
+            - 30
       - row: 9
         ranges:
           - - 5
             - 30
       - row: 10
         ranges:
-          - - 5
-            - 30
-      - row: 11
-        ranges:
-          - - 1
-            - 1
-          - - 5
-            - 30
-      - row: 12
-        ranges:
           - - 0
             - 1
           - - 3
             - 28
-      - row: 13
+      - row: 11
         ranges:
           - - 0
             - 26
-      - row: 14
+      - row: 12
         ranges:
           - - 0
             - 24
-      - row: 15
+      - row: 13
         ranges:
           - - 0
             - 23
-      - row: 16
+      - row: 14
         ranges:
           - - 0
-            - 18
-          - - 20
             - 22
-      - row: 17
-        ranges:
-          - - 0
-            - 20
-          - - 22
-            - 22
-      - row: 18
-        ranges:
-          - - 0
-            - 18
-      - row: 19
+      - row: 15
         ranges:
           - - 0
             - 19
-      - row: 20
+      - row: 16
         ranges:
-          - - 5
+          - - 0
+            - 19
+      - row: 17
+        ranges:
+          - - 0
+            - 0
+          - - 4
             - 18
-      - row: 21
+      - row: 18
         ranges:
           - - 7
             - 16
+      - row: 19
+        ranges:
+          - - 1
+            - 1
+          - - 9
+            - 11
+          - - 13
+            - 14
+      - row: 20
+        ranges:
+          - - 0
+            - 3
+      - row: 21
+        ranges:
+          - - 0
+            - 4
     area_masks:
       country.dunossai.nation:
-        tile_count: 463
+        tile_count: 420
         tile_rows: *a7
     alignment:
       parent_mask_id: world
@@ -2573,9 +2694,9 @@ masks:
       source_land_tile_count: 704
       transform:
         - 1.8666345690900334
-        - 1.801201802704056
+        - 1.5524384980578336
         - -178.3465334617236
-        - -33.636652187849876
+        - -29.108470606786586
       parent_hex_radius: 0.98125
   nation.havfrentyr:
     source: derived:world/country.havfrentyr
@@ -2589,125 +2710,135 @@ masks:
       rows: 22
       orientation: flat
       offset: odd-q
-    land_tile_count: 518
+    land_tile_count: 461
     land_rows: &a8
       - row: 0
         ranges:
-          - - 21
-            - 24
+          - - 17
+            - 20
       - row: 1
         ranges:
-          - - 18
-            - 27
+          - - 14
+            - 22
       - row: 2
         ranges:
-          - - 17
-            - 28
+          - - 14
+            - 23
       - row: 3
         ranges:
           - - 0
-            - 3
-          - - 7
-            - 10
-          - - 14
-            - 28
+            - 2
+          - - 6
+            - 8
+          - - 11
+            - 23
       - row: 4
         ranges:
           - - 0
             - 3
-          - - 7
-            - 11
-          - - 14
-            - 28
+          - - 5
+            - 9
+          - - 11
+            - 23
       - row: 5
         ranges:
           - - 0
-            - 28
+            - 23
       - row: 6
         ranges:
           - - 0
-            - 28
+            - 23
       - row: 7
         ranges:
           - - 0
-            - 28
+            - 23
       - row: 8
         ranges:
           - - 0
-            - 28
+            - 23
       - row: 9
         ranges:
           - - 0
-            - 28
+            - 23
       - row: 10
         ranges:
           - - 0
-            - 28
+            - 23
       - row: 11
         ranges:
           - - 0
-            - 29
-          - - 31
-            - 31
+            - 25
       - row: 12
         ranges:
           - - 0
-            - 31
+            - 25
       - row: 13
         ranges:
           - - 0
-            - 31
+            - 26
       - row: 14
         ranges:
           - - 0
-            - 31
+            - 26
       - row: 15
         ranges:
           - - 0
-            - 24
-          - - 28
+            - 20
+          - - 22
+            - 26
+          - - 29
             - 31
       - row: 16
         ranges:
           - - 0
-            - 24
+            - 20
+          - - 23
+            - 25
           - - 28
             - 31
       - row: 17
         ranges:
-          - - 3
-            - 21
-          - - 27
+          - - 2
+            - 17
+          - - 22
+            - 26
+          - - 28
             - 31
       - row: 18
         ranges:
           - - 3
-            - 20
-          - - 27
+            - 17
+          - - 22
+            - 26
+          - - 28
             - 31
       - row: 19
         ranges:
-          - - 3
-            - 10
-          - - 14
-            - 18
+          - - 2
+            - 8
+          - - 11
+            - 14
+          - - 22
+            - 26
           - - 28
             - 31
       - row: 20
         ranges:
           - - 2
-            - 10
-          - - 14
-            - 17
-          - - 28
+            - 8
+          - - 12
+            - 14
+          - - 23
+            - 25
+          - - 29
             - 31
       - row: 21
         ranges:
-          - - 3
-            - 7
+          - - 2
+            - 6
     area_masks:
       country.havfrentyr.nation:
-        tile_count: 518
+        tile_count: 461
         tile_rows: *a8
     alignment:
       parent_mask_id: world
@@ -2715,9 +2846,9 @@ masks:
       parent_source_sha256: cc21ef20c4ed8071b7ddc6d2b9efb94e101f76c912a09bbb424b7579d1c629a7
       source_land_tile_count: 704
       transform:
-        - 3.4709042076992005
+        - 2.8570375829034678
         - 4.1014823261117455
-        - -507.79834377797766
+        - -418.1623065585858
         - -68.40415706448331
       parent_hex_radius: 0.98125
   nation.khaos:
@@ -2732,13 +2863,11 @@ masks:
       rows: 22
       orientation: flat
       offset: odd-q
-    land_tile_count: 484
+    land_tile_count: 446
     land_rows: &a9
       - row: 0
         ranges:
-          - - 23
-            - 29
-          - - 31
+          - - 22
             - 31
       - row: 1
         ranges:
@@ -2746,7 +2875,7 @@ masks:
             - 31
       - row: 2
         ranges:
-          - - 23
+          - - 22
             - 31
       - row: 3
         ranges:
@@ -2754,31 +2883,25 @@ masks:
             - 31
       - row: 4
         ranges:
-          - - 23
+          - - 19
             - 31
       - row: 5
         ranges:
-          - - 19
+          - - 7
+            - 12
+          - - 15
             - 31
       - row: 6
         ranges:
-          - - 8
-            - 11
-          - - 15
+          - - 3
             - 31
       - row: 7
         ranges:
-          - - 5
-            - 5
-          - - 7
-            - 13
-          - - 15
+          - - 0
             - 31
       - row: 8
         ranges:
-          - - 1
-            - 1
-          - - 3
+          - - 0
             - 31
       - row: 9
         ranges:
@@ -2799,56 +2922,50 @@ masks:
       - row: 13
         ranges:
           - - 0
-            - 31
+            - 28
       - row: 14
         ranges:
-          - - 0
-            - 31
+          - - 3
+            - 29
       - row: 15
         ranges:
-          - - 0
-            - 31
+          - - 2
+            - 28
       - row: 16
         ranges:
-          - - 0
-            - 27
-      - row: 17
-        ranges:
-          - - 3
-            - 28
-      - row: 18
-        ranges:
-          - - 3
-            - 28
-      - row: 19
-        ranges:
-          - - 3
-            - 8
-          - - 10
-            - 24
-          - - 26
-            - 26
-      - row: 20
-        ranges:
           - - 4
-            - 4
-          - - 6
-            - 6
-          - - 8
             - 8
           - - 12
-            - 12
-          - - 14
             - 24
-      - row: 21
+      - row: 17
         ranges:
           - - 16
-            - 16
-          - - 18
+            - 25
+      - row: 18
+        ranges:
+          - - 9
+            - 9
+          - - 11
+            - 11
+          - - 19
             - 24
+      - row: 19
+        ranges:
+          - - 5
+            - 5
+          - - 7
+            - 13
+      - row: 20
+        ranges:
+          - - 3
+            - 13
+      - row: 21
+        ranges:
+          - - 2
+            - 12
     area_masks:
       country.khaos.nation:
-        tile_count: 484
+        tile_count: 446
         tile_rows: *a9
     alignment:
       parent_mask_id: world
@@ -2857,9 +2974,9 @@ masks:
       source_land_tile_count: 704
       transform:
         - 3.888665997993981
-        - 2.371127224785761
+        - 1.958083832335329
         - -393.80942828485445
-        - -80.97308981369872
+        - -67.01584606650476
       parent_hex_radius: 0.98125
   nation.sivlanzio:
     source: derived:world/country.sivlanzio
@@ -2873,115 +2990,139 @@ masks:
       rows: 22
       orientation: flat
       offset: odd-q
-    land_tile_count: 435
+    land_tile_count: 413
     land_rows: &a10
       - row: 0
         ranges:
-          - - 12
+          - - 11
+            - 21
+          - - 23
             - 23
       - row: 1
         ranges:
-          - - 11
-            - 11
-          - - 13
+          - - 10
             - 25
+          - - 27
+            - 27
       - row: 2
         ranges:
-          - - 11
-            - 25
+          - - 10
+            - 29
+      - row: 3
+        ranges:
+          - - 7
+            - 30
+      - row: 4
+        ranges:
+          - - 3
+            - 28
+          - - 30
+            - 30
+      - row: 5
+        ranges:
+          - - 1
+            - 22
+          - - 26
+            - 26
+      - row: 6
+        ranges:
+          - - 1
+            - 20
+      - row: 7
+        ranges:
+          - - 1
+            - 19
+      - row: 8
+        ranges:
+          - - 1
+            - 19
           - - 27
             - 27
           - - 29
             - 29
-      - row: 3
-        ranges:
-          - - 10
-            - 31
-      - row: 4
-        ranges:
-          - - 7
-            - 7
-          - - 9
-            - 31
-      - row: 5
-        ranges:
-          - - 5
-            - 31
-      - row: 6
-        ranges:
-          - - 3
-            - 24
-          - - 27
-            - 29
-      - row: 7
-        ranges:
-          - - 1
-            - 20
-          - - 22
-            - 22
-      - row: 8
-        ranges:
-          - - 2
-            - 21
       - row: 9
         ranges:
           - - 1
-            - 20
+            - 21
+          - - 26
+            - 31
       - row: 10
         ranges:
           - - 1
-            - 19
+            - 21
+          - - 26
+            - 31
       - row: 11
         ranges:
-          - - 2
-            - 21
+          - - 1
+            - 22
+          - - 26
+            - 31
       - row: 12
         ranges:
           - - 1
-            - 20
+            - 22
+          - - 28
+            - 31
       - row: 13
         ranges:
           - - 1
-            - 23
+            - 20
       - row: 14
         ranges:
-          - - 1
+          - - 0
+            - 15
+          - - 23
             - 23
+          - - 25
+            - 25
       - row: 15
         ranges:
-          - - 1
-            - 23
+          - - 0
+            - 16
+          - - 21
+            - 25
       - row: 16
-        ranges:
-          - - 2
-            - 22
-      - row: 17
-        ranges:
-          - - 1
-            - 16
-          - - 18
-            - 20
-          - - 22
-            - 22
-      - row: 18
-        ranges:
-          - - 1
-            - 15
-      - row: 19
-        ranges:
-          - - 0
-            - 16
-      - row: 20
-        ranges:
-          - - 0
-            - 16
-      - row: 21
         ranges:
           - - 0
             - 14
+          - - 20
+            - 26
+      - row: 17
+        ranges:
+          - - 0
+            - 2
+          - - 4
+            - 6
+          - - 8
+            - 8
+          - - 10
+            - 10
+          - - 12
+            - 12
+          - - 20
+            - 24
+      - row: 18
+        ranges:
+          - - 11
+            - 11
+          - - 20
+            - 24
+      - row: 19
+        ranges:
+          - - 8
+            - 13
+      - row: 20
+        ranges:
+          - - 7
+            - 13
+      - row: 21
+        ranges:
+          - - 7
+            - 13
     area_masks:
       country.sivlanzio.nation:
-        tile_count: 435
+        tile_count: 413
         tile_rows: *a10
     alignment:
       parent_mask_id: world
@@ -2989,10 +3130,10 @@ masks:
       parent_source_sha256: cc21ef20c4ed8071b7ddc6d2b9efb94e101f76c912a09bbb424b7579d1c629a7
       source_land_tile_count: 704
       transform:
-        - 2.2580081537565535
-        - 1.6079570853822085
-        - -252.79149679673864
-        - -39.86678455235397
+        - 2.11050626020686
+        - 1.2502606882168927
+        - -236.34227000544377
+        - -31.187299616681422
       parent_hex_radius: 0.98125
   nation.sirena:
     source: derived:world/country.sirena

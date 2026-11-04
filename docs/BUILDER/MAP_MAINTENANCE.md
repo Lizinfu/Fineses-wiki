@@ -1,128 +1,219 @@
-# 地图维护手册
+# 地图功能与维护指南
 
-> 适用版本：2026-10-31；实施原理与长期路线见 [地图实施方案](MAP_IMPLEMENTATION_PLAN.md)。
+> 更新于 2026-11-04。本文是交互地图的统一维护入口，面向内容编辑、美术与开发维护者。所有路径相对于仓库根目录；实现细节以当前源码和校验规则为准。
 
-## 先记住三件事
+## 1. 当前地图包含什么
 
-1. 世界图 `world` 常驻。世界与国家共用同一组实体六边形块；13 国的 `nation.<slug>` 保留细格数据接口，国家视野显示对应专题。只有卡夏·欧尔莱特有暂定城市 L2，以对称细块和六边形基座呈现。
-2. `data/maps/tiles.yaml` 是生成物，**不要手工编辑**。改变世界国界要改 `assets/map-sources/world-political.png`；改变国家层网格或来源要改 `data/maps/sources.yaml` 和 `data/maps/layers.yaml`，然后重新生成。
-3. 地名、政治状态、地图颜色和地理边界是不同的数据。不能只改 CSS 颜色来“增加国家”，也不能把尚无资料的地形或城市自动猜出来。
+页面入口是 `/portals/atlas/`，名称为“世界地图”。菲恩尼斯是图书馆品牌，不是世界名称。
 
-## 文件速查
+- **世界与国家**：一个常驻的 PixiJS / WebGL2 场景，支持横向环绕；13 个现存政治区域共用世界国土，聚焦后查看对应国家专题。塔罗萨尔当前没有现行政权。
+- **城市**：卡夏·欧尔莱特已有首都视野、皇宫与城区；其他城市尚未录入。城市布局、地形起伏和河道的具体形状仍有示意成分。
+- **特殊地理**：奥特莱斯跨卡俄斯、德诺尼塞与斯兰缇亚，以近黑深紫色凹陷呈现，关联已有档案 `reg.aotelaisi`，不另设国家。
+- **导航侧栏**：收录概览、“全部 / 诸国 / 地点 / 地貌”筛选、中文与外文名检索、区域资料卡、档案入口和空结果提示。计数表示当前收录数量。
+- **地图操作**：拖拽、滚轮、双指缩放、键盘与缩放按钮；可切换政治配色、沙盘视角，以及“六角网格 / 地形起伏 / 河流与水系 / 城区与建筑 / 道路”。
+- **基础阅读**：无 JavaScript 或无 WebGL2 时，仍可阅读目录中的摘要、打开档案。窄屏将侧栏放在地图下方。
 
-| 想改什么 | 编辑的权威文件 | 当前是否会直接显示 |
+视觉方向是平整六边形顶面、显式侧壁与离散台阶。世界采用冷蓝海面、浅色陆地、彩色国界与徽记；侧栏采用深色仪表盘、浅色标题条、青色线条和少量琥珀强调。
+
+当前没有自由三维旋转、完整 GIS、真实海拔测绘或已完成的全国行政区系统。未录入的地形、水系和城市不能据画面推断为正式设定；库库尔坎与齐黄之间的高原连接范围仍待确认。
+
+## 2. 文本信息在哪里编辑
+
+### 2.1 按显示位置查文件
+
+| 需要修改的内容 | 编辑位置 | 字段或说明 |
 | --- | --- | --- |
-| 世界海岸、国界、无人区形状 | `assets/map-sources/world-political.png`；新颜色同时登记 `data/maps/sources.yaml` | 运行 `npm run map:generate` 后显示 |
-| 现存国家 L1 格数、父级归属、生成方式 | `data/maps/layers.yaml`、`data/maps/sources.yaml` | 重新生成后显示；两处网格必须相同 |
-| 国家、大陆或特殊区域的名字、定位、状态 | `data/maps/areas.yaml` | 国家和大陆默认按实际陆地面积重心定位；可选 `label_anchor` 显式覆盖 |
-| 国家标签的外文名与 SVG 图标 | `data/maps/areas.yaml` 中该国的 `foreign_label`、可选 `icon_ref`；图标文件放在 `static/` | 世界/国家视野在统一倍率显示 30px 徽记与名称，拥挤时先保留徽记；城市层隐藏 |
-| 世界图上的地点标识 | `data/maps/locations.yaml`，以及已有内容实体的 `params.id` | 校验通过后显示；当前世界图支持此类标识 |
-| 国家 L1 / 城市 L2 的地形、水系、道路与城区 | `data/maps/features.yaml` | 已支持归一化几何、示意起伏、河流、道路和中心对称城区；空接口不会生成内容 |
-| 地图色彩、材质、边界与标签样式 | `assets/scripts/atlas/pixi-renderer.ts` 管配色、光照与边界；`assets/styles/pages/atlas-pixi.css` 管文字与控件 | 构建后显示；不改变区域归属 |
-| 国家或地区百科内容 | `content/` 下相应实体 Markdown | 影响档案；地图通过稳定 `entity_id` 关联 |
+| 页面标题、页面描述 | [content/portals/atlas/index.md](../../content/portals/atlas/index.md) | `title`、`description`；画布题签的中文名也使用页面标题 |
+| 国家、大陆的中文名称 | [data/maps/areas.yaml](../../data/maps/areas.yaml) | 对应世界区域记录的 `label`；国家在详图还有区域记录时，核对同名记录 |
+| 国家外文名、徽记文件引用 | `data/maps/areas.yaml` | `foreign_label`、`icon_ref`；名称用于地图标签和侧栏国家列表 |
+| 城市或地点名称 | [data/maps/locations.yaml](../../data/maps/locations.yaml) | `label`；`kind` 决定首都、城市等类型 |
+| 详图名称、专题列表中的所属地图名称 | [data/maps/layers.yaml](../../data/maps/layers.yaml) | `title`；不要为改显示名而更换地图 `id` |
+| 国家内的地形、河流、城区名称 | [data/maps/features.yaml](../../data/maps/features.yaml) | 对应要素的 `label`；`label_position` 决定是否在地图上显示标签 |
+| 奥特莱斯等跨国地貌名称 | [data/maps/world-relief.yaml](../../data/maps/world-relief.yaml) | `regions` 中的 `label`、`foreign_label` |
+| **侧栏资料卡、无脚本目录的地理摘要** | **[data/maps/reader.yaml](../../data/maps/reader.yaml)** | **`entries.<地图条目 ID>.category` 与 `description`**；这是读者文案的主要入口 |
+| 地图与档案的关联 | `areas.yaml`、`locations.yaml`、`features.yaml` 或 `world-relief.yaml` 中的原记录 | `entity_id` 必须引用已存在的公开档案 `params.id` |
+| 档案全文、正式名称、馆藏编号 | [content/](../../content/) 中对应 Markdown | 修改实体的正文、`title`、`params.names`、`params.library.catalog_no` 等；不会自动替换地图中的独立标签与摘要 |
+| 侧栏标题、分类按钮、操作提示、图层名称、画布英文题签 | [layouts/portals/atlas.html](../../layouts/portals/atlas.html) | 固定界面文字；例如“地理导航”“调阅档案”“显示设置” |
+| 动态计数、资料卡回退文字、地图标签附注、运行状态提示 | [assets/scripts/atlas/app.ts](../../assets/scripts/atlas/app.ts) | 动态界面文字；普通地理摘要优先放入 `reader.yaml` |
 
-现存国家包括：卡什莫兰、塔罗萨尔（无现行政权）、埃萨勒、伊琳沃克、莫尔索斯、德诺尼塞、赫芙伦特、卡俄斯、斯兰缇亚、塞壬、天照、殷、冈穹嘉卡。历史国家暂不加入现势地图。“环形空洞”已移除；不要重新在 `areas.yaml` 中登记它。
+`features.yaml` 的 `description` 和 `world-relief.yaml` 的国家 `summary` 是制作来源与地理建模说明，**不再直接作为侧栏资料卡正文**。修改它们不会替代 `reader.yaml` 的读者摘要。几何确定性 `provisional` 也不代表世界内的科考结论。
 
-## 四种日常操作
+### 2.2 修改一条读者摘要
 
-### A. 修改现有国家的国界
+在 `data/maps/reader.yaml` 的现有 `entries` 下找到条目，只修改相应字段。例如：
 
-1. 在 `assets/map-sources/world-political.png` 修改相应纯色范围。黑色/近黑色是海洋，白色是无人区；国家颜色对应 `data/maps/sources.yaml` 的 `world.regions`。
-2. 若只是改变形状，不改国家 ID、`areas.yaml`、`layers.yaml`。若使用新 RGB，则同时更新 `world.regions` 的颜色，避免采样丢区。
-3. 运行 `npm run map:generate`，再运行下文验证命令。检查邻国、岛屿、无人区与 L1 裁剪是否同步。所有国家 L1 都会随世界边界重建。
-
-来源图外围白框不是无人区。当前 `sources.yaml` 使用独立的横向和纵向裁切比例，适配 4096 × 2048 原图；更换尺寸或边框后需核对裁切，避免把白框采样成南北两排假陆地。
-
-### B. 修改或删除区域标签
-
-在 `data/maps/areas.yaml` 查找稳定 `id`。修改 `label` 只改中文显示名；世界国家还需 `foreign_label`，可选 `icon_ref: "name.svg"`，对应非空文件位于 `static/name.svg`。目前 13 个现存国家都有图标；埃萨勒使用 `elsae.svg`，天照使用 `amaturasu.svg`，不要按国家 ID 推测文件名。若日后某国没有图标，省略 `icon_ref`，不要写空路径或占位 SVG。
-
-默认不填写 `label_anchor`：国家采用生成国土的面积重心，大陆采用区域多边形内实际陆地的重心。岛屿或凹形海岸使重心落海时，选择距重心最近的陆地格；跨世界接缝的区域先展开环绕再计算。边界更新后中心自动同步。确需美术手调时才填写可选 `label_anchor: [col, row]`，整数格号必须在所属区域内。屏幕定位对准国家图标或区域主名称的中心，附属说明和按钮留白不参与地理定位；首都仍以设定点为准，文字显示在其右侧。
-
-删除一个纯多边形特殊区域，可删除该区域记录；如被其他配置或拓扑关系引用，要同步移除引用。删除一个国家不能仅删除 `areas.yaml` 条目：还必须先决定其世界像素归属、移除相关 L1 地图/来源/专题接口、整理拓扑与实体链接，再重新生成并校验。无意中留下未归属陆地或断裂国界会造成错误。
-
-### C. 添加或修改世界地点标识
-
-编辑 `data/maps/locations.yaml` 中的 `world` 地点。每条记录需有稳定 `loc.<slug>`、现存内容实体的 `entity_id`、名称、`kind`、`position: {x, y}` 和派生 `col/row`。世界网格为 136 × 60：`col = round(x × 135)`、`row = round(y × 59)`；世界横向环绕，建议 `0 ≤ x < 1`、`0 ≤ y ≤ 1`，对应瓦片必须是陆地。移动位置时同时更新 `position` 与 `col/row`。删除标识时删掉对应地点记录，并检查是否有城市详图或其他数据引用它；删除地图标识**不会**自动删除百科实体。
-
-可用 `kind`：`capital`、`city`、`region`、`ruin`、`landmark`。世界图上的地点目前是定位标识，并非整片城区。需要城市面积时请走 L2 城区流程，不要把一个点误当成城市轮廓。
-
-### D. 新增国家或国家内政区/标识
-
-新增国家涉及政治参考图颜色、内容实体、`sources.yaml` 颜色与 `derive_from_parent`、`layers.yaml` 地图、`areas.yaml` 世界和国家区域、`features.yaml` 空接口及测试，建议按下节的资料单委托 AI/开发者实施，避免漏掉父子引用。已有 13 国的国家层无需再创建。
-
-国家和城市专题要素使用下述契约；每个要素只出现在所属地图层。现有政区数据仍为空，不应依据地形或示意街区自动推断行政边界。城市 L2 仍需要城区父瓦片范围和 L1/L2 共同边界，目前仅卡夏·欧尔莱特有试点。
-
-## 专题数据契约
-
-每张详图保留 `administrative_regions`、`terrain`、`waterways`、`routes`、`settlements` 五个数组。要素必须具有全局唯一 `id`、`kind`、`label`、`description`、`source` 和 `geometry_status: provisional | verified`；已有百科记录通过可选 `entity_id` 关联。`label_position: [x,y]` 可选，不设置时仅绘制图形并保留目录入口。
-
-所有坐标均属于本张地图的连续归一化空间，`x` 向东、`y` 向南，范围 0–1；它们不是格号、屏幕像素或现实经纬度。位置由 `pointOnMap` 转为地图坐标，不四舍五入到六边形。
-
-| 分类 | kind / geometry | 参数 |
-| --- | --- | --- |
-| 地形 | `plain`、`upland`、`hill`、`low-hills` / `ellipse` | `center`、`radius`；`elevation.level` 为 0–6 的整数层级；可选 `core_level` 不低于外圈，`core_ratio` 为 0–1 内圈半径比例；不是米 |
-| 河流 | `river` / `polyline` | `points` 按流向排列；当前样板 `flow_direction: southwest-to-northeast`，具体源头和河口未定义 |
-| 道路 | `road`、`rail` / `polyline` | `points`；专题数据不自动代表正式路网 |
-| 政区 | `district` / `polygon` | 预留契约：`points` 至少三个点；当前无已确认实例，尚未接入 Pixi 绘制 |
-| 地点 | `point` / `point` | 预留契约：`position`；当前标识由 `locations.yaml` 提供，专题点尚未接入 Pixi 绘制 |
-| 城市布局 | `concentric-city` / `ellipse` | `center`、`radius`；`layout.rings` 递增，`spokes` 为 4–24 的偶数，`seed` 为整数 |
-
-参照现有记录新增要素。地形只使用平整顶面和整数台阶，不添加连续高度函数、噪声、模糊山影或随机块高。当前基础厚度为 6 个艺术单位，每个地形层级增加 5 个单位；它们在 `blocks.mjs` 定义，不代表现实海拔。河道经过的块体降低为不逆流上升的分层河床。`relief.height` 和 `roughness` 已删除，校验会拒绝旧字段。
-
-城市保持 180° 中心对称；街区、绿地和建筑只作示意，不创建虚构的独立百科实体。地形、河道与城市内部布局改变不需要重新生成 `tiles.yaml`。当前城市模型的展示大小由 `features.yaml` 的城区椭圆控制；改变父级逻辑范围或地图坐标比例时仍需调整 `sources.yaml` 并运行 `map:generate`。展示基座不是正式城区边界。
-
-Pixi 绘制在 `assets/scripts/atlas/pixi-renderer.ts`，逻辑坐标在 `atlas/space.mjs`，块体高度、顶面/侧面与拾取在 `atlas/blocks.mjs`，相机和标签在 `atlas/app.ts`；层级规则与对称城区在 `atlas/terrain.mjs`，界面在 `assets/styles/pages/atlas-pixi.css`。旧 SVG 渲染器不恢复平行实现。`npm run test:maps` 检查平整块面、厚度、分层河床、城市对称、升高后拾取和坐标契约，已纳入 `wiki:validate`。
-
-## 本地美术参考
-
-`assets/map-references/ultimate_reference.png` 与 `tactical-sandbox-reference.png` 是本地参考，目录已进入 `.gitignore`。不要放回 `static/`，不要用 `resources.Get` 引入，不依赖这些文件构建。运行时由数据和 PixiJS Graphics 块体构成，不加载参考图或高度纹理。
-
-## 给 AI/开发者的资料单
-
-维护者可直接编辑一份 Markdown 资料单并交给 AI，例如 `docs/map-requests/<stable-id>.md`（该目录可按需创建；资料单不会被网站自动读取）。建议采用以下内容，无法确认的字段写“未知”，不要猜：
-
-```text
-操作：新增 / 修改 / 删除
-对象：国家 / 政区 / 地形 / 水系 / 路线 / 地点 / 城区
-稳定 ID（已有对象必填）：
-中文显示名：
-所属地图与父级区域：
-百科实体 ID 或档案路径：
-位置或边界：参考图路径、坐标、相邻关系或文字描述
-缩放层级：世界 / 国家 / 城市
-资料来源与确定性：已确认 / 暂定 / 未知
-需要保留的旧关系或链接：
-期望显示方式：颜色覆盖 / 边界 / 线 / 标签 / 图标
-明确不能推断的部分：
+```yaml
+entries:
+  terrain.aotelaisi:
+    category: 特殊地理
+    description: 克里希达西南的巨大无人区，绝大部分位于卡俄斯，边缘伸入德诺尼塞与斯兰缇亚。深紫色的土地沉于海平面以下，科考记录显示其范围仍在缓慢扩大。
 ```
 
-交付时要求 AI/开发者：只改与该对象有关的源文件，不手改 `tiles.yaml`；必要时生成瓦片；补校验和浏览器测试；回报哪些部分只是暂定推断、哪些因资料不足而未显示。即使只给文字设定，也应先建立“已知/未知”的边界，不自动虚构地理事实。
+上例是字段结构，不要在文件中重复添加第二个 `entries`。文案应依据已有档案或作者设定，使用读者能理解的地理描述；格数、算法、可替换布局等制作说明留在源数据或本文。缺少专属摘要时，界面使用简短的地理记录提示和可用的档案入口。
 
-## 验证和发布
+常见 ID 的用途如下：
 
-修改参考图、生成配置或国家网格后先运行：
+| ID | 含义 | 文本维护位置 |
+| --- | --- | --- |
+| `country.inibholc` | 伊琳沃克的世界地图区域 | `areas.yaml` 名称；`reader.yaml` 地理摘要 |
+| `nation.inibholc` | 伊琳沃克的详图 ID | `layers.yaml` 登记；`features.yaml` 保存该图专题 |
+| `loc.cathair` | 首都定位记录 | `locations.yaml` 名称与定位；`reader.yaml` 摘要 |
+| `terrain.aotelaisi` | 奥特莱斯地图地貌记录 | `world-relief.yaml` 范围与名称；`reader.yaml` 摘要 |
+| `reg.aotelaisi` | 奥特莱斯百科档案 ID | [content/regions/reg-aotelaisi/index.md](../../content/regions/reg-aotelaisi/index.md) |
+
+显示名称可以修改，稳定 ID 不应随改名而更换。地图条目 ID 与档案 ID 各有职责，用 `entity_id` 建立关联。奥特莱斯地图记录应保留 `entity_id: reg.aotelaisi`；首都关联 `reg.ini.col`。
+
+### 2.3 改名或改档案链接的检查顺序
+
+1. 在对应 `areas`、`locations`、`features` 或 `world-relief.regions` 记录中修改 `label`；有外文名时同步核对。
+2. 更新 `reader.yaml` 中摘要提及的名称，以及 `content/` 中的正式档案。
+3. 检查 `entity_id` 是否仍指向正确的公开档案；新增档案按[内容模型](../content-model.md)创建。
+4. 运行验证与构建，核对地图标签、侧栏、资料卡和“调阅档案”入口。
+
+只改名称、摘要或档案关联不需要重新生成地图瓦片。不要手改 `data/generated/id-index.json` 来修补链接，应修改源档案并通过构建生成索引。
+
+## 3. 美术资产在哪里
+
+### 3.1 国家徽记：网站实际加载的文件
+
+地图标签与侧栏列表均读取世界国家记录的 `icon_ref`。当前契约只接受 `static/` 根目录下的 SVG 文件名，不接受子目录；文件以站点根路径加载：
+
+| 国家 / 地区 | 当前徽记文件 |
+| --- | --- |
+| 卡什莫兰 | [static/crushmora.svg](../../static/crushmora.svg) |
+| 塔罗萨尔 | [static/tarusar.svg](../../static/tarusar.svg) |
+| 埃萨勒 | [static/elsae.svg](../../static/elsae.svg) |
+| 伊琳沃克 | [static/inibholc.svg](../../static/inibholc.svg) |
+| 莫尔索斯 | [static/muocils.svg](../../static/muocils.svg) |
+| 德诺尼塞 | [static/dunossai.svg](../../static/dunossai.svg) |
+| 赫芙伦特 | [static/havfrentyr.svg](../../static/havfrentyr.svg) |
+| 卡俄斯 | [static/khaos.svg](../../static/khaos.svg) |
+| 斯兰缇亚 | [static/sivlanzio.svg](../../static/sivlanzio.svg) |
+| 塞壬 | [static/sirena.svg](../../static/sirena.svg) |
+| 天照 | [static/amaturasu.svg](../../static/amaturasu.svg) |
+| 殷 | [static/yin.svg](../../static/yin.svg) |
+| 冈穹嘉卡 | [static/gkrk.svg](../../static/gkrk.svg) |
+
+替换徽记时可以直接覆盖同名 SVG；若更换文件名，同时修改 `icon_ref`。SVG 应保留正确的 `viewBox`，留白适中，不使用空文件占位。埃萨勒和天照的现有文件名与区域 ID 拼法不同，以引用字段为准。确实没有徽记时省略 `icon_ref`。
+
+`content/nations/.../media/` 中的国旗、封面、徽章和地图是档案页面资源，与上述交互地图徽记独立；修改其中的 `emblem.svg` 不会自动更新 `static/` 中的地图图标。
+
+### 3.2 政治源图与本地美术参考
+
+| 文件 | 用途 | 是否进入网站运行时 |
+| --- | --- | --- |
+| [assets/map-sources/world-political.png](../../assets/map-sources/world-political.png) | 生成世界海岸、国家归属和无人区的政治源图 | 不作为地图底图加载；生成器读取 |
+| [assets/map-sources/inibholc-political.png](../../assets/map-sources/inibholc-political.png) | 伊琳沃克来源及国家配准输入；城市范围也依赖该来源配置 | 不作为底图加载；生成器读取 |
+| [assets/map-sources/world-overview.webp](../../assets/map-sources/world-overview.webp) | 保留的历史概览图，当前生成配置未引用 | 当前地图不加载 |
+| `assets/map-references/ultimate_reference.png` | 泰拉地图参考：信息组织、国界与地名层次 | 本地参考，不构建、不发布 |
+| `assets/map-references/tactical-sandbox-reference.png` | 战术沙盘参考：块体厚度、斜俯视及侧栏仪表盘风格 | 本地参考，不构建、不发布 |
+
+`assets/map-references/` 已列入 `.gitignore`，新克隆不一定包含这两张图；构建不依赖它们。不要把参考截图移到 `static/` 或通过 Hugo `resources.Get` 引入页面。删除旧绘制方案不等于删除仍使用的政治源图、SVG 徽记或百科图片。
+
+### 3.3 地形、配色和界面的“美术源文件”
+
+地图的海洋、六边形、侧壁、河流、城区与边界由代码绘制，不存在一张可替换的运行时整图或高度纹理。
+
+| 想调整的视觉内容 | 编辑文件 |
+| --- | --- |
+| 每国国界色、地貌分布、各区域使用的材质、海冰、奥特莱斯等特殊地形 | [data/maps/world-relief.yaml](../../data/maps/world-relief.yaml) |
+| 材质的基础颜色，例如雪、荒漠、深紫凹陷 | [assets/scripts/atlas/world-relief.mjs](../../assets/scripts/atlas/world-relief.mjs) 的 `MATERIALS` |
+| 海色、政治配色混合、边线、侧壁明暗、建筑与河流绘制 | [assets/scripts/atlas/pixi-renderer.ts](../../assets/scripts/atlas/pixi-renderer.ts) |
+| 块体基础厚度、台阶高度、凹陷边壁和拾取 | [assets/scripts/atlas/blocks.mjs](../../assets/scripts/atlas/blocks.mjs) |
+| 侧栏宽度、仪表盘面板、字体、按钮、地图标签及窄屏布局 | [assets/styles/pages/atlas-pixi.css](../../assets/styles/pages/atlas-pixi.css) |
+| 侧栏分组、标题条、图例和画布控件结构 | [layouts/portals/atlas.html](../../layouts/portals/atlas.html) |
+
+当前材质名为 `temperate`、`stone`、`desert`、`rainforest`、`tundra`、`snow`、`ice`、`abyss`。例如奥特莱斯使用 `abyss`，基础颜色是 `0x21152f`。只改材质、国界显示色、CSS 或绘制样式不需要重生瓦片。
+
+**注意两套颜色的区别**：`sources.yaml` 的 `regions.*.color` 用于识别政治源图的 RGB，决定生成归属；`world-relief.yaml` 的 `countries.*.border` 是运行时国界显示色。调整美术配色时不要误改前者。
+
+## 4. 修改范围、位置或地形
+
+### 4.1 世界国界、海岸与岛屿
+
+1. 在 `assets/map-sources/world-political.png` 修改相应国家纯色范围。近黑色为海洋，白色为无人区；国家颜色对应 `data/maps/sources.yaml` 的 `sources.world.regions`。
+2. 仅改变轮廓时保留原国家 ID；若更换采样 RGB，同时登记 `sources.yaml` 中的颜色。源图外围白框由 `crop` 排除，更换尺寸或边框后重新检查裁切。
+3. 作者确认存在但尚未画入源图的岛屿，可在 `sources.world.schematic_islands.groups` 登记世界格号；补充格只能位于原先的空海格，不能覆盖已有国土。
+4. 运行 `npm run map:generate`，核对世界与国家裁剪、海岸、地点和首都锚点。
+
+`data/maps/tiles.yaml` 是自动生成的归属与配准数据，禁止手工编辑。国家网格或父子关系改变时，同时核对 `layers.yaml` 和 `sources.yaml`，两处网格须一致。
+
+### 4.2 地点与标签位置
+
+- `locations.yaml` 的 `position: {x, y}` 使用所属地图的 0–1 连续坐标，向东为 x 增加，向南为 y 增加。同步维护派生 `col`、`row`；世界 136 × 60 网格对应 `round(x × 135)`、`round(y × 59)`，其他层按各自网格计算。
+- `areas.yaml` 的国家、大陆标签通常由实际陆地重心定位。岛屿或凹形范围使重心落海时自动选择最近陆地；需要人工调整时使用区内整数格 `label_anchor: [col, row]`。
+- `features.yaml` 的 `label_position: [x, y]` 属于本张地图的 0–1 连续坐标。没有该字段仍保留目录入口，但不额外生成地图文字。
+
+不要把屏幕像素、格号和 0–1 坐标混用。城市中心绑定首都的连续定位点；移动首都或改变城区配准后，应同时检查 `sources.yaml` 与 `features.yaml`，按来源变动情况重生瓦片。
+
+### 4.3 普通地貌与跨国特殊地貌
+
+- **世界普通地貌**：`world-relief.yaml` 的 `countries` 中，`base` 定义基础层级和材质；`zones` 按顺序覆盖，`ellipse` 为椭圆、`ridge` 为折线山带。位置基于该国世界国土包围盒的 0–1 坐标；无人区 `wilderness` 使用世界 0–1 坐标。
+- **国家 / 城市专题**：`features.yaml` 按地图 ID 分组，保留 `administrative_regions`、`terrain`、`waterways`、`routes`、`settlements`。国家专题地形优先于普通世界地貌；现有河流、道路和城市布局由这些记录提供。
+- **跨国特殊地貌**：`world-relief.yaml` 的 `regions` 使用 `cells_by_country` 明确列出各国世界格号；覆盖层不改变政治归属。记录包含稳定 `terrain.*` ID、名称、来源、几何状态、材质、层级和区内 `label_cell`，有档案时填写 `entity_id`，并在 `reader.yaml` 添加读者摘要。
+
+普通世界地形和专题地形使用 0–6 整数层级；特殊地貌允许 −6 至 6。基础厚度 9、每层 5 个艺术单位，不是米；顶面低于 0 表示海平面以下。奥特莱斯当前为连续 10 格：卡俄斯 8 格、德诺尼塞与斯兰缇亚各 1 格，层级 −4。校验会拒绝重叠格、越界格和原归属不符的特殊地貌。
+
+专题要素的 `description`、`source` 和 `geometry_status` 仍须保留。河道以折线表达流向，城市布局有环路与放射道路；行政区多边形和专题点是预留契约，当前尚未接入绘制，不能只填数据就声称已实现。新建国家、城市层或行政区涉及多文件，应核对父级归属、实体关联和对应测试后再加入。
+
+## 5. 文件职责与实现边界
+
+| 文件 | 主要职责 |
+| --- | --- |
+| `data/maps/reader.yaml` | 读者摘要与地理分类 |
+| `data/maps/areas.yaml`、`locations.yaml` | 区域、名称、政治状态、地点、徽记和档案关联 |
+| `data/maps/layers.yaml`、`sources.yaml` | 地图层级、逻辑网格、来源与父子配准 |
+| `data/maps/features.yaml`、`world-relief.yaml` | 详图专题与世界地貌美术配置 |
+| `data/maps/topology.yaml` | 需要保持的区域拓扑关系 |
+| `data/maps/tiles.yaml` | 生成掩膜、来源哈希和配准数据 |
+| `assets/scripts/map-entry.ts` | 地图页面加载入口 |
+| `assets/scripts/atlas/app.ts` | 相机、输入、标签避让、筛选、资料卡和浏览器历史 |
+| `assets/scripts/atlas/space.mjs` | 坐标、相机投影、父子配准与横向环绕 |
+| `assets/scripts/atlas/blocks.mjs`、`terrain.mjs` | 块体表面、侧壁、拾取、离散地形与对称城区 |
+| `assets/scripts/atlas/pixi-renderer.ts` | 单 Canvas 的 PixiJS Graphics 场景 |
+| `assets/scripts/atlas/world-relief.mjs` | 世界地貌取样、材质颜色与契约校验 |
+| `scripts/generate-hex-map.mjs`、`scripts/lib/map-islands.mjs` | 政治来源、岛屿补充与地图数据生成 |
+| `scripts/validate-maps.mjs`、`scripts/lib/map-features.mjs` | 地图、专题、读者摘要 ID、实体关联及结构校验 |
+
+世界和国家共用实体国土块，国家细格保留为数据接口。城市有独立细块和基座；政治图形、标签、河流及拾取使用同一块面坐标与相机。改变缩放或标签行为时修改 `app.ts`，不要对地图 DOM 另加 CSS 缩放。PixiJS 版本由依赖文件锁定，安装使用 `npm ci`。
+
+决策记录用于解释选择，而不是替代本文的操作步骤：[采用 PixiJS](../decisions/0003-pixijs-atlas.md)、[离散六边形沙盘](../decisions/0004-hex-tactical-board.md)、[世界美术方向](../decisions/0006-world-atlas-art-direction.md)。
+
+## 6. 修改后如何检查
+
+从仓库根目录执行：
+
+| 改动 | 是否先运行 `npm run map:generate` | 重点复核 |
+| --- | --- | --- |
+| 名称、摘要、档案关联、徽记、CSS、材质或国界显示色 | 否 | 标签、资料卡、档案入口、图标、深浅主题 |
+| 普通地形、河流、道路、城区展示布局、特殊地貌覆盖 | 通常否 | 形状、高差、归属、标签与拾取；涉及来源或父级范围时按下一行处理 |
+| 政治源图、岛屿补充、采样配置、网格、父子配准或城区来源范围 | 是 | 世界与国家共享边界、相邻区域、离岸岛屿、环绕接缝、首都对齐 |
 
 ```powershell
+# 仅来源或网格等生成输入变动时先执行
 npm run map:generate
+
+# 校验数据、来源同步、TypeScript 与地图单元测试
+npm run wiki:validate
+
+# 完整站点构建、搜索索引与静态产物检查
+npm run wiki:build
 ```
 
-仅改名称、地点、CSS 或档案内容时通常不用重生瓦片。随后依次运行：
+涉及交互、模板或样式时，在构建后检查桌面和窄屏：
 
 ```powershell
-npm run wiki:validate
-npm run wiki:build
-$env:PLAYWRIGHT_CHANNEL='chrome'; npm run test:browser
+$env:PLAYWRIGHT_CHANNEL='chrome'
+npm run test:browser -- tests/browser/pixi-atlas.spec.mjs tests/browser/atlas-directory.spec.mjs --workers=2
 ```
 
-最后人工检查桌面与窄屏：点击目标国家是否仍在世界页原位放大、边界是否无错位、邻国和海洋是否可见、不同缩放级别是否只显示适合的标签、深浅主题是否清楚。若国家或城区形状改动，特别检查跨国相邻处和世界左右环绕接缝。构建通过不等于地理内容已核实。
+上述浏览器命令使用本机 Chrome；使用 Playwright 自带 Chromium 时先按项目安装说明准备浏览器，再省略 `PLAYWRIGHT_CHANNEL`。前置版本与日常预览命令见[根目录 README](../../README.md)。Windows 如遇 Hugo 默认缓存目录权限错误，可仅为本次构建设置仓库内缓存：
 
-## PixiJS 地图检查
+```powershell
+$env:HUGO_CACHEDIR = Join-Path (Get-Location) '.cache/hugo'
+npm run wiki:build
+```
 
-运行 `npm run typecheck:atlas` 检查类型。地理坐标先由 `blocks.mjs` 升到块面，再通过 `space.mjs` 相机投影；点击按可见顶面/侧面拾取后回到逻辑归属。不要单独给地图 DOM 施加 CSS 缩放。默认斜俯视为 0.78；“块面描边”只控制边线，“地形层级”关闭后仍保留基础块体厚度。资料面板位于目录；无 WebGL2 时保留目录和档案链接。
+最后人工核对一次：搜索与分类同时生效、资料卡只显示读者摘要、图标和中外文名称清楚、档案链接正确、拖拽与缩放不误触、显示设置可用、移动端无横向溢出。来源或地形变更还需检查邻国、凹陷边壁及拾取。自动测试通过不等于美术和地理设定已获确认。
 
-标签禁用通用按钮的 transform 过渡，直接跟随相机；否则拖动、缩放和资料聚焦过程中会产生视觉滞后。检查居中时应比较图标/主名称本体与区域中心，不能只比较整个标签框。
-
-国界约为 1.8px，选中国家约为 2.6px，并位于国家地形上方。不要仅增加世界单位线宽，否则缩小时仍然看不清。国家图标统一在倍率 0.28 后显示，当前聚焦国家也不例外；发生文字碰撞时先收起名称，保留徽记与名称提示。徽记仍可能因越界或真实图标碰撞隐藏，目录入口始终保留。
-
-`layers.yaml` 不再保留旧 SVG 的 `context`、`chunk_size`、`appearance`、独立相机参数及显示 `gap`；`areas.yaml` 不再使用旧 CSS 的 `style_token`。逻辑网格、父子配准和陆地数量预算继续验证，旧国家页地址继续跳转到统一地图。
+只更新本指南等文档时，检查引用路径与描述是否符合源码即可，不必为了文案清理重新生成地图。`public/`、`resources/_gen/` 与 `data/generated/` 是生成物，不能作为源文件手改。
