@@ -75,7 +75,7 @@ entries:
     description: 流经高风原野中部的水道，由西南流向东北。
   terrain.cathair.hill:
     category: 高地
-    description: 卡夏·欧尔莱特所在的缓丘，位于高风原野的高处。
+    description: 熔金之城坐落于高风原野的高处，街巷沿西北高地向东南低处层层展开。
   settlement.cathair.plan:
     category: 城区
-    description: 熔金之城的中央城区，皇宫坐落于城市中心。
+    description: 皇宫居于城心，街道向四周辐射。河流自西北而来，绕皇城汇为护城河，再向东南流去；工坊聚于西部，住宅铺展在东部，高墙与岗哨环守城缘。

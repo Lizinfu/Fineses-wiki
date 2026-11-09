@@ -1,5 +1,6 @@
 import { createRenderer, type Point } from "./pixi-renderer";
 import { createBlockBoard, BOARD_TILT } from "./blocks.mjs";
+import { MIN_ZOOM, MAX_ZOOM, COUNTRY_LABEL_ZOOM, constrainCameraY } from "./viewport.mjs";
 import {
   createSpace,
   boundsOf,
@@ -87,7 +88,7 @@ export async function initAtlas(): Promise<void> {
   let camera: Camera = {
     x: (worldBox.minX + worldBox.maxX) / 2,
     y: (worldBox.minY + worldBox.maxY) / 2,
-    zoom: 0.15,
+    zoom: MIN_ZOOM,
     tilt: BOARD_TILT,
   };
   let selected: any,
@@ -104,7 +105,7 @@ export async function initAtlas(): Promise<void> {
     waterways: true,
     settlements: true,
     routes: true,
-    grid: true,
+    grid: false,
   };
   const featureCard = root.querySelector<HTMLElement>(
     "[data-atlas-feature-card]",
@@ -150,7 +151,7 @@ export async function initAtlas(): Promise<void> {
       url.searchParams.set(key, value);
     history[push ? "pushState" : "replaceState"]({}, "", url);
   }
-  function fit(box: any, min = 0.07) {
+  function fit(box: any, min = MIN_ZOOM) {
     return {
       ...camera,
       x: (box.minX + box.maxX) / 2,
@@ -160,12 +161,16 @@ export async function initAtlas(): Promise<void> {
           (host.clientWidth - 68) / (box.maxX - box.minX),
           (host.clientHeight - 96) / (box.maxY - box.minY) / camera.tilt,
         ),
-        min,
-        40,
+        Math.max(MIN_ZOOM, min),
+        MAX_ZOOM,
       ),
     };
   }
+  const constrain = (view: Camera) => constrainCameraY(view, host.clientHeight, worldBox);
   function go(target: Camera, animate = true) {
+    // Navigate to the nearest horizontal copy, including when a label is across the seam.
+    target = { ...target, x: target.x + Math.round((camera.x - target.x) / space.period) * space.period };
+    target = constrain(target);
     cancelAnimationFrame(animation);
     manuallyAdjusted = true;
     if (!animate || matchMedia("(prefers-reduced-motion: reduce)").matches) {
@@ -178,14 +183,14 @@ export async function initAtlas(): Promise<void> {
     const tick = (now: number) => {
       const t = Math.min(1, (now - start) / 430),
         e = 1 - (1 - t) ** 3;
-      camera = {
+      camera = constrain({
         x: from.x + (target.x - from.x) * e,
         y: from.y + (target.y - from.y) * e,
         zoom: Math.exp(
           Math.log(from.zoom) * (1 - e) + Math.log(target.zoom) * e,
         ),
         tilt: target.tilt,
-      };
+      });
       schedule();
       if (t < 1) animation = requestAnimationFrame(tick);
       else animation = 0;
@@ -252,7 +257,7 @@ export async function initAtlas(): Promise<void> {
     selected = selectedLocation = undefined;
     markSelection();
     featureCard.hidden = true;
-    go(fit(worldBox, host.clientWidth < 600 ? 0.16 : 0.07), false);
+    go(fit(worldBox), false);
     manuallyAdjusted = false;
     if (write) updateUrl({}, false);
   }
@@ -370,12 +375,17 @@ export async function initAtlas(): Promise<void> {
         "",
         () => {
           info(area.label, "大陆与地理区域档案。", area.entity_id, area.id);
+          const center = space.areaCenter(area);
           go(
             fit(
               boundsOf(
                 area.polygons
                   .flat()
-                  .map((p: number[]) => hexCenter(p[0], p[1], space.root.grid)),
+                  .map((p: number[]) => {
+                    const point = hexCenter(p[0], p[1], space.root.grid);
+                    if (area.wrap_x) point.x += Math.round((center.x - point.x) / space.period) * space.period;
+                    return point;
+                  }),
               ),
             ),
           );
@@ -469,6 +479,7 @@ export async function initAtlas(): Promise<void> {
     raf = 0;
     if (destroyed) return;
     const start = performance.now();
+    camera = constrain(camera);
     camera.x = ((camera.x % space.period) + space.period) % space.period;
     board.setTerrain(switches.terrain);
     const center = board.groundPoint(camera, cityId),
@@ -505,6 +516,7 @@ export async function initAtlas(): Promise<void> {
       delete root.dataset.featureEnhanced;
       status.textContent = "地图渲染未能完成。请使用地点目录与档案链接。";
       status.hidden = false;
+      renderer.destroy();
       console.error("PixiJS atlas rendering failed", error);
       return;
     }
@@ -512,7 +524,7 @@ export async function initAtlas(): Promise<void> {
       ? "城区"
       : nationId
         ? "国家详图"
-        : camera.zoom < 0.16
+        : camera.zoom < COUNTRY_LABEL_ZOOM
           ? "世界总览"
           : "世界地图";
     root.dataset.atlasLevel = String(cityId ? 2 : nationId ? 1 : 0);
@@ -524,14 +536,15 @@ export async function initAtlas(): Promise<void> {
       tier;
     root.querySelector<HTMLElement>("[data-atlas-view-region]")!.textContent =
       cityId ? city.label : nationId ? candidate.label : "全球";
+    root.querySelector<HTMLElement>("[data-atlas-context-note]")!.hidden = !cityId;
     root.querySelector<HTMLElement>("[data-atlas-zoom-readout]")!.textContent =
       `${Math.round(camera.zoom * 100)}%`;
     (
       root.querySelector('[data-atlas-zoom="in"]') as HTMLButtonElement
-    ).disabled = camera.zoom >= 40;
+    ).disabled = camera.zoom >= MAX_ZOOM;
     (
       root.querySelector('[data-atlas-zoom="out"]') as HTMLButtonElement
-    ).disabled = camera.zoom <= 0.07;
+    ).disabled = camera.zoom <= MIN_ZOOM;
     const hostBox = host.getBoundingClientRect();
     const occupied: ScreenRect[] = Array.from(stage.querySelectorAll<HTMLElement>(
       '.atlas-stage__toolbar,.atlas-view-indicator,.atlas-cartouche,.atlas-compass,.atlas-legend',
@@ -563,9 +576,9 @@ export async function initAtlas(): Promise<void> {
     for (const label of ordered) {
       let show =
         label.tier === "continent"
-          ? camera.zoom < 0.16
+          ? !cityId && camera.zoom < COUNTRY_LABEL_ZOOM
           : label.tier === "country"
-            ? !cityId && camera.zoom >= 0.16
+            ? !cityId && camera.zoom >= COUNTRY_LABEL_ZOOM
             : label.tier === "capital"
               ? !!nationId && !cityId
               : label.tier === "palace"
@@ -645,13 +658,13 @@ export async function initAtlas(): Promise<void> {
     cancelAnimationFrame(animation);
     animation = 0;
     manuallyAdjusted = true;
-    camera = zoomAt(
+    camera = constrain(zoomAt(
       camera,
-      clamp(value, 0.07, 40),
+      clamp(value, MIN_ZOOM, MAX_ZOOM),
       anchor,
       host.clientWidth,
       host.clientHeight,
-    );
+    ));
     schedule();
   }
   root
@@ -682,6 +695,7 @@ export async function initAtlas(): Promise<void> {
   );
   listen(root.querySelector("[data-atlas-tilt]")!, "click", (event: Event) => {
     camera.tilt = camera.tilt === 1 ? BOARD_TILT : 1;
+    camera = constrain(camera);
     (event.currentTarget as HTMLElement).setAttribute(
       "aria-pressed",
       String(camera.tilt !== 1),
@@ -700,6 +714,7 @@ export async function initAtlas(): Promise<void> {
           board.setTerrain(input.checked);
           camera.y += board.raise(ground, cityId).y - before.y;
         }
+        camera = constrain(camera);
         schedule();
       }),
     );
@@ -789,6 +804,7 @@ export async function initAtlas(): Promise<void> {
     drag = {
       camera: { ...camera },
       start: ps[0],
+      origin: { ...ps[0] },
       moved: ps.length > 1,
       label: ps.length === 1 ? label : null,
       center:
@@ -808,7 +824,7 @@ export async function initAtlas(): Promise<void> {
       const distance = Math.hypot(ps[0].x - ps[1].x, ps[0].y - ps[1].y);
       camera = pinchAt(
         drag.camera,
-        clamp((drag.camera.zoom * distance) / drag.distance, 0.07, 40),
+        clamp((drag.camera.zoom * distance) / drag.distance, MIN_ZOOM, MAX_ZOOM),
         drag.center,
         { x: (ps[0].x + ps[1].x) / 2, y: (ps[0].y + ps[1].y) / 2 },
         host.clientWidth,
@@ -821,7 +837,18 @@ export async function initAtlas(): Promise<void> {
         x: drag.camera.x - delta.x / camera.zoom,
         y: drag.camera.y - delta.y / (camera.zoom * camera.tilt),
       };
-      if (Math.hypot(delta.x, delta.y) > 4) drag.moved = true;
+      if (Math.hypot(ps[0].x - drag.origin.x, ps[0].y - drag.origin.y) > 4) drag.moved = true;
+    }
+    const requestedY = camera.y;
+    camera = constrain(camera);
+    if (camera.y !== requestedY) {
+      if (ps.length === 2) {
+        drag.camera.y += camera.y - requestedY;
+      } else {
+        // Rebase only the blocked axis, so reversing a drag responds immediately at an edge.
+        drag.camera.y = camera.y;
+        drag.start.y = ps[0].y;
+      }
     }
     if (drag.moved) selected = selectedLocation = undefined;
     manuallyAdjusted = true;
@@ -841,8 +868,9 @@ export async function initAtlas(): Promise<void> {
           host.clientHeight,
         ),
         p = board.groundPoint(visual, cityId),
-        area = space.countryAt(p);
-      if (cityId && board.pick(visual, cityId)?.city === cityId) {
+        area = space.countryAt(p),
+        hit = cityId ? board.pick(visual, cityId) : undefined;
+      if (cityId && hit?.city === cityId && hit.cell) {
         const plan = featureIndex.get("settlement.cathair.plan");
         if (plan)
           info(
@@ -851,11 +879,11 @@ export async function initAtlas(): Promise<void> {
             plan.feature.entity_id,
             plan.feature.id,
           );
-      } else if (area?.layer === "country") focusCountry(area);
+      } else if (!cityId && area?.layer === "country") focusCountry(area);
     }
     const remaining = [...pointers.values()];
     drag = remaining.length
-      ? { camera: { ...camera }, start: remaining[0], moved: true, distance: 0 }
+      ? { camera: { ...camera }, start: remaining[0], origin: { ...remaining[0] }, moved: true, distance: 0 }
       : undefined;
   };
   listen(host, "pointerup", endPointer);
@@ -902,6 +930,7 @@ export async function initAtlas(): Promise<void> {
           : event.key === "ArrowUp"
             ? -48 / camera.zoom / camera.tilt
             : 0;
+      camera = constrain(camera);
       schedule();
     } else return;
     event.preventDefault();
@@ -924,7 +953,8 @@ export async function initAtlas(): Promise<void> {
   listen(window, "popstate", restore);
   const observer = new ResizeObserver(() => {
     renderer.resize();
-    if (!manuallyAdjusted) camera = fit(worldBox, host.clientWidth < 600 ? 0.16 : 0.07);
+    if (!manuallyAdjusted) camera = fit(worldBox);
+    camera = constrain(camera);
     measureLabels();
   });
   observer.observe(host);

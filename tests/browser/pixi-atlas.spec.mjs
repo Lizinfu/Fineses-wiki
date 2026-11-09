@@ -4,8 +4,10 @@ import { createBlockBoard } from "../../assets/scripts/atlas/blocks.mjs";
 import { test, expect } from "@playwright/test";
 import AxeBuilder from "@axe-core/playwright";
 import sharp from "sharp";
+import { constrainCameraY } from "../../assets/scripts/atlas/viewport.mjs";
 import {
   createSpace,
+  hexagon,
   project,
   unproject,
 } from "../../assets/scripts/atlas/space.mjs";
@@ -30,12 +32,16 @@ async function ready(page, query = "entity=nat.ini") {
 const root = (page) => page.locator("[data-atlas]");
 const camera = (page) =>
   root(page).getAttribute("data-atlas-camera").then(JSON.parse);
+const navigationBounds = new WeakMap();
+const groundCapture = { style: ".atlas-stage__toolbar, .atlas-cartouche, .atlas-compass, .atlas-legend, .atlas-view-indicator, .atlas-screen-labels { visibility: hidden !important; }" };
 
 async function model(page) {
-  return page.locator("#atlas-map-data").evaluate((node) => {
+  const data = await page.locator("#atlas-map-data").evaluate((node) => {
     const value = JSON.parse(node.textContent);
     return typeof value === "string" ? JSON.parse(value) : value;
   });
+  navigationBounds.set(page, createBlockBoard(data, createSpace(data)).bounds());
+  return data;
 }
 
 async function pointViewAt(page, point, zoom, period) {
@@ -51,6 +57,9 @@ async function pointViewAt(page, point, zoom, period) {
   await expect
     .poll(async () => Math.abs((await camera(page)).zoom - zoom))
     .toBeLessThan(0.001);
+  // Positioning setup follows the camera policy; label projection assertions still use the original geography.
+  const limits = navigationBounds.get(page);
+  point = constrainCameraY({ ...(await camera(page)), ...point }, box.height, limits);
   // Keep every drag within the viewport, including on a narrow touch device.
   for (let step = 0; step < 40; step++) {
     const view = await camera(page),
@@ -144,7 +153,7 @@ for (const source of worldAreas.filter((area) => area.layer === "continent")) {
     const data = await model(page), space = createSpace(data), board = createBlockBoard(data, space),
       area = data.areas.find((entry) => entry.id === source.id),
       point = board.raise(space.areaCenter(area));
-    await pointViewAt(page, point, 0.13, space.period);
+    await pointViewAt(page, point, 0.37, space.period);
     await expectTitleCentered(page, page.locator(`[data-atlas-label="${area.id}"]`), point);
   });
 }
@@ -316,7 +325,7 @@ test("dragging an emblem pans without activating it and keyboard activation rema
 
 test("shared country borders remain distinct over terrain at world and national zoom", async ({
   page,
-}) => {
+}, testInfo) => {
   await page.emulateMedia({ reducedMotion: "reduce" });
   await ready(page, "");
   const data = await model(page),
@@ -359,17 +368,18 @@ test("shared country borders remain distinct over terrain at world and national 
     if (boundary) break;
   }
   expect(boundary).toBeTruthy();
-  for (const zoom of [0.36, 3.2]) {
+  for (const zoom of [0.37, 3.2]) {
     await pointViewAt(page, boundary.middle, zoom, space.period);
     const canvas = page.locator(".atlas-pixi-canvas"),
       box = await canvas.boundingBox(),
       view = await camera(page),
       p = project(view, boundary.middle, box.width, box.height),
-      image = await sharp(await canvas.screenshot())
+      png = await canvas.screenshot(),
+      image = await sharp(png)
         .ensureAlpha()
         .raw()
         .toBuffer({ resolveWithObject: true });
-    const brightness = (offset) => {
+    const rgb = (offset) => {
       const x = Math.round(
           ((p.x + boundary.normal.x * offset) * image.info.width) / box.width,
         ),
@@ -377,11 +387,19 @@ test("shared country borders remain distinct over terrain at world and national 
           ((p.y + boundary.normal.y * offset) * image.info.height) / box.height,
         ),
         i = (y * image.info.width + x) * 4;
-      return (image.data[i] + image.data[i + 1] + image.data[i + 2]) / 3;
+      return [...image.data.subarray(i, i + 3)];
     };
+    const brightness = offset => rgb(offset).reduce((sum, value) => sum + value, 0) / 3;
     const background = (brightness(-6) + brightness(6)) / 2;
+    const contrast = background - Math.min(...[-1, 0, 1].map(brightness));
+    const diagnostic = { zoom, view, point: p, samples: [-6, -1, 0, 1, 6].map(offset => ({ offset, rgb: rgb(offset) })), contrast };
+    if (contrast <= 35) {
+      const imagePath = testInfo.outputPath(`country-border-${zoom}.png`);
+      await sharp(png).toFile(imagePath);
+      await testInfo.attach(`country-border-${zoom}.png`, { path: imagePath, contentType: "image/png" });
+    }
     expect(
-      background - Math.min(...[-1, 0, 1].map(brightness)),
+      contrast, JSON.stringify(diagnostic),
     ).toBeGreaterThan(35);
   }
 });
@@ -471,7 +489,7 @@ test("Aotelaisi can be found in Greek, keeps its dark floor in political mode an
   await expect(page.locator('[data-feature-card-title]')).toHaveText('卡俄斯');
 });
 
-test("block tops are flat colors and exposed side walls provide the volume", async ({
+test("planar block tops remain locally coherent while neutral lighting separates their exposed side walls", async ({
   page,
 }) => {
   await page.emulateMedia({ reducedMotion: "reduce" });
@@ -480,21 +498,24 @@ test("block tops are flat colors and exposed side walls provide the volume", asy
   const data = await model(page),
     space = createSpace(data),
     board = createBlockBoard(data, space),
-    cell = board.cells.find(
+    world = board.bounds(),
+    centerY = (world.minY + world.maxY) / 2,
+    // Keep the surface sample away from polar camera limits and the map toolbar.
+    cell = board.cells.filter(
       (c) =>
         c.owner?.layer === "special" &&
         !board.logicalCell({
           x: c.point.x,
           y: c.point.y + (c.radius * Math.sqrt(3)) / 2 + 1,
         }),
-    );
+    ).sort((a, b) => Math.abs(a.point.y - centerY) - Math.abs(b.point.y - centerY))[0];
   expect(cell).toBeTruthy();
   const top = board.raise(cell.point);
   await pointViewAt(page, top, 1.6, space.period);
   const canvas = page.locator(".atlas-pixi-canvas"),
     box = await canvas.boundingBox(),
     view = await camera(page),
-    shot = await sharp(await canvas.screenshot())
+    shot = await sharp(await canvas.screenshot(groundCapture))
       .ensureAlpha()
       .raw()
       .toBuffer({ resolveWithObject: true }),
@@ -516,7 +537,7 @@ test("block tops are flat colors and exposed side walls provide the volume", asy
     expect(
       Math.max(...colors.map((c) => c[channel])) -
         Math.min(...colors.map((c) => c[channel])),
-    ).toBeLessThan(3);
+    ).toBeLessThan(12);
   const face = board.geometry(cell).faces.find((f) => f.index === 1).points,
     wall = pixel({
       x: face.reduce((s, p) => s + p.x, 0) / 4,
@@ -526,6 +547,65 @@ test("block tops are flat colors and exposed side walls provide the volume", asy
     colors[0].reduce((s, v) => s + v, 0) / 3 -
       wall.reduce((s, v) => s + v, 0) / 3,
   ).toBeGreaterThan(20);
+});
+
+test("equal-height world ground is continuous by default and the optional grid only adds an overlay", async ({ page }) => {
+  await page.emulateMedia({ reducedMotion: "reduce" });
+  await ready(page, "");
+  await expect(page.locator('[data-feature-toggle="grid"]')).not.toBeChecked();
+  const data = await model(page), space = createSpace(data), board = createBlockBoard(data, space);
+  const world = board.bounds(), centerY = (world.minY + world.maxY) / 2;
+  const candidates = board.cells.filter(cell => !cell.region && cell.level >= 0 &&
+    !data.feature_maps[cell.owner?.detail_map_id]?.waterways?.length).map(cell => {
+    const polygon = hexagon(cell.point, cell.radius);
+    const neighbours = polygon.map((a, i) => {
+      const b = polygon[(i + 1) % 6];
+      return board.logicalCell({ x: a.x + b.x - cell.point.x, y: a.y + b.y - cell.point.y });
+    });
+    return { cell, polygon, neighbours };
+  }).filter(({ cell, neighbours }) => neighbours.every(other => other && Math.abs(other.point.x - cell.point.x) < cell.radius * 2 && other.level === cell.level &&
+    other.material === cell.material && other.owner?.id === cell.owner?.id && !other.region));
+  const sample = candidates.sort((a, b) => Math.abs(a.cell.point.y - centerY) - Math.abs(b.cell.point.y - centerY))[0];
+  expect(sample).toBeTruthy();
+  await pointViewAt(page, board.raise(sample.cell.point), 2.2, space.period);
+  const canvas = page.locator(".atlas-pixi-canvas");
+  const capture = async () => {
+    await canvas.scrollIntoViewIfNeeded();
+    await page.evaluate(() => new Promise(requestAnimationFrame));
+    return sharp(await canvas.screenshot(groundCapture)).removeAlpha().raw().toBuffer({ resolveWithObject: true });
+  };
+  const seamless = await capture(), box = await canvas.boundingBox(), view = await camera(page);
+  const pixel = (shot, p) => {
+    const x = Math.round(p.x * shot.info.width / box.width), y = Math.round(p.y * shot.info.height / box.height);
+    return [...shot.data.subarray((y * shot.info.width + x) * 3, (y * shot.info.width + x) * 3 + 3)];
+  };
+  const edgeSamples = [];
+  const center = pixel(seamless, project(view, board.raise(sample.cell.point), box.width, box.height));
+  for (let edge = 0; edge < 6; edge++) {
+    const neighbour = sample.neighbours[edge], a = sample.polygon[edge], b = sample.polygon[(edge + 1) % 6];
+    const other = pixel(seamless, project(view, board.raise(neighbour.point), box.width, box.height));
+    const normal = { x: neighbour.point.x - sample.cell.point.x, y: (neighbour.point.y - sample.cell.point.y) * view.tilt };
+    const length = Math.hypot(normal.x, normal.y);
+    for (const t of [0.3, 0.5, 0.7]) {
+      const p = project(view, { x: a.x + (b.x - a.x) * t, y: a.y + (b.y - a.y) * t - board.cellHeight(sample.cell) }, box.width, box.height);
+      edgeSamples.push(p);
+      for (const offset of [-1, 0, 1]) {
+        const rgb = pixel(seamless, { x: p.x + normal.x / length * offset, y: p.y + normal.y / length * offset });
+        for (let channel = 0; channel < 3; channel++) {
+          expect(rgb[channel]).toBeGreaterThanOrEqual(Math.min(center[channel], other[channel]) - 8);
+          expect(rgb[channel]).toBeLessThanOrEqual(Math.max(center[channel], other[channel]) + 8);
+        }
+      }
+    }
+  }
+  await page.locator(".atlas-feature-controls summary").click();
+  await page.locator('[data-feature-toggle="grid"]').check();
+  const gridded = await capture();
+  const changed = edgeSamples.filter(p => pixel(seamless, p).reduce((sum, value, channel) => sum + Math.abs(value - pixel(gridded, p)[channel]), 0) > 6);
+  expect(changed.length).toBeGreaterThan(5);
+  await page.locator('[data-feature-toggle="grid"]').uncheck();
+  const restored = await capture();
+  for (const p of edgeSamples) expect(pixel(restored, p)).toEqual(pixel(seamless, p));
 });
 
 test("two-finger zoom follows the moving midpoint without a spurious selection", async ({
@@ -695,8 +775,20 @@ test("tilt and wheel zoom keep screen labels aligned with the same world project
 test("GPU terrain, grids, waterways and city layers respond to controls", async ({
   page,
 }) => {
+  await page.emulateMedia({ reducedMotion: "reduce" });
   await ready(page);
-  const image = () => page.locator(".atlas-pixi-canvas").screenshot();
+  const image = async () => {
+    const canvas = page.locator(".atlas-pixi-canvas");
+    await canvas.evaluate(node => node.scrollIntoView({ block: "center", behavior: "instant" }));
+    await page.evaluate(() => new Promise(requestAnimationFrame));
+    return canvas.screenshot(groundCapture);
+  };
+  const meanDifference = (a, b) => {
+    expect(a.length).toBe(b.length);
+    let sum = 0;
+    for (let i = 0; i < a.length; i++) sum += Math.abs(a[i] - b[i]);
+    return sum / a.length;
+  };
   const before = await sharp(await image())
     .raw()
     .toBuffer();
@@ -705,11 +797,16 @@ test("GPU terrain, grids, waterways and city layers respond to controls", async 
   const after = await sharp(await image())
     .raw()
     .toBuffer();
-  let difference = 0;
-  for (let i = 0; i < Math.min(before.length, after.length); i++)
-    difference += Math.abs(before[i] - after[i]);
-  expect(difference / before.length).toBeGreaterThan(1);
+  expect(meanDifference(before, after)).toBeGreaterThan(1);
   await page.locator('[data-feature-toggle="terrain"]').check();
+  const grid = page.locator('[data-feature-toggle="grid"]');
+  await expect(grid).not.toBeChecked();
+  const withoutGrid = await sharp(await image()).raw().toBuffer();
+  await grid.check();
+  const withGrid = await sharp(await image()).raw().toBuffer();
+  expect(meanDifference(withoutGrid, withGrid)).toBeGreaterThan(0.05);
+  await grid.uncheck();
+  expect(meanDifference(withoutGrid, await sharp(await image()).raw().toBuffer())).toBeLessThan(0.1);
   await page.locator('[data-feature-toggle="waterways"]').uncheck();
   await expect(
     page.locator('[data-atlas-label="waterway.inibholc.central"]'),

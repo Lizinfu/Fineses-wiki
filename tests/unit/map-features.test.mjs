@@ -30,21 +30,20 @@ test("thematic records have usable references and explicit schematic geometry", 
   assert.ok(errors.some((error) => error.includes("unknown entity")));
 });
 
-test("city blocks and palace preserve central symmetry and regenerate identically", () => {
+test("city avenues preserve radial symmetry while architectural districts regenerate identically", () => {
   const feature = sets["city.cathair"].settlements[0];
   const plan = cityGeometry(feature);
   assert.deepEqual(cityGeometry(feature), plan);
   const [cx, cy] = plan.center;
   const key = (point) => point.map((n) => n.toFixed(9)).join(",");
-  const vertices = new Set(
-    plan.blocks.flatMap((block) => block.points).map(key),
-  );
-  for (const block of plan.blocks)
-    for (const [x, y] of block.points)
-      assert.ok(vertices.has(key([2 * cx - x, 2 * cy - y])));
-  const palace = new Set(plan.palace.map(key));
-  for (const [x, y] of plan.palace)
-    assert.ok(palace.has(key([2 * cx - x, 2 * cy - y])));
+  const avenues = plan.roads.filter(road => !road.closed);
+  const endpoints = new Set(avenues.flatMap(road => road.points).map(key));
+  for (const road of avenues)
+    for (const [x, y] of road.points)
+      assert.ok(endpoints.has(key([2 * cx - x, 2 * cy - y])));
+  assert.ok(plan.buildings.some(building => building.district === "palace"));
+  assert.ok(plan.buildings.some(building => building.district === "industrial"));
+  assert.ok(plan.buildings.some(building => building.district === "residential"));
 });
 
 test("terrain uses discrete levels and rejects the removed continuous relief parameters", () => {
@@ -67,4 +66,16 @@ test("continuous feature coordinates stay independent from hex resolution", () =
   assert.ok(b.x > a.x);
   assert.ok(b.x - a.x < 24);
   assert.equal(a.y, b.y);
+});
+
+test("directional city terraces reject invalid slope vectors and height ranges", () => {
+  for (const slope of [
+    { direction: [0, 0], levels: 4 },
+    { direction: [-1, -1], levels: 10 },
+    { direction: [1], levels: 4 },
+  ]) {
+    const bad = structuredClone(sets);
+    bad["city.cathair"].terrain[0].elevation.slope = slope;
+    assert.ok(validateMapFeatures(bad, maps, entities).some(e => e.includes("directional terrace")));
+  }
 });

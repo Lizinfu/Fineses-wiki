@@ -120,6 +120,14 @@ export function validateMapFeatures(featureMaps, mapIds, entityIds) {
                 elevation.core_ratio >= 1))
           )
             errors.push(`${name}: invalid discrete terrace elevation.`);
+          if (elevation?.slope !== undefined) {
+            const { direction, levels } = elevation.slope ?? {};
+            if (!Array.isArray(direction) || direction.length !== 2 ||
+                !direction.every(Number.isFinite) || Math.hypot(...direction) === 0 ||
+                !Number.isInteger(levels) || levels < 1 ||
+                elevation.level + levels > 6)
+              errors.push(`${name}: invalid directional terrace slope.`);
+          }
           if (feature.relief !== undefined)
             errors.push(
               `${name}: continuous relief is no longer supported; use terrace elevation.`,

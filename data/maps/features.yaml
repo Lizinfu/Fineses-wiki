@@ -1,5 +1,5 @@
 # 归一化地图坐标，y 向南。离散层级不代表海拔米数；provisional 几何可独立替换。
-# 来源：2026-10-30 作者说明及伊琳沃克参考图，详见地图维护手册。
+# 来源：2026-10-30 作者地理说明；卡夏·欧尔莱特城区按 2026-11-07 作者规划与白模型参考图更新。
 maps:
   nation.inibholc:
     administrative_regions: []
@@ -137,14 +137,13 @@ maps:
       - id: terrain.cathair.hill
         kind: hill
         label: 城区缓丘
-        source: owner-2026-10-30
+        source: owner-2026-11-07
         geometry_status: provisional
-        description: 城市所在高点的分级示意，非实际测绘高程。
+        description: 城市坐落于高风原野的高处，城区地势由西北向东南逐级降低。坡向遵循作者规划，台阶范围与高度为美术参数，不代表测绘海拔。
         geometry: {type: ellipse, center: [0.5, 0.5], radius: [0.48, 0.48]}
         elevation:
           level: 1
-          core_level: 2
-          core_ratio: 0.35
+          slope: {direction: [-1, -1], levels: 4}
     waterways: []
     routes: []
     settlements:
@@ -152,9 +151,16 @@ maps:
         entity_id: reg.ini.col
         kind: concentric-city
         label: 皇宫与中央城区
-        source: owner-2026-10-30
+        source: owner-2026-11-07
         geometry_status: provisional
-        description: 皇宫位于中心，城区高度中心对称。环路、放射道路、街区、绿地及建筑为可替换的布局示意，采用现代爱尔兰城市的石材、坡屋顶与绿地意象。
+        description: 城市以皇宫为中心组织环路与放射道路。河流由西北流向东南，在皇宫外围分流环绕为护城河；西部以工业建筑为主，东部以住宅为主，内城密集、外城疏朗，外围为高耸的素面城墙与岗哨。普通建筑采用抽象白色体块，皇宫以都柏林城堡的庭院、圆塔与礼拜堂体量为参考；建筑细节、河道及街坊形状为可编辑的美术规划。
         geometry: {type: ellipse, center: [0.5, 0.5], radius: [0.40, 0.37]}
-        layout: {rings: [0.28, 0.52, 0.76, 1], spokes: 12, seed: 19}
+        layout:
+          rings: [0.28, 0.52, 0.76, 1]
+          spokes: 12
+          seed: 19
+          wall_height: 0.14
+          watchtower_height: 0.20
+          river_width: 0.035
+          moat_radius: 0.215
         label_position: [0.5, 0.5]

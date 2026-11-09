@@ -580,7 +580,8 @@
 .atlas-cartouche {
   position: absolute; top: 24px; left: 25px; z-index: 2;
   color: #dce7eb; pointer-events: none;
-  border-left: 3px solid #b6cbd5; padding-left: 14px;
+  background: #183341df;
+  border-left: 3px solid #b6cbd5; padding: 10px 14px;
 }
 .atlas-cartouche > span { font-size: 13px; letter-spacing: 0.32em; }
 .atlas-cartouche strong { display: block; margin: 9px 0; color: #dce7eb; font: 800 clamp(22px, 2.3vw, 38px)/0.95 var(--font-sans); letter-spacing: -0.03em; }

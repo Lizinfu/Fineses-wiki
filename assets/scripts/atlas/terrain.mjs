@@ -19,6 +19,14 @@ export function terraceLevelAt(x, y, terrain) {
       ((x - center[0]) / radius[0]) ** 2 + ((y - center[1]) / radius[1]) ** 2;
     if (d > 1) continue;
     level = feature.elevation.level;
+    const slope = feature.elevation.slope;
+    if (slope) {
+      const [dx, dy] = slope.direction;
+      const projection = ((x - center[0]) / radius[0] * dx + (y - center[1]) / radius[1] * dy) / Math.hypot(dx, dy);
+      const fraction = Math.max(0, Math.min(1, (projection + 1) / 2));
+      level += Math.round(fraction * slope.levels);
+      continue;
+    }
     if (
       feature.elevation.core_level !== undefined &&
       d <= feature.elevation.core_ratio ** 2
@@ -28,61 +36,4 @@ export function terraceLevelAt(x, y, terrain) {
   return level;
 }
 
-export function cityGeometry(feature) {
-  const {
-    center: [cx, cy],
-    radius: [rx, ry],
-  } = feature.geometry;
-  const { rings, spokes, seed } = feature.layout;
-  const point = (radius, angle) => [
-    cx + rx * radius * Math.cos(angle),
-    cy + ry * radius * Math.sin(angle),
-  ];
-  const roads = rings.map((radius) => ({
-    closed: true,
-    points: Array.from({ length: 72 }, (_, i) =>
-      point(radius, (i * Math.PI) / 36),
-    ),
-  }));
-  for (let i = 0; i < spokes; i++) {
-    const angle = (i * Math.PI * 2) / spokes;
-    roads.push({
-      closed: false,
-      points: [point(0.19, angle), point(1.04, angle)],
-    });
-  }
-  const blocks = [];
-  // Opposite sectors use the same park/roof choice, preserving 180-degree symmetry.
-  for (let band = 0; band < rings.length; band++) {
-    const inner = (band === 0 ? 0.2 : rings[band - 1]) + 0.028;
-    const outer = rings[band] - 0.028;
-    for (let sector = 0; sector < spokes; sector++) {
-      const start = ((sector + 0.09) * Math.PI * 2) / spokes;
-      const end = ((sector + 0.91) * Math.PI * 2) / spokes;
-      const pairedSector = sector % (spokes / 2);
-      const park = (pairedSector + band + seed) % 7 === 0;
-      const points = [
-        point(inner, start),
-        point(outer, start),
-        point(outer, end),
-        point(inner, end),
-      ];
-      blocks.push({ points, park, shade: (pairedSector + band + seed) % 3 });
-    }
-  }
-  const palace = [
-    [-0.055, -0.13],
-    [0.055, -0.13],
-    [0.055, -0.055],
-    [0.13, -0.055],
-    [0.13, 0.055],
-    [0.055, 0.055],
-    [0.055, 0.13],
-    [-0.055, 0.13],
-    [-0.055, 0.055],
-    [-0.13, 0.055],
-    [-0.13, -0.055],
-    [-0.055, -0.055],
-  ].map(([x, y]) => [cx + x * rx, cy + y * ry]);
-  return { roads, blocks, palace, center: [cx, cy] };
-}
+export { cityGeometry } from "./city.mjs";
