@@ -143,19 +143,38 @@ function compareOutskirts(before, after, indices) {
   return { changed, blueRemoved, blackAdded };
 }
 
-function compare(before, after, predicate = () => true) {
+function compare(before, after, predicate = () => true, minimumDelta = 30) {
   expect(before.info).toMatchObject({ width: after.info.width, height: after.info.height, channels: 3 });
   let changed = 0, matching = 0, difference = 0;
   for (let i = 0; i < before.data.length; i += 3) {
     const pixel = [...before.data.subarray(i, i + 3)];
     const delta = pixel.reduce((sum, value, channel) => sum + Math.abs(value - after.data[i + channel]), 0);
     difference += delta;
-    if (delta > 30) {
+    if (delta > minimumDelta) {
       changed++;
       if (predicate(pixel)) matching++;
     }
   }
   return { changed, matching, mean: difference / before.data.length };
+}
+
+async function expectCleanCountryNavigation(page, exited) {
+  const exitedView = await camera(page);
+  expect(new URL(page.url()).searchParams.get("entity")).toBe("nat.ini");
+  // Country fitting reveals legitimate purple borders and terrain that were
+  // outside the city view. Compare against the same country loaded without any
+  // city history instead of treating every purple pixel as a leftover trace.
+  // The caller checks canvas persistence before this deliberate reload.
+  await page.reload();
+  await expect(root(page)).toHaveAttribute("data-atlas-renderer", "webgl");
+  await expect(root(page)).toHaveAttribute("data-atlas-city", "");
+  await expect(root(page)).toHaveAttribute("data-atlas-level", "1");
+  const clean = await snapshot(page, groundCapture), cleanView = await camera(page);
+  for (const key of ["x", "y", "zoom", "tilt"])
+    expect(cleanView[key], `country reference camera ${key}`).toBeCloseTo(exitedView[key], 7);
+  const delta = compare(exited, clean, () => true, 6);
+  expect(delta.changed, "exiting the city must leave no localized overlay pixels").toBeLessThan(8);
+  expect(delta.mean, "exiting the city must restore the clean country render").toBeLessThan(0.01);
 }
 
 test("Cathair renders pale white-model buildings and preserves the city canvas when the massing layer is toggled", async ({ page }) => {
@@ -420,11 +439,13 @@ for (const exit of ["zoom", "pan", "country navigation"]) {
 
     await expect(root(page)).toHaveAttribute("data-atlas-city", "");
     await expect(root(page)).toHaveAttribute("data-atlas-level", "1");
-    const countryPixels = contextPixels(await snapshot(page, groundCapture));
+    const countryShot = await snapshot(page, groundCapture);
+    const countryPixels = contextPixels(countryShot);
     expect(countryPixels.dark).toBeLessThan(0.05);
     expect(cityPixels.dark - countryPixels.dark).toBeGreaterThan(0.3);
-    expect(countryPixels.violet).toBeLessThan(cityPixels.violet * 0.1);
     await expect(canvas(page)).toHaveCount(1);
     await expect(canvas(page)).toHaveAttribute("data-city-probe", "persistent");
+    if (exit === "country navigation") await expectCleanCountryNavigation(page, countryShot);
+    else expect(countryPixels.violet).toBeLessThan(cityPixels.violet * 0.1);
   });
 }
