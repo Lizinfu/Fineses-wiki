@@ -6,7 +6,11 @@
   aria-label="{{ if eq $mode "mobile" }}移动端主要导航{{ else }}主要导航{{ end }}">
 
   {{- with site.Menus.main -}}
-    {{- range $index, $item := . -}}
+    {{- range $group := slice (dict "Title" "馆藏 / COLLECTIONS" "Tools" false) (dict "Title" "探索 / EXPLORE" "Tools" true) -}}
+      <span class="primary-nav__group">{{ $group.Title }}</span>
+      {{- range $index, $item := site.Menus.main -}}
+      {{- $isTool := in (slice "atlas" "timeline" "search") $item.Identifier -}}
+      {{- if eq $isTool $group.Tools -}}
       {{- $href := $item.URL -}}
 
       {{- with $item.Page -}}
@@ -37,6 +41,8 @@
           {{ or (T $item.Identifier) $item.Name }}
         </span>
       </a>
+      {{- end -}}
+      {{- end -}}
     {{- end -}}
 
   {{- else -}}

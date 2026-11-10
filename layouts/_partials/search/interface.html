@@ -134,10 +134,9 @@
             class="search-state"
             data-search-state="missing">
             <span class="search-state__code">INDEX ABSENT / 03</span>
-            <h2>搜索索引尚未生成</h2>
+            <h2>检索暂时不可用</h2>
             <p>
-              请运行站点构建，确认 <code>public/search-index.json</code>
-              已生成。
+              请稍后重新加载页面，或先浏览<a href="{{ "portals/" | relLangURL }}">馆藏目录</a>。
             </p>
           </section>
 
@@ -147,8 +146,7 @@
             <span class="search-state__code">SYSTEM ERROR / 04</span>
             <h2>检索系统加载失败</h2>
             <p>
-              请检查浏览器控制台和
-              <code>public/search-index.json</code> 是否完整。
+              请重新加载页面后再试，或先浏览<a href="{{ "portals/" | relLangURL }}">馆藏目录</a>。
             </p>
           </section>
         </div>

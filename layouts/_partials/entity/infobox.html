@@ -1,9 +1,3 @@
-{{- $kind := .Params.entity_kind
-  | default .Type
-  | default .Section
-  | default .Kind
--}}
-
 {{- $catalog := "" -}}
 {{- with .Params.library -}}
   {{- with index . "catalog_no" -}}
@@ -23,7 +17,7 @@
   {{- $heroResource = $.Resources.GetMatch . -}}
 {{- end -}}
 
-<aside class="entity-infobox">
+<div class="entity-infobox">
   {{ if or $hero $heroResource }}
     <div class="entity-infobox__media">
       <img
@@ -32,16 +26,16 @@
         loading="eager"
         decoding="async">
       <span class="entity-infobox__media-code">
-        Visual record / 01
+        图像记录 / 01
       </span>
     </div>
   {{ end }}
 
   <header class="entity-infobox__header">
     <div class="entity-infobox__header-topline">
-      <span class="entity-infobox__kind">{{ $kind }}</span>
+      <span class="entity-infobox__kind">档案摘要</span>
       <span class="entity-infobox__catalog">
-        {{ $catalog | default "CATALOG PENDING" }}
+        {{ $catalog | default "未编目" }}
       </span>
     </div>
 
@@ -118,6 +112,7 @@
   {{ end }}
 
   {{ with .Params.classifications }}
+    {{ if or (index . "cultures") (index . "eras") (index . "regions") (index . "government_forms") (index . "topics") }}
     <section class="entity-infobox__section">
       <h3 class="entity-infobox__section-title">分类索引</h3>
 
@@ -158,20 +153,21 @@
         {{ end }}
       </dl>
     </section>
+    {{ end }}
   {{ end }}
 
-  <section class="entity-infobox__section">
-    <h3 class="entity-infobox__section-title">系统字段</h3>
+  <details class="entity-infobox__system">
+    <summary>系统编目</summary>
 
     <dl class="entity-infobox__rows">
       {{ partial "entity/infobox-row.html" (dict
         "Key" "稳定 ID"
-        "Value" (.Params.id | default "UNASSIGNED")
+        "Value" (.Params.id | default "未编目")
       ) }}
 
       {{ partial "entity/infobox-row.html" (dict
         "Key" "Schema"
-        "Value" (.Params.schema | default "UNSPECIFIED")
+        "Value" (.Params.schema | default "未记录")
       ) }}
 
       {{ with .Params.canon_status }}
@@ -181,5 +177,5 @@
         ) }}
       {{ end }}
     </dl>
-  </section>
-</aside>
+  </details>
+</div>

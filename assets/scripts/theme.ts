@@ -1,6 +1,7 @@
 type Theme = "light" | "dark";
 
 const STORAGE_KEY = "world-library-theme";
+let themeRevision = 0;
 
 function getStoredTheme(): Theme | null {
   try {
@@ -12,13 +13,19 @@ function getStoredTheme(): Theme | null {
 }
 
 function getPreferredTheme(): Theme {
-  return window.matchMedia("(prefers-color-scheme: dark)").matches
-    ? "dark"
-    : "light";
+  return "light";
 }
 
 function applyTheme(theme: Theme): void {
-  document.documentElement.dataset.theme = theme;
+  const root = document.documentElement;
+  const revision = ++themeRevision;
+  // Switch paired foreground/background tokens together, avoiding unreadable
+  // intermediate colors from individual hover transitions.
+  root.dataset.themeChanging = "true";
+  root.dataset.theme = theme;
+  requestAnimationFrame(() => requestAnimationFrame(() => {
+    if (revision === themeRevision) delete root.dataset.themeChanging;
+  }));
 
   document
     .querySelectorAll<HTMLButtonElement>("[data-theme-toggle]")

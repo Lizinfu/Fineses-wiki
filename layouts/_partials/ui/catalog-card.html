@@ -42,10 +42,10 @@
       {{ if $page.IsSection }}
         {{ len $page.RegularPagesRecursive }} RECORDS
       {{ else }}
-        REV. {{ $page.Lastmod.Format "2006-01-02" }}
+        修订 {{ partial "ui/display-date.html" (dict "Value" $page.Lastmod) }}
       {{ end }}
     </span>
 
-    <span class="catalog-card__meta">OPEN</span>
+    <span class="catalog-card__meta">调阅 ↗</span>
   </footer>
 </a>

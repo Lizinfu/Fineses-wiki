@@ -3,6 +3,12 @@
   | default .Section
   | default .Kind
 -}}
+{{- $kindLabel := $kind -}}
+{{- with index site.Data.vocabularies "entity-kinds" -}}
+  {{- range .entity_kinds -}}
+    {{- if eq .id $kind -}}{{- $kindLabel = .label -}}{{- end -}}
+  {{- end -}}
+{{- end -}}
 
 {{- $catalog := "" -}}
 {{- $access := "" -}}
@@ -22,7 +28,7 @@
 
 <header class="entity-header">
   <div class="entity-header__topline">
-    <span class="ui-label">{{ $kind | upper }}</span>
+    <span class="ui-label">{{ $kindLabel }}</span>
 
     <span class="ui-index">
       {{ $catalog | default (.Params.id | default .RelPermalink) }}
@@ -39,19 +45,19 @@
     <div class="entity-header__status" aria-label="档案状态">
       {{ with $access }}
         <span class="status-chip" data-status="{{ . | urlize }}">
-          Access / {{ . }}
+          {{ partial "entity/status-label.html" . }}
         </span>
       {{ end }}
 
       {{ with $reliability }}
         <span class="status-chip" data-status="{{ . | urlize }}">
-          Reliability / {{ . }}
+          {{ partial "entity/status-label.html" . }}
         </span>
       {{ end }}
 
       {{ with .Params.canon_status }}
         <span class="status-chip" data-status="{{ . | urlize }}">
-          Canon / {{ . }}
+          {{ partial "entity/status-label.html" . }}
         </span>
       {{ end }}
     </div>

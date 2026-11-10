@@ -1,9 +1,7 @@
 <aside class="site-rail" aria-label="馆藏门户">
   <div class="sticky-rail portal-nav">
     <header class="portal-nav__header">
-      <span class="ui-kicker">Portal Index</span>
-      <strong class="portal-nav__title">馆藏导航</strong>
-      <span class="portal-nav__meta">Primary access channels</span>
+      <strong class="portal-nav__title">馆藏索引</strong>
     </header>
 
     {{ partial "navigation/primary-nav.html" (dict
@@ -12,7 +10,7 @@
     ) }}
 
     <footer class="portal-nav__footer">
-      <span>Records</span>
+      <span>公开条目</span>
       <strong>{{ len site.RegularPages }}</strong>
     </footer>
   </div>

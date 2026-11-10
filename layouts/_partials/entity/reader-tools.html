@@ -1,0 +1,21 @@
+{{- $toc := printf "%s" .TableOfContents -}}
+{{- $hasTOC := strings.Contains $toc "<li>" -}}
+{{- if or $hasTOC .Params.id -}}
+  <div class="entity-mobile-tools" aria-label="本页阅读工具">
+    {{ if $hasTOC }}
+      <details class="entity-mobile-tools__panel">
+        <summary>本页目录 <span>定位章节</span></summary>
+        {{ partial "navigation/page-toc.html" (dict
+          "Page" .
+          "ID" "mobile-page-toc"
+        ) }}
+      </details>
+    {{ end }}
+    {{ if .Params.id }}
+      <details class="entity-mobile-tools__panel">
+        <summary>档案摘要 <span>名称、年代与分类</span></summary>
+        {{ partial "entity/infobox.html" . }}
+      </details>
+    {{ end }}
+  </div>
+{{- end -}}

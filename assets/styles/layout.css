@@ -34,7 +34,7 @@
 .page-main {
   min-width: 0;
   padding:
-    clamp(2rem, 5vw, 5rem)
+    clamp(1.5rem, 3vw, 2.5rem)
     var(--gutter)
     var(--space-20);
 }
@@ -42,6 +42,15 @@
 .page-main__inner {
   width: min(100%, var(--content-wide));
   margin-inline: auto;
+}
+
+/* Auxiliary space belongs to a document's contents, never repeated global stats. */
+.site-shell:not(:has(.atlas-page)):not(:has(> .page-aside .page-toc, > .page-aside .entity-infobox)) {
+  grid-template-columns: var(--rail-left) minmax(0, 1fr);
+}
+
+.page-aside:not(:has(.page-toc, .entity-infobox)) {
+  display: none;
 }
 
 .article-grid {

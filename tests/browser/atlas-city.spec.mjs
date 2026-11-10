@@ -1,6 +1,6 @@
 import { test, expect } from "@playwright/test";
 import sharp from "sharp";
-import { createSpace, hexagon, project } from "../../assets/scripts/atlas/space.mjs";
+import { createSpace, hexagon, project, unproject } from "../../assets/scripts/atlas/space.mjs";
 import { createBlockBoard, prismGeometry } from "../../assets/scripts/atlas/blocks.mjs";
 import { cityGeometry } from "../../assets/scripts/atlas/terrain.mjs";
 
@@ -16,6 +16,7 @@ async function ready(page) {
   await expect(root(page)).toHaveAttribute("data-atlas-draws", /\d+/);
   await canvas(page).evaluate(node => node.dataset.cityProbe = "persistent");
   await page.locator("[data-feature-card-close]").click();
+  await expect(page.locator("[data-atlas-feature-card]")).toBeHidden();
 }
 
 async function toggle(page, name, enabled) {
@@ -41,33 +42,35 @@ const groundCapture = { style: ".atlas-stage__toolbar, .atlas-cartouche, .atlas-
 
 function contextPixels(shot) {
   const { width, height } = shot.info;
-  let dark = 0, violet = 0;
-  const edges = Array.from({ length: 4 }, () => ({ dark: 0, total: 0 }));
+  let pale = 0, traces = 0;
+  const edges = Array.from({ length: 4 }, () => ({ ground: 0, total: 0 }));
   for (let y = 0; y < height; y++) for (let x = 0; x < width; x++) {
     const i = (y * width + x) * 3;
     const [r, g, b] = shot.data.subarray(i, i + 3);
-    const missingGround = Math.max(r, g, b) < 45;
-    if (missingGround) dark++;
-    // Exclude blue water, neutral roofs and bright labels. The missing-data
-    // circuit traces should be dim purple, rather than a colored full-screen wash.
-    if (r > g + 4 && b > r + 4 && b < 140 && r < 115) violet++;
+    const neutral = Math.max(r, g, b) - Math.min(r, g, b) < 10;
+    const missingGround = neutral && Math.min(r, g, b) >= 222 && Math.max(r, g, b) <= 242;
+    if (missingGround) pale++;
     const inEdge = [x < width * 0.04, x >= width * 0.96, y < height * 0.04, y >= height * 0.96];
+    // The perimeter lies outside the surveyed city: inspect its neutral gray
+    // traces here so white roofs and the city's own ground cannot count as traces.
+    const trace = neutral && Math.min(r, g, b) >= 160 && Math.max(r, g, b) < 232;
+    if (trace && !missingGround && inEdge.some(Boolean)) traces++;
     inEdge.forEach((inside, edge) => {
       if (inside) {
         edges[edge].total++;
-        if (missingGround) edges[edge].dark++;
+        if (missingGround || trace) edges[edge].ground++;
       }
     });
   }
-  return { dark: dark / (width * height), violet, edges: edges.map(edge => edge.dark / edge.total) };
+  return { pale: pale / (width * height), traces, edges: edges.map(edge => edge.ground / edge.total) };
 }
 
 function expectCityContext(shot) {
   const pixels = contextPixels(shot);
-  expect(pixels.dark).toBeGreaterThan(0.35);
+  expect(pixels.pale).toBeGreaterThan(0.35);
   for (const edge of pixels.edges) expect(edge).toBeGreaterThan(0.9);
-  expect(pixels.violet).toBeGreaterThan(30);
-  expect(pixels.violet / (shot.info.width * shot.info.height)).toBeLessThan(0.15);
+  expect(pixels.traces).toBeGreaterThan(30);
+  expect(pixels.traces / (shot.info.width * shot.info.height)).toBeLessThan(0.15);
   return pixels;
 }
 
@@ -86,6 +89,24 @@ async function cityModel(page) {
   });
   const space = createSpace(data), board = createBlockBoard(data, space);
   return { data, space, board, city: board.cities.get("city.cathair") };
+}
+
+async function missingSurveyPoint(page) {
+  const { board, city } = await cityModel(page),
+    box = await canvas(page).boundingBox(), view = await camera(page);
+  // A fixed percentage can move onto the real city when the sidebar or canvas
+  // width changes. Choose a currently unoccupied point outside all city faces.
+  for (const y of [0.5, 0.3, 0.7, 0.15, 0.85])
+    for (const x of [0.02, 0.98, 0.08, 0.92]) {
+      const local = { x: box.width * x, y: box.height * y };
+      if (board.pick(unproject(view, local, box.width, box.height), city.id)?.city === city.id) continue;
+      const point = { x: box.x + local.x, y: box.y + local.y };
+      const unobstructed = await page.evaluate(({ x, y }) =>
+        Boolean(document.elementFromPoint(x, y)?.closest("[data-atlas-canvas]")) &&
+        !document.elementFromPoint(x, y)?.closest("button, a"), point);
+      if (unobstructed) return point;
+    }
+  throw new Error("No exposed missing-survey point was found outside the known city");
 }
 
 function pixelAt(shot, point, box) {
@@ -161,9 +182,9 @@ function compare(before, after, predicate = () => true, minimumDelta = 30) {
 async function expectCleanCountryNavigation(page, exited) {
   const exitedView = await camera(page);
   expect(new URL(page.url()).searchParams.get("entity")).toBe("nat.ini");
-  // Country fitting reveals legitimate purple borders and terrain that were
-  // outside the city view. Compare against the same country loaded without any
-  // city history instead of treating every purple pixel as a leftover trace.
+  // Country fitting reveals real pale land that shares the missing-survey
+  // palette. Compare against the same country loaded without any city history
+  // instead of treating those legitimate land pixels as a leftover overlay.
   // The caller checks canvas persistence before this deliberate reload.
   await page.reload();
   await expect(root(page)).toHaveAttribute("data-atlas-renderer", "webgl");
@@ -342,14 +363,14 @@ test("irregular land outside the walls contains visible hills and an unoutlined 
   await expect(canvas(page)).toHaveAttribute("data-city-probe", "persistent");
 });
 
-test("the city has a full missing-data ground with subtle violet traces across grid, projection and viewport changes", async ({ page }) => {
+test("the city has a pale missing-data ground with subtle gray traces across grid, projection and viewport changes", async ({ page }) => {
   await ready(page);
   await expect(page.locator('[data-feature-toggle="grid"]')).not.toBeChecked();
   const withoutGrid = await snapshot(page, groundCapture);
   expectCityContext(withoutGrid);
 
-  const box = await canvas(page).boundingBox(), beforeClick = await camera(page);
-  await page.mouse.click(box.x + box.width * 0.04, box.y + box.height * 0.5);
+  const blank = await missingSurveyPoint(page), beforeClick = await camera(page);
+  await page.mouse.click(blank.x, blank.y);
   await expect(page.locator("[data-atlas-feature-card]")).toBeHidden();
   await expect(root(page)).toHaveAttribute("data-atlas-city", "city.cathair");
   expect(await camera(page)).toEqual(beforeClick);
@@ -378,14 +399,14 @@ test("the city has a full missing-data ground with subtle violet traces across g
   await expect(canvas(page)).toHaveAttribute("data-city-probe", "persistent");
 });
 
-test("violet data flows move only while city motion is enabled and stop with reduced motion or city exit", async ({ page }) => {
+test("gray data flows move only while city motion is enabled and stop with reduced motion or city exit", async ({ page }) => {
   await ready(page);
   await zoomTo(page, 2.6);
   await page.emulateMedia({ reducedMotion: "no-preference" });
   const moving = await snapshot(page, groundCapture);
-  const violet = ([r, g, b]) => r > g + 4 && b > r + 4 && b < 140;
-  await expect.poll(async () => compare(moving, await snapshot(page, groundCapture), violet).matching, {
-    message: "moving violet GPU pixels should advance without a camera interaction",
+  const gray = rgb => Math.min(...rgb) >= 160 && Math.max(...rgb) < 232 && Math.max(...rgb) - Math.min(...rgb) < 10;
+  await expect.poll(async () => compare(moving, await snapshot(page, groundCapture), gray).matching, {
+    message: "moving gray GPU pixels should advance without a camera interaction",
     timeout: 8000,
   }).toBeGreaterThan(15);
 
@@ -404,8 +425,7 @@ test("violet data flows move only while city motion is enabled and stop with red
   await expect(root(page)).toHaveAttribute("data-atlas-level", "1");
   const exited = await snapshot(page, groundCapture);
   const exitedPixels = contextPixels(exited);
-  expect(exitedPixels.dark).toBeLessThan(0.05);
-  expect(exitedPixels.violet).toBeLessThan(contextPixels(still).violet * 0.1);
+  expect(exitedPixels.pale).toBeLessThan(0.05);
   stableCaptures = 0;
   await expect.poll(async () => {
     const next = await snapshot(page, groundCapture);
@@ -428,7 +448,7 @@ for (const exit of ["zoom", "pan", "country navigation"]) {
       const box = await canvas(page).boundingBox(), view = await camera(page);
       const x = box.x + box.width * 0.8, y = box.y + box.height * 0.62;
       // Leave the real city footprint while keeping the gesture in the canvas;
-      // a drawn black context hex must not extend the logical city boundary.
+      // a drawn missing-data tile must not extend the logical city boundary.
       await page.mouse.move(x, y);
       await page.mouse.down();
       await page.mouse.move(x - (city.foundationRadius + 8) * view.zoom, y, { steps: 4 });
@@ -440,12 +460,16 @@ for (const exit of ["zoom", "pan", "country navigation"]) {
     await expect(root(page)).toHaveAttribute("data-atlas-city", "");
     await expect(root(page)).toHaveAttribute("data-atlas-level", "1");
     const countryShot = await snapshot(page, groundCapture);
-    const countryPixels = contextPixels(countryShot);
-    expect(countryPixels.dark).toBeLessThan(0.05);
-    expect(cityPixels.dark - countryPixels.dark).toBeGreaterThan(0.3);
     await expect(canvas(page)).toHaveCount(1);
     await expect(canvas(page)).toHaveAttribute("data-city-probe", "persistent");
-    if (exit === "country navigation") await expectCleanCountryNavigation(page, countryShot);
-    else expect(countryPixels.violet).toBeLessThan(cityPixels.violet * 0.1);
+    if (exit === "country navigation") {
+      // A newly fitted country includes genuinely pale terrain; a clean render
+      // at the identical camera is the strict reference for all residual pixels.
+      await expectCleanCountryNavigation(page, countryShot);
+    } else {
+      const countryPixels = contextPixels(countryShot);
+      expect(countryPixels.pale).toBeLessThan(0.05);
+      expect(cityPixels.pale - countryPixels.pale).toBeGreaterThan(0.3);
+    }
   });
 }

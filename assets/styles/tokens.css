@@ -18,7 +18,7 @@
     "JetBrains Mono", "SFMono-Regular", Consolas, "Liberation Mono", monospace;
   --font-annotation: "PingFang ChangAnTi", "Kaiti SC", KaiTi, STKaiti, serif;
 
-  --text-2xs: 0.6875rem;
+  --text-2xs: 0.75rem;
   --text-xs: 0.75rem;
   --text-sm: 0.875rem;
   --text-base: 1rem;
@@ -26,8 +26,8 @@
   --text-lg: 1.25rem;
   --text-xl: 1.5rem;
   --text-2xl: 2rem;
-  --text-3xl: clamp(2.35rem, 5vw, 4.8rem);
-  --text-display: clamp(3.25rem, 9vw, 8.5rem);
+  --text-3xl: clamp(2rem, 3.5vw, 3rem);
+  --text-display: clamp(2.25rem, 4vw, 3.25rem);
 
   --leading-tight: 1.05;
   --leading-heading: 1.16;
@@ -56,36 +56,36 @@
   --page-max: 96rem;
   --content-readable: 72ch;
   --content-wide: 88rem;
-  --rail-left: 17rem;
+  --rail-left: 12rem;
   --rail-right: 15rem;
-  --header-height: 4.5rem;
-  --gutter: clamp(1rem, 3vw, 3rem);
+  --header-height: 4.25rem;
+  --gutter: clamp(1rem, 2.5vw, 2.5rem);
 
   /* Surfaces */
-  --canvas: #ececea;
-  --surface-0: #f7f7f4;
+  --canvas: #e5e9e4;
+  --surface-0: #f0f3ee;
   --surface-1: #ffffff;
-  --surface-2: #e4e4df;
-  --surface-inverse: #111315;
-  --surface-inverse-2: #1d2023;
+  --surface-2: #e5eae3;
+  --surface-inverse: #202925;
+  --surface-inverse-2: #2c3731;
 
   /* Text */
-  --text-strong: #101214;
-  --text-body: #303438;
-  --text-muted: #686e73;
-  --text-faint: #92989d;
+  --text-strong: #18201e;
+  --text-body: #344039;
+  --text-muted: #5c6961;
+  --text-faint: #68756d;
   --text-inverse: #f4f5f2;
 
   /* Lines */
-  --line-strong: #101214;
-  --line-default: #b6bab8;
-  --line-subtle: #d8dad6;
+  --line-strong: #25342b;
+  --line-default: #bcc7bd;
+  --line-subtle: #d4dcd3;
   --line-inverse: rgb(255 255 255 / 24%);
 
   /* Accent and semantic colors */
-  --accent: #f2a900;
-  --accent-hover: #ffbc24;
-  --accent-soft: #fff2c9;
+  --accent: #e6ad28;
+  --accent-hover: #f0ba3d;
+  --accent-soft: #f4e9c9;
   --accent-ink: #17130a;
 
   --status-info: #377ba8;
@@ -145,5 +145,5 @@
   --line-inverse: rgb(0 0 0 / 24%);
 
   --accent-soft: #3b2b03;
-  --accent-ink: #fff8e1;
+  --accent-ink: #17130a;
 }

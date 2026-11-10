@@ -1,142 +1,78 @@
 {{ define "main" }}
   {{- $timeline := index site.Data.generated "timeline" -}}
   {{- $timelineCount := 0 -}}
-
   {{- with $timeline -}}
-    {{- $timelineCount = add
-      (len (index . "entries"))
-      (len (index . "undated"))
-    -}}
+    {{- $timelineCount = add (len (index . "entries")) (len (index . "undated")) -}}
   {{- end -}}
-
   <div class="page-main__inner">
     <section class="home-hero" aria-labelledby="home-title">
       <div class="home-hero__content">
-        <span class="ui-kicker">Recovered Information System</span>
-
-        <h1 class="home-hero__title" id="home-title">
-          {{ site.Title }}
-        </h1>
-
-        <a class="home-hero__library-link" href="{{ "library/" | relLangURL }}">
-          <span aria-hidden="true">↗</span>
-          图书馆概述：馆务、馆员与访问说明
-        </a>
-
-        <p class="home-hero__description">
-          {{ site.Params.description
-            | default "面向公众开放的世界观馆藏、实体档案与交叉索引系统。" }}
-        </p>
-
-        <div class="home-hero__actions">
-          <a class="button-link" href="#portal-index">
-            进入馆藏目录
-            <span aria-hidden="true">↓</span>
-          </a>
-
-          <a
-            class="button-link button-link--secondary"
-            href="{{ "timeline/" | relLangURL }}">
-            世界时间线
-          </a>
-
-          <a
-            class="button-link button-link--secondary"
-            href="{{ "search/" | relLangURL }}">
-            检索档案
-          </a>
-        </div>
+        <span class="ui-kicker">公开馆藏 / PUBLIC ARCHIVE</span>
+        <h1 class="home-hero__title" id="home-title">世界的记录，<br>在此交汇。</h1>
+        <p class="home-hero__description">国家、人物与历史的公开馆藏。<br>从一份档案，进入彼此相连的世界。</p>
+        <form class="home-search" action="{{ "search/" | relLangURL }}" method="get" role="search" aria-label="检索馆藏正文">
+          <label for="home-query">检索馆藏正文</label>
+          <div class="home-search__row">
+            <input id="home-query" name="q" type="search" placeholder="输入正文关键词" autocomplete="off">
+            <button type="submit">检索 <span aria-hidden="true">↗</span></button>
+          </div>
+          <p class="home-search__hint">空格分隔关键词，同时匹配全部关键词</p>
+        </form>
       </div>
-
-      <aside class="home-hero__status" aria-label="馆藏统计">
-        <div class="system-stat">
-          <strong class="system-stat__value">
-            {{ len site.RegularPages }}
-          </strong>
-          <span class="system-stat__label">Indexed records</span>
-        </div>
-
-        <div class="system-stat">
-          <strong class="system-stat__value">
-            {{ len site.Data.navigation.portals.portals }}
-          </strong>
-          <span class="system-stat__label">Reader portals</span>
-        </div>
-
-        <div class="system-stat">
-          <strong class="system-stat__value">
-            {{ $timelineCount }}
-          </strong>
-          <span class="system-stat__label">Timeline records</span>
-        </div>
-
-        <div class="system-stat">
-          <strong class="system-stat__value">PUBLIC</strong>
-          <span class="system-stat__label">Access protocol</span>
-        </div>
-      </aside>
+      {{ with site.GetPage "/nations/nat-inibholc" }}
+        {{ $feature := . }}
+        {{ with .Resources.GetMatch "media/cuijin.png" }}
+          {{ $image := .Resize "900x webp q80" }}
+          <a class="home-feature" href="{{ $feature.RelPermalink }}" aria-label="调阅{{ $feature.Title }}档案">
+            <div class="home-feature__media">
+              <img src="{{ $image.RelPermalink }}" alt="伊琳沃克高风原野的淬金石柱" width="{{ $image.Width }}" height="{{ $image.Height }}" fetchpriority="high">
+              <span class="home-feature__code">{{ $feature.Params.library.catalog_no }}</span>
+            </div>
+            <div class="home-feature__caption">
+              <div><strong>{{ $feature.Title }}</strong><span>{{ $feature.Description }} · 国家档案</span></div>
+              <span aria-hidden="true">↗</span>
+            </div>
+          </a>
+        {{ end }}
+      {{ end }}
     </section>
-
-    <section
-      class="home-section"
-      id="portal-index"
-      aria-labelledby="portal-index-title">
+    <div class="home-summary" aria-label="馆藏概况">
+      <span><strong>{{ len site.Data.navigation.portals.portals }}</strong> 馆藏门户</span>
+      <span><strong>{{ len site.RegularPages }}</strong> 公开条目</span>
+      <span><strong>{{ $timelineCount }}</strong> 时间线记录</span>
+      <a href="{{ "library/" | relLangURL }}">图书馆概述与馆务 ↗</a>
+    </div>
+    <section class="home-section" id="portal-index" aria-labelledby="portal-index-title">
       <header class="section-heading">
-        <div class="section-heading__title">
-          <span class="ui-kicker">Primary Portals</span>
-          <h2 id="portal-index-title">馆藏入口</h2>
-        </div>
-
-        <span class="section-heading__meta">
-          {{ len site.Data.navigation.portals.portals }} PORTALS
-        </span>
+        <h2 id="portal-index-title">馆藏入口</h2>
+        <span class="section-heading__meta">COLLECTION INDEX</span>
       </header>
-
       {{ with site.Data.navigation.portals.portals }}
         <div class="auto-grid home-portals">
           {{ range sort . "weight" "asc" }}
-            {{ partial "ui/portal-card.html" (dict
-              "Portal" .
-            ) }}
+            {{ partial "ui/portal-card.html" (dict "Portal" .) }}
           {{ end }}
         </div>
-      {{ else }}
-        {{ partial "ui/empty-state.html" (dict
-          "Title" "尚未建立门户配置"
-          "Text" "请配置 data/navigation/portals.yaml。"
-        ) }}
       {{ end }}
+      <div class="home-explore">
+        <a href="{{ "portals/atlas/" | relLangURL }}">世界地图 <span aria-hidden="true">↗</span></a>
+        <a href="{{ "timeline/" | relLangURL }}">世界时间线 <span aria-hidden="true">↗</span></a>
+        <a href="{{ "search/" | relLangURL }}">检索中心 <span aria-hidden="true">↗</span></a>
+      </div>
     </section>
-
     <section class="home-section" aria-labelledby="recent-records-title">
       <header class="section-heading">
-        <div class="section-heading__title">
-          <span class="ui-kicker">Revision Feed</span>
-          <h2 id="recent-records-title">最近修订</h2>
-        </div>
-
-        <span class="section-heading__meta">
-          SORT / LASTMOD
-        </span>
+        <h2 id="recent-records-title">最近修订</h2>
+        <span class="section-heading__meta">REVISION FEED</span>
       </header>
-
       {{ $recent := where site.RegularPages "Section" "ne" "library" }}
       {{ $recent = $recent.ByLastmod.Reverse | first 6 }}
-
       {{ with $recent }}
-        <div class="auto-grid home-recent">
-          {{ range . }}
-            {{ partial "ui/catalog-card.html" (dict
-              "Page" .
-              "Variant" "compact"
-            ) }}
-          {{ end }}
+        <div class="home-recent">
+          {{ range . }}{{ partial "ui/catalog-card.html" (dict "Page" . "Variant" "compact") }}{{ end }}
         </div>
       {{ else }}
-        {{ partial "ui/empty-state.html" (dict
-          "Title" "暂无公开条目"
-          "Text" "已发布的普通页面会按 lastmod 自动排列在这里。"
-        ) }}
+        {{ partial "ui/empty-state.html" (dict "Title" "暂无公开条目" "Text" "公开馆藏将显示在这里。") }}
       {{ end }}
     </section>
   </div>
