@@ -1,0 +1,18 @@
+{{- $labels := dict
+  "public" "公开阅览"
+  "restricted" "限制阅览"
+  "internal" "馆内阅览"
+  "verified" "资料已核验"
+  "partially-verified" "部分核验"
+  "unverified" "尚未核验"
+  "reliable" "可靠"
+  "uncertain" "尚待确认"
+  "disputed" "存在争议"
+  "damaged" "资料残损"
+  "review" "待复核"
+  "draft" "草稿"
+  "canon" "正史"
+  "non-canon" "非正史"
+  "apocrypha" "旁传"
+-}}
+{{- return (index $labels (printf "%v" .) | default .) -}}

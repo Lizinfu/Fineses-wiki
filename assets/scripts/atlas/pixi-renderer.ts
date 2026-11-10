@@ -252,7 +252,7 @@ export async function createRenderer(
     resolution: Math.min(devicePixelRatio || 1, 2),
     autoDensity: true,
     autoStart: false,
-    backgroundColor: 0x355568,
+    backgroundColor: 0xa9c4d2,
   });
   host.prepend(app.canvas);
   app.canvas.className = "atlas-pixi-canvas";
@@ -297,7 +297,7 @@ export async function createRenderer(
         distance += length;
       }
     }
-    contextFlow.stroke({ color: 0xa67ac0, width: 0.22, alpha: 0.4, cap: "round" });
+    contextFlow.stroke({ color: 0x657572, width: 0.22, alpha: 0.4, cap: "round" });
   }
   const canAnimate = () => contextLayer.visible && !motion.matches && !document.hidden;
   function animateFlow(now: number) {
@@ -352,10 +352,10 @@ export async function createRenderer(
       maxX = Math.max(...points.map(p => p.x)) + radius,
       maxY = Math.max(...points.map(p => p.y)) + radius;
     // An opaque underlay closes the seams even where the parent map was ocean.
-    contextGround.rect(minX, minY, maxX - minX, maxY - minY).fill(0x0b0b12);
+    contextGround.rect(minX, minY, maxX - minX, maxY - minY).fill(0xe8ebea);
     for (const cell of context.cells) {
-      path(contextSeams, hexagon(cell.point, radius), 0x282134, 0.18, 0.65, true);
-      path(contextTraces, cell.trace, 0x684578, 0.14, 0.3);
+      path(contextSeams, hexagon(cell.point, radius), 0x9ca8a5, 0.18, 0.65, true);
+      path(contextTraces, cell.trace, 0x8a9492, 0.14, 0.3);
       const lengths = cell.trace.slice(1).map((p, i) => Math.hypot(p.x - cell.trace[i].x, p.y - cell.trace[i].y));
       const total = lengths.reduce((sum, length) => sum + length, 0);
       if (total > 0) flowPaths.push({ points: cell.trace, lengths, total,

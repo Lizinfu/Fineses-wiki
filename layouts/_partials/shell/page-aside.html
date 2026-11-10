@@ -1,38 +1,42 @@
-<aside class="page-aside">
+<aside class="page-aside{{ if .Params.id }} page-aside--entity{{ end }}" aria-label="本页索引与摘要">
   <div class="sticky-rail">
     {{- $toc := printf "%s" .TableOfContents -}}
 
-    {{- if and .IsPage (strings.Contains $toc "<li>") -}}
+    {{- if strings.Contains $toc "<li>" -}}
       {{ partial "navigation/page-toc.html" . }}
-    {{- else -}}
+    {{- end -}}
+
+    {{- if .Params.id -}}
+      {{ partial "entity/infobox.html" . }}
+    {{- else if not (strings.Contains $toc "<li>") -}}
       <section class="archive-status" aria-labelledby="archive-status-title">
         <div class="page-toc__title">
-          <strong id="archive-status-title">系统状态</strong>
-          <span>LIVE</span>
+          <strong id="archive-status-title">馆藏概况</strong>
+          <span>INDEX</span>
         </div>
 
         <div class="archive-status__grid">
           <div class="archive-status__item">
-            <span class="archive-status__key">Access</span>
-            <span class="archive-status__value">Public</span>
+            <span class="archive-status__key">阅览方式</span>
+            <span class="archive-status__value">公开</span>
           </div>
 
           <div class="archive-status__item">
-            <span class="archive-status__key">Records</span>
+            <span class="archive-status__key">收录档案</span>
             <span class="archive-status__value">
               {{ len site.RegularPages }}
             </span>
           </div>
 
           <div class="archive-status__item">
-            <span class="archive-status__key">Sections</span>
+            <span class="archive-status__key">馆藏类别</span>
             <span class="archive-status__value">
               {{ len site.Sections }}
             </span>
           </div>
 
           <div class="archive-status__item">
-            <span class="archive-status__key">Language</span>
+            <span class="archive-status__key">语言</span>
             <span class="archive-status__value">
               {{ site.Language.LanguageCode | default "zh-CN" }}
             </span>

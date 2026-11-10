@@ -415,7 +415,7 @@ test("extruded land leaves the open sea clear", async ({ page }) => {
     view = await camera(page),
     canvas = page.locator(".atlas-pixi-canvas"),
     box = await canvas.boundingBox();
-  const image = await sharp(await canvas.screenshot())
+  const image = await sharp(await canvas.screenshot(groundCapture))
     .ensureAlpha()
     .raw()
     .toBuffer({ resolveWithObject: true });
@@ -437,11 +437,12 @@ test("extruded land leaves the open sea clear", async ({ page }) => {
         (Math.floor((y * image.info.height) / box.height) * image.info.width +
           Math.floor((x * image.info.width) / box.width)) *
         4;
-      const r = image.data[i],
-        b = image.data[i + 2];
-      expect({ x, y, r, b }).toMatchObject({ r: expect.any(Number) });
-      expect(r).toBeLessThan(110);
-      expect(b - r).toBeGreaterThan(25);
+      const rgb = [...image.data.subarray(i, i + 3)];
+      // These positions are outside all raised land and away from coastlines.
+      // They must retain the approved cold-blue sea, rather than a land surface
+      // or the city's neutral missing-survey overlay.
+      expect(Math.max(...rgb.map((value, channel) => Math.abs(value - [169, 196, 210][channel]))),
+        JSON.stringify({ x, y, rgb })).toBeLessThan(6);
       checked++;
     }
   expect(checked).toBeGreaterThan(2);

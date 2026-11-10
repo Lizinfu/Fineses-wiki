@@ -1,8 +1,17 @@
-<section class="page-toc" data-page-toc aria-labelledby="page-toc-title">
+{{- $page := . -}}
+{{- $id := "page-toc" -}}
+{{- if reflect.IsMap . -}}
+  {{- $page = .Page -}}
+  {{- $id = .ID | default $id -}}
+{{- end -}}
+<section class="page-toc" data-page-toc aria-labelledby="{{ $id }}-title">
   <header class="page-toc__title">
-    <strong id="page-toc-title">本页目录</strong>
+    <strong id="{{ $id }}-title">本页目录</strong>
     <span>INDEX</span>
   </header>
 
-  {{ .TableOfContents }}
+  {{ replace (printf "%s" $page.TableOfContents)
+    `id="TableOfContents"`
+    (printf `id="%s-nav"` $id)
+    | safeHTML }}
 </section>

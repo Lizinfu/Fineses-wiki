@@ -5,6 +5,7 @@ import { initThemeToggle } from "./theme";
 import { initTableOfContents } from "./table-of-contents";
 import { initLibraryComments } from "./library-comments";
 import { initLibraryAnnouncement } from "./library-announcement";
+import { initMotion } from "./motion";
 
 function boot(): void {
   document.documentElement.classList.remove("no-js");
@@ -17,6 +18,7 @@ function boot(): void {
   initSearch();
   initLibraryComments();
   initLibraryAnnouncement();
+  initMotion();
 }
 
 if (document.readyState === "loading") {

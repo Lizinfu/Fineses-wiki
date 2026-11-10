@@ -5,6 +5,7 @@
 <head>
   {{ partial "head/meta.html" . }}
   {{ partial "head/styles.html" . }}
+  {{ partial "head/motion.html" . }}
 </head>
 
 <body class="kind-{{ .Kind }}{{ with .Section }} section-{{ . | urlize }}{{ end }}">

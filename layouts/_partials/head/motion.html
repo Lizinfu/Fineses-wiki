@@ -1,0 +1,38 @@
+{{- /* Read display preferences before cross-document snapshots are taken. */ -}}
+<script>
+  (() => {
+    const root = document.documentElement;
+    const isAtlas = {{ if eq .Layout "atlas" }}true{{ else }}false{{ end }};
+    const refreshMotion = () => {
+      let enabled = true;
+      try {
+        enabled = localStorage.getItem("world-library-motion") !== "off";
+      } catch {
+        // Storage is optional; the in-page control still works.
+      }
+      root.dataset.motion = matchMedia("(prefers-reduced-motion: reduce)").matches
+        ? "reduced"
+        : enabled ? "on" : "off";
+    };
+    refreshMotion();
+
+    addEventListener("pagereveal", (event) => {
+      refreshMotion();
+      if (!event.viewTransition) return;
+      if (root.dataset.motion !== "on" || isAtlas) {
+        event.viewTransition.skipTransition();
+        return;
+      }
+      root.dataset.motionTransition = "active";
+      event.viewTransition.finished.finally(() => {
+        delete root.dataset.motionTransition;
+      });
+    });
+
+    addEventListener("pageswap", (event) => {
+      if (event.viewTransition && (root.dataset.motion !== "on" || isAtlas)) {
+        event.viewTransition.skipTransition();
+      }
+    });
+  })();
+</script>

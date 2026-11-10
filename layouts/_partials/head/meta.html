@@ -10,7 +10,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="color-scheme" content="light dark">
-<meta name="theme-color" content="#111315">
+<meta name="theme-color" content="#f0f3ee">
 
 <link rel="icon" href="{{ "favicon.svg" | relURL }}" type="image/svg+xml">
 <link rel="alternate icon" href="{{ "favicon.ico" | relURL }}" sizes="any">
@@ -33,11 +33,8 @@
   (() => {
     try {
       const stored = localStorage.getItem("world-library-theme");
-      const preferred = matchMedia("(prefers-color-scheme: dark)").matches
-        ? "dark"
-        : "light";
       document.documentElement.dataset.theme =
-        stored === "light" || stored === "dark" ? stored : preferred;
+        stored === "light" || stored === "dark" ? stored : "light";
     } catch {
       document.documentElement.dataset.theme = "light";
     }

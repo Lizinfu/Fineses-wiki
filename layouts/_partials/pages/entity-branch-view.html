@@ -1,8 +1,9 @@
-<div class="page-main__inner">
+<div class="page-main__inner entity-page">
   {{ partial "entity/graph-status.html" . }}
   {{ partial "navigation/breadcrumbs.html" . }}
   {{ partial "entity/header.html" . }}
   {{ partial "entity/archive-meta.html" . }}
+  {{ partial "entity/reader-tools.html" . }}
 
   <div class="entity-layout">
     <article class="prose entity-content">
@@ -12,10 +13,6 @@
         {{ partial "entity/child-pages.html" . }}
       </div>
     </article>
-
-    <aside class="entity-layout__aside" aria-label="实体信息">
-      {{ partial "entity/infobox.html" . }}
-    </aside>
   </div>
 
   <div class="entity-appendix">

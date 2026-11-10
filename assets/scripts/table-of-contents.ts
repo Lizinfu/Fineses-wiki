@@ -1,6 +1,8 @@
 export function initTableOfContents(): void {
-  const toc = document.querySelector<HTMLElement>("[data-page-toc]");
-  if (!toc) return;
+  document.querySelectorAll<HTMLElement>("[data-page-toc]").forEach(initContents);
+}
+
+function initContents(toc: HTMLElement): void {
 
   const links = Array.from(
     toc.querySelectorAll<HTMLAnchorElement>("a[href^='#']"),

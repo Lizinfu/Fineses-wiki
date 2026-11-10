@@ -98,7 +98,7 @@
         {{ end }}
         <section id="atlas-feature-card" class="atlas-feature-card" data-atlas-feature-card hidden aria-label="地图要素资料">
           <button class="atlas-text-button" type="button" data-feature-card-close aria-label="关闭要素资料">×</button>
-          <span class="atlas-feature-card__eyebrow">区域情报 / FIELD NOTES</span>
+          <span class="atlas-feature-card__eyebrow">地点资料 / FIELD NOTES</span>
           <span data-feature-card-status></span>
           <h2 data-feature-card-title></h2>
           <p data-feature-card-description></p>
@@ -106,17 +106,17 @@
         </section>
         <p class="atlas-directory__empty" data-atlas-empty hidden>未找到目的地<span>尝试其他名称，或切换至“全部”。</span></p>
         <section data-directory-group="country" class="atlas-directory__group" aria-labelledby="atlas-countries-title">
-        <h3 id="atlas-countries-title" class="atlas-directory__group-title"><span>01 / 诸国档案</span><span data-directory-group-count>{{ len $countryAreas }}</span></h3>
+        <h3 id="atlas-countries-title" class="atlas-directory__group-title"><span>01 / 诸国位置</span><span data-directory-group-count>{{ len $countryAreas }}</span></h3>
         <ul class="atlas-location-list" data-atlas-list>
           {{ range $countryAreas }}
             {{- $entity := index $entities .entity_id -}}
             <li data-atlas-area-item data-directory-kind="country" data-feature-search="{{ .label }} {{ .foreign_label }}" data-area-id="{{ .id }}" data-entity-id="{{ .entity_id }}">
               <button type="button" class="atlas-location" data-atlas-area-focus="{{ .id }}" aria-pressed="false">
                 {{ with .icon_ref }}<span class="atlas-location__emblem" aria-hidden="true"><img src="{{ . | relURL }}" alt="" loading="lazy" width="30" height="30"></span>{{ end }}
-                <span class="atlas-location__body"><span class="atlas-location__kind">{{ if eq .political_status "unruled" }}无政权地区{{ else }}国家{{ end }}</span><strong>{{ .label }}</strong>{{ with .foreign_label }}<span class="atlas-location__foreign">{{ . }}</span>{{ end }}</span>
+                <span class="atlas-location__body"><span class="atlas-location__kind">{{ if eq .political_status "unruled" }}无政权地区{{ else }}国家{{ end }}<span class="atlas-location__action"> · 定位地图</span></span><strong>{{ .label }}</strong>{{ with .foreign_label }}<span class="atlas-location__foreign">{{ . }}</span>{{ end }}</span>
               </button>
               {{ with index $reader .id }}<p class="atlas-feature-fallback">{{ .description }}</p>{{ end }}
-              {{ with $entity }}<a class="atlas-entry-link" href="{{ .page_ref | relURL }}" aria-label="调阅{{ .title }}档案" title="调阅{{ .title }}档案">↗</a>{{ end }}
+              {{ with $entity }}<a class="atlas-entry-link" href="{{ .page_ref | relURL }}" aria-label="调阅{{ .title }}档案">档案 <span aria-hidden="true">↗</span></a>{{ end }}
             </li>
           {{ end }}
         </ul>
@@ -128,20 +128,20 @@
             {{- $entity := index $entities .entity_id -}}
             <li data-atlas-location-item data-directory-kind="place" data-location-id="{{ .id }}" data-entity-id="{{ .entity_id }}">
               <button type="button" class="atlas-location" data-atlas-focus="{{ .id }}" aria-pressed="false">
-                <span class="atlas-location__symbol" aria-hidden="true">⌖</span><span class="atlas-location__body"><span class="atlas-location__kind">地点</span><strong>{{ .label }}</strong></span>
+                <span class="atlas-location__symbol" aria-hidden="true">⌖</span><span class="atlas-location__body"><span class="atlas-location__kind">地点<span class="atlas-location__action"> · 定位地图</span></span><strong>{{ .label }}</strong></span>
               </button>
               {{ with index $reader .id }}<p class="atlas-feature-fallback">{{ .description }}</p>{{ end }}
-              {{ with $entity }}<a class="atlas-entry-link" href="{{ .page_ref | relURL }}" aria-label="调阅{{ .title }}档案" title="调阅{{ .title }}档案">↗</a>{{ end }}
+              {{ with $entity }}<a class="atlas-entry-link" href="{{ .page_ref | relURL }}" aria-label="调阅{{ .title }}档案">档案 <span aria-hidden="true">↗</span></a>{{ end }}
             </li>
           {{ end }}
           {{ range $detailLocations }}
             {{- $entity := index $entities .entity_id -}}
             <li data-atlas-city-item data-directory-kind="place" data-location-id="{{ .id }}" data-entity-id="{{ .entity_id }}">
               <button type="button" class="atlas-location" data-atlas-city-focus="{{ .id }}" aria-pressed="false">
-                <span class="atlas-location__symbol" aria-hidden="true">⌖</span><span class="atlas-location__body"><span class="atlas-location__kind">{{ if eq .kind "capital" }}首都{{ else }}城市{{ end }}</span><strong>{{ .label }}</strong></span>
+                <span class="atlas-location__symbol" aria-hidden="true">⌖</span><span class="atlas-location__body"><span class="atlas-location__kind">{{ if eq .kind "capital" }}首都{{ else }}城市{{ end }}<span class="atlas-location__action"> · 定位地图</span></span><strong>{{ .label }}</strong></span>
               </button>
               {{ with index $reader .id }}<p class="atlas-feature-fallback">{{ .description }}</p>{{ end }}
-              {{ with $entity }}<a class="atlas-entry-link" href="{{ .page_ref | relURL }}" aria-label="调阅{{ .title }}档案" title="调阅{{ .title }}档案">↗</a>{{ end }}
+              {{ with $entity }}<a class="atlas-entry-link" href="{{ .page_ref | relURL }}" aria-label="调阅{{ .title }}档案">档案 <span aria-hidden="true">↗</span></a>{{ end }}
             </li>
           {{ end }}
           {{ if eq $indexedCount 0 }}
@@ -156,7 +156,7 @@
             {{- $entity := index $entities (.entity_id | default "") -}}
             <li data-atlas-feature-item data-directory-kind="feature" data-feature-search="{{ .label }} {{ .foreign_label }}">
               <button class="atlas-location" type="button" data-atlas-feature-focus="{{ .id }}" aria-controls="atlas-feature-card" aria-expanded="false">
-                <span class="atlas-location__symbol" aria-hidden="true">◇</span><span class="atlas-location__body"><span class="atlas-location__kind">跨国地貌</span><strong>{{ .label }}</strong><span class="atlas-location__foreign">{{ .foreign_label }}</span></span>
+                <span class="atlas-location__symbol" aria-hidden="true">◇</span><span class="atlas-location__body"><span class="atlas-location__kind">跨国地貌<span class="atlas-location__action"> · 定位地图</span></span><strong>{{ .label }}</strong><span class="atlas-location__foreign">{{ .foreign_label }}</span></span>
               </button>
               {{ with index $reader .id }}<p class="atlas-feature-fallback" data-feature-description>{{ .description }}</p>{{ end }}
               {{ with $entity }}<a class="atlas-feature-archive" href="{{ strings.TrimPrefix "/" .page_ref | relURL }}">查看档案</a>{{ end }}
@@ -169,7 +169,7 @@
                 {{- $entity := index $entities (.entity_id | default "") -}}
                 <li data-atlas-feature-item data-directory-kind="feature" data-feature-search="{{ .label }}">
                   <button class="atlas-location" type="button" data-atlas-feature-focus="{{ .id }}" aria-controls="atlas-feature-card" aria-expanded="false">
-                    <span class="atlas-location__symbol" aria-hidden="true">◇</span><span class="atlas-location__body"><span class="atlas-location__kind">{{ $map.title }}</span><strong>{{ .label }}</strong></span>
+                    <span class="atlas-location__symbol" aria-hidden="true">◇</span><span class="atlas-location__body"><span class="atlas-location__kind">{{ $map.title }}<span class="atlas-location__action"> · 定位地图</span></span><strong>{{ .label }}</strong></span>
                   </button>
                   {{ with index $reader .id }}<p class="atlas-feature-fallback" data-feature-description>{{ .description }}</p>{{ end }}
                   {{ with $entity }}<a class="atlas-feature-archive" href="{{ strings.TrimPrefix "/" .page_ref | relURL }}">查看档案</a>{{ end }}
