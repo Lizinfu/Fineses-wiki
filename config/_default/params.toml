@@ -2,3 +2,38 @@ library_name = '菲恩尼斯图书馆'
 library_subtitle = '互联档案检索系统'
 site_description = '用于检索国家、人物、历史、概念与地区生态资料的世界观档案库。'
 footer_text = '本馆资料仍在持续整理；馆藏内容以最新修订版本为准。'
+
+# 首页展示配置：按顺序轮播；id 引用既有档案，image 相对该页或父页资源。
+# 仅控制推荐展示，不参与实体模型、检索或关系生成。
+[home_recommendations]
+interval_ms = 7000
+
+[[home_recommendations.items]]
+id = 'art.maerhvan'
+image = 'media/maehvan_draft.png'
+alt = '人鱼的形态设定图'
+summary = '赫芙伦特特有的造物生灵，活跃在居民生活的方方面面。'
+image_position = '50% 35%'
+image_fit = 'contain'
+
+[[home_recommendations.items]]
+id = 'per.lapla'
+image = 'media/lapla.png'
+alt = '拉普拉的人物立绘'
+summary = '熟悉她的人会叫她拉普拉；但，为了你好，请尊称“圣女大人”。'
+image_position = '50% 24%'
+image_fit = 'contain'
+
+[[home_recommendations.items]]
+id = 'reg.ini.col'
+image = 'media/overview.png'
+alt = '卡夏·欧尔莱特的城市插图'
+summary = '熔金之城，伊琳沃克的首都。金火与术法的国度在此降临。'
+image_position = '50% 45%'
+
+[[home_recommendations.items]]
+id = 'nat.ten'
+image = 'media/overview.png'
+alt = '特洛恩行帐的假想复原图'
+summary = '从逐浪而居的海上部族，到沉入海底的历史遗迹。'
+image_position = '50% 50%'

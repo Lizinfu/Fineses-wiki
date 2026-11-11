@@ -15,6 +15,7 @@ topics:
   - 外交
 params:
   id: nat.ini
+  hover_preview: media/cuijin.png
   entity_kind: nation
   library:
     catalog_no: NAT-0005

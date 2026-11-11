@@ -1,0 +1,12 @@
+{{- /* Presentation-only lookup for dynamically rendered search cards. The body
+      search index, matching rules and source documents stay authoritative. */ -}}
+<template data-entry-preview-map>
+  {{- range site.Pages -}}
+    {{- if .Params.hover_preview -}}
+      {{- $page := . -}}
+      {{- with partialCached "media/hover-preview.html" . .RelPermalink -}}
+        <span data-preview-page="{{ $page.RelPermalink }}" data-preview-src="{{ .src }}"></span>
+      {{- end -}}
+    {{- end -}}
+  {{- end -}}
+</template>

@@ -3,6 +3,18 @@ Stage 7 stylesheet bundle.
 Every listed file is required. Missing resources stop the Hugo build.
 */ -}}
 
+{{- $displayFont := resources.Get "fonts/oswald-latin-variable.woff2" | fingerprint "sha384" -}}
+<link rel="preload" href="{{ $displayFont.RelPermalink }}" as="font" type="font/woff2" crossorigin="anonymous">
+<style>
+  @font-face {
+    font-family: "Archive Display";
+    src: url("{{ $displayFont.RelPermalink }}") format("woff2");
+    font-style: normal;
+    font-weight: 200 700;
+    font-display: swap;
+  }
+</style>
+
 {{- $paths := slice
   "styles/tokens.css"
   "styles/reset.css"
@@ -34,6 +46,9 @@ Every listed file is required. Missing resources stop the Hugo build.
   "styles/pages/search-page.css"
   "styles/precision.css"
   "styles/components/motion.css"
+  "styles/industrial.css"
+  "styles/components/recommendations.css"
+  "styles/components/entry-preview.css"
   "styles/utilities.css"
 -}}
 

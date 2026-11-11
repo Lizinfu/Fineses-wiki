@@ -1,0 +1,76 @@
+{{- $config := site.Params.home_recommendations -}}
+{{- $items := $config.items | default (slice) -}}
+{{- $idMap := partialCached "relations/id-map.html" . "entities" -}}
+{{- $slides := slice -}}
+{{- range $items -}}
+  {{- $item := . -}}
+  {{- $page := index $idMap (printf "%v" .id) -}}
+  {{- if not $page -}}
+    {{- errorf "Home recommendation references an unknown archive id: %s" .id -}}
+  {{- else -}}
+    {{- $image := false -}}
+    {{- with $item.image -}}
+      {{- $image = $page.Resources.GetMatch . -}}
+      {{- if not $image -}}
+        {{- with $page.Parent -}}{{- $image = .Resources.GetMatch $item.image -}}{{- end -}}
+      {{- end -}}
+      {{- if not $image -}}
+        {{- errorf "Home recommendation %s cannot find image: %s" $item.id . -}}
+      {{- end -}}
+    {{- end -}}
+    {{- $slides = $slides | append (dict "Page" $page "Image" $image "Item" $item) -}}
+  {{- end -}}
+{{- end -}}
+{{- with $slides -}}
+<section class="recommendations" data-recommendations data-recommendation-interval="{{ $config.interval_ms | default 7000 }}" aria-labelledby="recommendations-title" aria-roledescription="轮播">
+  <header class="recommendations__heading">
+    <h2 id="recommendations-title">推荐阅读</h2>
+    <span class="section-heading__meta">READING SELECTION</span>
+  </header>
+  <div class="recommendations__track" data-recommendations-track role="group" tabindex="0" aria-label="推荐阅读预览，可横向浏览">
+    {{- range $index, $slide := . -}}
+      {{- $page := .Page -}}
+      {{- $hoverPreview := partialCached "media/hover-preview.html" $page $page.RelPermalink -}}
+      {{- $item := .Item -}}
+      {{- $summary := $item.summary | default ($page.Plain | strings.TrimSpace | truncate 110) -}}
+      <article class="recommendations__slide" data-recommendation aria-label="{{ add $index 1 }} / {{ len $slides }}：{{ $page.Title }}">
+        <a class="recommendations__card{{ if $hoverPreview }} has-entry-preview{{ end }}" href="{{ $page.RelPermalink }}"{{ with $hoverPreview }} data-entry-preview style="{{ .style }}"{{ end }}>
+          {{ with $hoverPreview }}<span class="entry-preview" aria-hidden="true"></span>{{ end }}
+          <div class="recommendations__media" style="--recommendation-position: {{ $item.image_position | default "50% 50%" }}; --recommendation-fit: {{ $item.image_fit | default "cover" }};">
+            {{- with .Image -}}
+              {{- $preview := . -}}
+              {{- if and (ne .MediaType.SubType "svg") (gt .Width 1000) -}}
+                {{- $preview = .Resize "1000x webp q82" -}}
+              {{- end -}}
+              {{ partial "media/responsive-image.html" (dict "Resource" $preview "Alt" ($item.alt | default $page.Title) "Loading" "lazy" "Sizes" "(max-width: 42rem) 100vw, 50vw") }}
+            {{- else -}}
+              <span class="recommendations__placeholder" aria-hidden="true">{{ $page.Params.library.catalog_no | default "FINESES" }}</span>
+            {{- end -}}
+            <span class="recommendations__code">{{ $page.Params.library.catalog_no }}</span>
+          </div>
+          <div class="recommendations__body">
+            <span class="recommendations__kicker">{{ printf "%02d" (add $index 1) }} / 精选档案</span>
+            <h3 class="recommendations__title">{{ $page.Title }}</h3>
+            <p class="recommendations__summary">{{ $summary }}</p>
+            <span class="recommendations__meta">阅读档案 <span aria-hidden="true">↗</span></span>
+          </div>
+        </a>
+      </article>
+    {{- end -}}
+  </div>
+  <div class="recommendations__controls" data-recommendations-controls hidden>
+    <div class="recommendations__indicators" role="group" aria-label="选择推荐文章">
+      {{- range $index, $slide := . -}}
+        <button type="button" data-recommendation-goto="{{ $index }}" aria-label="查看推荐：{{ .Page.Title }}"{{ if eq $index 0 }} aria-current="true"{{ end }}>{{ printf "%02d" (add $index 1) }}</button>
+      {{- end -}}
+    </div>
+    <div class="recommendations__navigation">
+      <span class="recommendations__position" data-recommendation-position>01 / {{ printf "%02d" (len $slides) }}</span>
+      <button type="button" data-recommendation-prev aria-label="上一条推荐">←</button>
+      <button type="button" data-recommendation-next aria-label="下一条推荐">→</button>
+      <button type="button" data-recommendation-toggle aria-pressed="true"><span data-recommendation-play-label>暂停轮播</span></button>
+    </div>
+  </div>
+  <p class="visually-hidden" data-recommendation-status aria-live="polite" aria-atomic="true"></p>
+</section>
+{{- end -}}

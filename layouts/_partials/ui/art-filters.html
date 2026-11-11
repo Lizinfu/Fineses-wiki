@@ -1,0 +1,14 @@
+{{- /* Decorative, local filters only. No duplicated images or additional renderer. */ -}}
+<svg class="archive-art-filters" xmlns="http://www.w3.org/2000/svg" width="0" height="0" aria-hidden="true" focusable="false">
+  <defs>
+    <filter id="archive-chromatic" x="-2%" y="-2%" width="104%" height="104%" color-interpolation-filters="sRGB">
+      <feColorMatrix in="SourceGraphic" type="matrix" values="1 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 1 0" result="red"/>
+      <feOffset in="red" dx="1.4" dy=".2" result="red-shift"/>
+      <feColorMatrix in="SourceGraphic" type="matrix" values="0 0 0 0 0  0 1 0 0 0  0 0 0 0 0  0 0 0 1 0" result="green"/>
+      <feColorMatrix in="SourceGraphic" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 1 0 0  0 0 0 1 0" result="blue"/>
+      <feOffset in="blue" dx="-1.4" dy="-.2" result="blue-shift"/>
+      <feBlend in="red-shift" in2="green" mode="screen" result="red-green"/>
+      <feBlend in="red-green" in2="blue-shift" mode="screen"/>
+    </filter>
+  </defs>
+</svg>

@@ -12,7 +12,8 @@ test("motion preference persists across normal page navigation and reload", asyn
   await expect(control).toHaveAttribute("aria-pressed", "true");
   await control.click();
   await expect(control).toHaveAttribute("aria-pressed", "false");
-  await expect(page.locator(".archive-particles")).toBeHidden();
+  await expect(page.locator("[data-signal-field]")).toHaveAttribute("data-signal-ready", "false");
+  await expect(page.locator('[data-signal-static="orbit"]')).toBeVisible();
 
   await page.goto("/nations/nat-inibholc/");
   await expect(page.locator("h1")).toHaveText("伊琳沃克");

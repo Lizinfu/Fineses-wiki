@@ -1,0 +1,50 @@
+<div class="home-signal" data-signal-field data-signal-ready="false" role="group" aria-label="世界观测图形">
+  <div class="home-signal__meta">
+    <span>世界观测 <span aria-hidden="true">/ WORLD OBSERVATORY</span></span>
+    <span aria-hidden="true">F / 01</span>
+  </div>
+  <div class="home-signal__viewport" aria-hidden="true">
+    <svg class="home-signal__fallback" data-signal-static="orbit" viewBox="0 0 600 480" fill="none">
+      <g stroke="currentColor" stroke-width="1" opacity=".65">
+        <circle cx="300" cy="240" r="142" stroke-dasharray="1 5"/>
+        <ellipse cx="300" cy="240" rx="142" ry="44"/>
+        <ellipse cx="300" cy="240" rx="142" ry="96"/>
+        <ellipse cx="300" cy="240" rx="46" ry="142"/>
+        <ellipse cx="300" cy="240" rx="101" ry="142"/>
+        <path d="M158 240h284M300 98v284" stroke-dasharray="2 6"/>
+      </g>
+      <g stroke="var(--accent)" opacity=".85">
+        <ellipse cx="300" cy="240" rx="212" ry="60" transform="rotate(-28 300 240)"/>
+        <ellipse cx="300" cy="240" rx="180" ry="80" transform="rotate(37 300 240)" stroke-dasharray="1 7"/>
+        <path d="M76 240h30m388 0h30M300 36v30m0 348v30"/>
+      </g>
+      <g fill="var(--accent)"><circle cx="119" cy="326" r="4"/><circle cx="473" cy="158" r="3"/><circle cx="300" cy="98" r="3"/></g>
+    </svg>
+    <svg class="home-signal__fallback" data-signal-static="crest" viewBox="0 0 600 480" fill="none" hidden>
+      <g stroke="currentColor" opacity=".7">
+        <path d="m300 66 150 86v174l-150 88-150-88V152z" stroke-dasharray="1 5"/>
+        <path d="m300 92 127 74v147l-127 75-127-75V166z"/>
+        <path d="M204 308V172l96-56 96 56v136M190 322h220M300 66v348" stroke-dasharray="2 7"/>
+      </g>
+      <g stroke="var(--accent)" stroke-width="1.5">
+        <path d="m300 134 54 106-54 106-54-106zM300 134v212m-54-106h108"/>
+        <path d="M150 192v-40l36-21m228 0 36 21v40M150 288v38l36 21m228 0 36-21v-38"/>
+      </g>
+    </svg>
+    <svg class="home-signal__fallback" data-signal-static="terrain" viewBox="0 0 600 480" fill="none" hidden>
+      <g stroke="currentColor" opacity=".65">
+        <path d="M70 306q60-40 114-21t90-48 112-47 144 61M70 326q60-40 114-21t90-48 112-47 144 61M70 346q60-40 114-21t90-48 112-47 144 61M70 366q60-40 114-21t90-48 112-47 144 61M70 386q60-40 114-21t90-48 112-47 144 61"/>
+        <path d="M70 286q60-40 114-21t90-48 112-47 144 61M70 266q60-40 114-21t90-48 112-47 144 61M70 246q60-40 114-21t90-48 112-47 144 61M70 226q60-40 114-21t90-48 112-47 144 61" stroke-dasharray="1 5"/>
+      </g>
+      <g stroke="var(--accent)"><path d="M70 296q60-40 114-21t90-48 112-47 144 61M350 108v244M330 180h40"/><circle cx="350" cy="180" r="7"/></g>
+    </svg>
+  </div>
+  <div class="home-signal__footer">
+    <div><strong data-signal-label>环轨观测</strong><span class="home-signal__hint">切换图形，探索世界的形态</span></div>
+    <div class="home-signal__modes" data-signal-controls role="group" aria-label="观测图形" hidden>
+      <button type="button" data-signal-model="orbit" aria-pressed="true">环轨</button>
+      <button type="button" data-signal-model="crest" aria-pressed="false">徽记</button>
+      <button type="button" data-signal-model="terrain" aria-pressed="false">地形</button>
+    </div>
+  </div>
+</div>

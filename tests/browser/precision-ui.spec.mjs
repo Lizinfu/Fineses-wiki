@@ -28,7 +28,10 @@ test("the country archive exposes contents, facts and clean editorial dates", as
 test("light and dark archive reading satisfy automated accessibility checks", async ({ page }) => {
   await page.goto("/nations/nat-inibholc/");
   for (const theme of ["light", "dark"]) {
-    if (theme === "dark") await page.locator("[data-theme-toggle]").click();
+    if (await page.locator("html").getAttribute("data-theme") !== theme) {
+      await page.locator("[data-theme-toggle]").click();
+    }
+    await expect(page.locator("html")).toHaveAttribute("data-theme", theme);
     const audit = await new AxeBuilder({ page }).withTags(["wcag2a", "wcag2aa"]).analyze();
     expect(audit.violations.map(v => ({ id: v.id, theme, nodes: v.nodes.map(n => ({ target: n.target, detail: n.failureSummary })) }))).toEqual([]);
   }

@@ -12,8 +12,10 @@
 
   <ol class="entity-child-list">
     {{- range $index, $child := $pages -}}
+      {{- $preview := partialCached "media/hover-preview.html" $child $child.RelPermalink -}}
       <li>
-        <a class="entity-child-link" href="{{ $child.RelPermalink }}">
+        <a class="entity-child-link{{ if $preview }} has-entry-preview{{ end }}" {{ with $preview }}data-entry-preview style="{{ .style }}"{{ end }} href="{{ $child.RelPermalink }}">
+          {{ with $preview }}<span class="entry-preview" aria-hidden="true"></span>{{ end }}
           <span class="entity-child-link__index">
             {{ printf "%02d" (add $index 1) }}
           </span>

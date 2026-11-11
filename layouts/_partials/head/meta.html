@@ -3,14 +3,16 @@
   | default "世界观图书馆公开馆藏与交叉索引系统。" -}}
 
 {{- $title := site.Title -}}
+{{- /* Validate optional presentation metadata even on pages without incoming cards. */ -}}
+{{- $hoverPreview := partialCached "media/hover-preview.html" . .RelPermalink -}}
 {{- if not .IsHome -}}
   {{- $title = printf "%s · %s" .Title site.Title -}}
 {{- end -}}
 
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="color-scheme" content="light dark">
-<meta name="theme-color" content="#f0f3ee">
+<meta name="color-scheme" content="dark light">
+<meta name="theme-color" content="#090d11">
 
 <link rel="icon" href="{{ "favicon.svg" | relURL }}" type="image/svg+xml">
 <link rel="alternate icon" href="{{ "favicon.ico" | relURL }}" sizes="any">
@@ -34,9 +36,9 @@
     try {
       const stored = localStorage.getItem("world-library-theme");
       document.documentElement.dataset.theme =
-        stored === "light" || stored === "dark" ? stored : "light";
+        stored === "light" || stored === "dark" ? stored : "dark";
     } catch {
-      document.documentElement.dataset.theme = "light";
+      document.documentElement.dataset.theme = "dark";
     }
   })();
 </script>

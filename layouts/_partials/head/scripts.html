@@ -20,6 +20,24 @@
   crossorigin="anonymous"
   defer></script>
 
+{{- if .IsHome -}}
+  {{- $signalEntry := resources.Get "scripts/signal-entry.ts" -}}
+  {{- $signalScript := $signalEntry
+    | js.Build (dict
+      "targetPath" "js/signal.js"
+      "format" "iife"
+      "target" "es2018"
+      "minify" true
+    )
+    | fingerprint "sha384"
+  -}}
+  <script
+    src="{{ $signalScript.RelPermalink }}"
+    integrity="{{ $signalScript.Data.Integrity }}"
+    crossorigin="anonymous"
+    defer></script>
+{{- end -}}
+
 {{- if eq .Layout "atlas" -}}
   {{- $atlasEntry := resources.Get "scripts/map-entry.ts" -}}
   {{- if not $atlasEntry -}}

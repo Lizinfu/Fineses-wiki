@@ -72,6 +72,7 @@ class ArchiveSearch {
   private readonly resultsList: HTMLOListElement;
   private readonly loadMoreButton: HTMLButtonElement;
   private documents: SearchDocument[] = [];
+  private readonly previews = new Map<string, string>();
   private matches: SearchMatch[] = [];
   private visibleCount = 0;
   private debounceTimer: number | undefined;
@@ -85,6 +86,16 @@ class ArchiveSearch {
     this.resultCount = requiredElement(root, "[data-search-count]");
     this.resultsList = requiredElement(root, "[data-search-results]");
     this.loadMoreButton = requiredElement(root, "[data-search-more]");
+    const previewMap = root.querySelector<HTMLTemplateElement>("template[data-entry-preview-map]");
+    for (const entry of previewMap?.content.querySelectorAll<HTMLElement>("[data-preview-page][data-preview-src]") ?? []) {
+      const page = entry.dataset.previewPage;
+      const source = entry.dataset.previewSrc;
+      if (!page || !source) continue;
+      const image = new URL(source, location.href);
+      if (image.origin === location.origin && ["http:", "https:"].includes(image.protocol)) {
+        this.previews.set(page, image.href);
+      }
+    }
   }
 
   async init(): Promise<void> {
@@ -201,6 +212,16 @@ class ArchiveSearch {
     const item = document.createElement("li");
     const article = document.createElement("article");
     article.className = "search-result";
+    const preview = this.previews.get(record.url);
+    if (preview) {
+      article.classList.add("has-entry-preview");
+      article.dataset.entryPreview = "";
+      article.style.setProperty("--entry-preview-image", `url(${JSON.stringify(preview)})`);
+      const image = document.createElement("span");
+      image.className = "entry-preview";
+      image.setAttribute("aria-hidden", "true");
+      article.append(image);
+    }
     const topline = document.createElement("div");
     topline.className = "search-result__topline";
     const kind = document.createElement("span");

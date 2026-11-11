@@ -104,6 +104,9 @@ test("keyboard users can reach and activate the skip link", async ({
 }) => {
   await page.goto("/");
   await dismissAnnouncement(page);
+  // Start from a document without a modal focus history; dialog restoration is
+  // independent of the first keyboard stop in normal page navigation.
+  await page.reload();
   await page.keyboard.press("Tab");
   await expect(page.locator("a.skip-link")).toBeFocused();
   await page.keyboard.press("Enter");

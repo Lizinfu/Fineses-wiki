@@ -1,0 +1,75 @@
+{{- /* Optional presentation metadata only. Resolve the target archive's own
+      choice; never guess a preview from its title, relationships, or contents. */ -}}
+{{- $page := . -}}
+{{- $result := false -}}
+{{- with $page -}}
+  {{- if isset .Params "hover_preview" -}}
+    {{- $configured := index .Params "hover_preview" -}}
+    {{- if ne (printf "%T" $configured) "string" -}}
+      {{- errorf "hover_preview on %s must be a local image path string" .RelPermalink -}}
+    {{- else -}}
+      {{- $path := strings.TrimSpace $configured -}}
+      {{- if $path -}}
+        {{- $unsafe := or
+          (gt (len (findRE `(?i)^[a-z][a-z0-9+.-]*:` $path)) 0)
+          (strings.HasPrefix $path "//")
+          (strings.Contains $path `\`)
+          (gt (len (findRE `[[:cntrl:]?#]` $path)) 0)
+          (gt (len (findRE `(^|/)\.\.(/|$)` $path)) 0)
+        -}}
+        {{- $extension := path.Ext $path | lower -}}
+        {{- $imageExtensions := slice ".png" ".jpg" ".jpeg" ".webp" ".gif" ".svg" ".avif" ".bmp" ".tif" ".tiff" -}}
+        {{- if or $unsafe (not (in $imageExtensions $extension)) -}}
+          {{- errorf "hover_preview on %s must reference an existing local image without a scheme, query, fragment, or parent traversal: %q" $page.RelPermalink $configured -}}
+        {{- else -}}
+          {{- $src := "" -}}
+          {{- if strings.HasPrefix $path "/" -}}
+            {{- $relative := strings.TrimPrefix "/" (path.Clean $path) -}}
+            {{- $staticPath := path.Join "static" $relative -}}
+            {{- if not (fileExists $staticPath) -}}
+              {{- errorf "hover_preview on %s cannot find static image %q (expected %s)" $page.RelPermalink $configured $staticPath -}}
+            {{- else if (os.Stat $staticPath).IsDir -}}
+              {{- errorf "hover_preview on %s references a directory, not an image: %q" $page.RelPermalink $configured -}}
+            {{- else if eq (os.Stat $staticPath).Size 0 -}}
+              {{- errorf "hover_preview on %s references an empty static image: %q" $page.RelPermalink $configured -}}
+            {{- else -}}
+              {{- /* relURL needs a path without a leading slash to preserve
+                    the GitHub Pages project prefix from baseURL. */ -}}
+              {{- $src = $relative | relURL -}}
+            {{- end -}}
+          {{- else -}}
+            {{- $resourcePath := path.Clean $path -}}
+            {{- $resource := $page.Resources.Get $resourcePath -}}
+            {{- if not $resource -}}
+              {{- with $page.Parent -}}
+                {{- $resource = .Resources.Get $resourcePath -}}
+              {{- end -}}
+            {{- end -}}
+            {{- if not $resource -}}
+              {{- errorf "hover_preview on %s cannot find page or parent image resource %q" $page.RelPermalink $configured -}}
+            {{- else if ne $resource.MediaType.MainType "image" -}}
+              {{- errorf "hover_preview on %s references a non-image resource: %q" $page.RelPermalink $configured -}}
+            {{- else -}}
+              {{- $preview := $resource -}}
+              {{- /* Preserve animated GIFs and vectors. Only formats supported
+                    by Hugo's raster processor are resized; never enlarge. */ -}}
+              {{- if in (slice ".png" ".jpg" ".jpeg" ".webp" ".bmp" ".tif" ".tiff") $extension -}}
+                {{- if gt $resource.Width 800 -}}
+                  {{- $preview = $resource.Resize "800x webp q80" -}}
+                {{- end -}}
+              {{- end -}}
+              {{- $src = $preview.RelPermalink -}}
+            {{- end -}}
+          {{- end -}}
+          {{- with $src -}}
+            {{- /* Only the validated local result reaches CSS. Quoting the URL
+                  prevents path punctuation from becoming a CSS declaration. */ -}}
+            {{- $style := printf "--entry-preview-image: url(%q);" . | safeCSS -}}
+            {{- $result = dict "src" . "style" $style -}}
+          {{- end -}}
+        {{- end -}}
+      {{- end -}}
+    {{- end -}}
+  {{- end -}}
+{{- end -}}
+{{- return $result -}}

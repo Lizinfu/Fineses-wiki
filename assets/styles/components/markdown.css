@@ -1,5 +1,15 @@
 /* Stage 3 — Markdown render-hook output */
 
+.prose {
+  /* An ending editorial float must remain inside its article, not the appendix. */
+  display: flow-root;
+}
+
+.prose > :is(h2, h3, h4, .markdown-table, .media-pair, .map-plate, .archive-gallery, .document-excerpt),
+.prose > .media-figure:not([data-layout="float-start"]):not([data-layout="float-end"]) {
+  clear: both;
+}
+
 .content-heading {
   position: relative;
 }
@@ -62,6 +72,7 @@
   border-block-start: 1px solid var(--line-default);
   font-size: var(--text-sm);
   line-height: 1.55;
+  overflow-wrap: anywhere;
 }
 
 .content-figure__caption::before {

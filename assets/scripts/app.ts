@@ -6,6 +6,8 @@ import { initTableOfContents } from "./table-of-contents";
 import { initLibraryComments } from "./library-comments";
 import { initLibraryAnnouncement } from "./library-announcement";
 import { initMotion } from "./motion";
+import { initRecommendations } from "./recommendations";
+import { initEntryPreviews } from "./entry-preview";
 
 function boot(): void {
   document.documentElement.classList.remove("no-js");
@@ -19,6 +21,8 @@ function boot(): void {
   initLibraryComments();
   initLibraryAnnouncement();
   initMotion();
+  initRecommendations();
+  initEntryPreviews();
 }
 
 if (document.readyState === "loading") {

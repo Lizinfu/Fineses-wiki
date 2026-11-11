@@ -1,0 +1,86 @@
+/* Optional, decorative previews for rectangular archive entries.
+   Contract: .has-entry-preview (or [data-entry-preview]) on the entry,
+   --entry-preview-image: url("resolved local image"), and one direct child
+   <span class="entry-preview" aria-hidden="true"></span>.
+   Do not attach this contract to inline links or article/prose containers. */
+
+:is(.has-entry-preview, [data-entry-preview]) {
+  position: relative;
+  isolation: isolate;
+  --entry-preview-opacity: .07;
+}
+
+:root[data-theme="dark"] :is(.has-entry-preview, [data-entry-preview]) {
+  --entry-preview-opacity: .15;
+}
+
+/* This card has its own opaque text panel; let the optional layer sit behind
+   that panel's text while the outer card continues to provide the surface. */
+.recommendations__card.has-entry-preview > .recommendations__body {
+  background: transparent;
+}
+
+:is(.has-entry-preview, [data-entry-preview]) > .entry-preview {
+  position: absolute;
+  inset: 0 0 0 auto;
+  z-index: -1;
+  display: block;
+  width: min(60%, 32rem);
+  overflow: hidden;
+  border-radius: inherit;
+  background-image: none;
+  background-position: center right;
+  background-repeat: no-repeat;
+  background-size: cover;
+  opacity: 0;
+  filter: saturate(.55);
+  mask-image: linear-gradient(90deg, transparent, rgb(0 0 0 / 30%) 32%, #000 78%);
+  pointer-events: none;
+  transition: opacity 220ms ease-out;
+}
+
+/* Progressive enhancement marks only entries the user has reached. Retaining
+   that image after first activation lets every browser complete the fade-out. */
+:is(.has-entry-preview, [data-entry-preview])[data-entry-preview-loaded="true"] > .entry-preview {
+  background-image: var(--entry-preview-image, none);
+}
+
+/* No-JS fallback: delay removal until opacity has faded to zero. Untouched
+   entries do not consume their URL; older engines get a safe instant exit. */
+@supports (transition-behavior: allow-discrete) {
+  :is(.has-entry-preview, [data-entry-preview]) > .entry-preview {
+    transition:
+      opacity 220ms ease-out,
+      background-image 0s linear 220ms allow-discrete;
+  }
+}
+
+/* Keyboard focus inside a non-link entry also reveals its preview. Focus-visible
+   excludes the persistent focus left by normal touch taps. */
+:is(.has-entry-preview, [data-entry-preview]):is(:focus-visible, :has(:focus-visible)) {
+  background-color: var(--surface-1);
+}
+
+:is(.has-entry-preview, [data-entry-preview]):is(:focus-visible, :has(:focus-visible)) > .entry-preview {
+  background-image: var(--entry-preview-image, none);
+  opacity: var(--entry-preview-opacity);
+  transition-delay: 0s;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  :is(.has-entry-preview, [data-entry-preview]):hover > .entry-preview {
+    background-image: var(--entry-preview-image, none);
+    opacity: var(--entry-preview-opacity);
+    transition-delay: 0s;
+  }
+}
+
+html:is([data-motion="off"], [data-motion="reduced"]) :is(.has-entry-preview, [data-entry-preview]) > .entry-preview {
+  transition: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :is(.has-entry-preview, [data-entry-preview]) > .entry-preview {
+    transition: none;
+  }
+}

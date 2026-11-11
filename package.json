@@ -17,8 +17,9 @@
     "map:check": "node scripts/generate-hex-map.mjs --check",
     "test:maps": "node --test tests/unit/map-features.test.mjs tests/unit/atlas-space.test.mjs tests/unit/atlas-blocks.test.mjs tests/unit/world-relief.test.mjs tests/unit/atlas-viewport.test.mjs tests/unit/atlas-city.test.mjs tests/unit/atlas-city-context.test.mjs tests/unit/atlas-lighting.test.mjs tests/unit/atlas-surface.test.mjs",
     "typecheck:atlas": "tsc -p tsconfig.atlas.json",
+    "typecheck:ui": "tsc -p tsconfig.ui.json",
     "wiki:prepare": "node scripts/prepare-wiki.mjs",
-    "wiki:validate": "node scripts/validate-content-model.mjs && npm run map:check && node scripts/validate-maps.mjs && npm run typecheck:atlas && npm run test:maps && node scripts/prepare-wiki.mjs --check",
+    "wiki:validate": "node scripts/validate-content-model.mjs && npm run map:check && node scripts/validate-maps.mjs && npm run typecheck:atlas && npm run typecheck:ui && npm run test:maps && node scripts/prepare-wiki.mjs --check",
     "wiki:report": "node scripts/print-content-report.mjs && node scripts/print-timeline-report.mjs",
     "quality:source": "node scripts/check-media-budget.mjs",
     "quality:site": "node scripts/check-site-output.mjs",
@@ -31,11 +32,13 @@
   "devDependencies": {
     "@axe-core/playwright": "^4.10.2",
     "@playwright/test": "^1.55.1",
+    "@types/three": "0.187.0",
     "sharp": "^0.35.5",
     "typescript": "5.9.3",
     "yaml": "2.9.0"
   },
   "dependencies": {
-    "pixi.js": "8.22.0"
+    "pixi.js": "8.22.0",
+    "three": "0.187.0"
   }
 }

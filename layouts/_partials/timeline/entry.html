@@ -19,13 +19,17 @@
 {{- $note := index $entry "note" | default "" -}}
 {{- $presentation := index $entry "presentation" | default "standard" -}}
 {{- $summaryMode := index $entry "summary_mode" | default "full" -}}
+{{- $preview := false -}}
+{{- with $page -}}{{- $preview = partialCached "media/hover-preview.html" . .RelPermalink -}}{{- end -}}
 
 <li
-  class="timeline-entry"
+  class="timeline-entry{{ if $preview }} has-entry-preview{{ end }}"
+  {{ with $preview }}data-entry-preview style="{{ .style }}"{{ end }}
   id="timeline-{{ $id | urlize }}"
   data-presentation="{{ $presentation }}"
   data-status="{{ $status }}"
   data-summary-mode="{{ $summaryMode }}">
+  {{ with $preview }}<span class="entry-preview" aria-hidden="true"></span>{{ end }}
 
   <div class="timeline-entry__date">
     <strong class="timeline-entry__date-primary">

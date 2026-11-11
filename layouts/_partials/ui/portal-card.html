@@ -10,7 +10,10 @@
   {{- end -}}
 {{- end -}}
 
-<a class="portal-card" href="{{ $href }}">
+{{- $preview := false -}}
+{{- with $portalPage -}}{{- $preview = partialCached "media/hover-preview.html" . .RelPermalink -}}{{- end -}}
+<a class="portal-card{{ if $preview }} has-entry-preview{{ end }}" {{ with $preview }}data-entry-preview style="{{ .style }}"{{ end }} href="{{ $href }}">
+  {{ with $preview }}<span class="entry-preview" aria-hidden="true"></span>{{ end }}
   <header class="portal-card__header">
     <span class="portal-card__code">{{ $portal.code }}</span>
     <span class="portal-card__count">

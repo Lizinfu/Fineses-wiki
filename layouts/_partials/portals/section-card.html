@@ -10,10 +10,13 @@
 {{- end -}}
 
 {{- if $available -}}
+{{- $preview := partialCached "media/hover-preview.html" $sectionPage $sectionPage.RelPermalink -}}
 <a
-  class="portal-section-card"
+  class="portal-section-card{{ if $preview }} has-entry-preview{{ end }}"
+  {{ with $preview }}data-entry-preview style="{{ .style }}"{{ end }}
   href="{{ $href }}"
   data-available="true">
+  {{ with $preview }}<span class="entry-preview" aria-hidden="true"></span>{{ end }}
   <div class="portal-section-card__content">
     <span class="portal-section-card__code">
       SECTION / {{ $config.key | upper }}

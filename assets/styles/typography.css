@@ -137,15 +137,15 @@ pre {
   max-width: min(100%, 64rem);
 }
 
-.prose figcaption {
+.prose .content-figure > figcaption {
   display: grid;
-  grid-template-columns: auto 1fr;
+  grid-template-columns: auto minmax(0, 1fr);
   gap: var(--space-3);
   padding-block-start: var(--space-2);
   border-top: 1px solid var(--line-default);
 }
 
-.prose figcaption::before {
+.prose .content-figure > figcaption::before {
   content: "FIG.";
   font-family: var(--font-mono);
   font-size: var(--text-xs);

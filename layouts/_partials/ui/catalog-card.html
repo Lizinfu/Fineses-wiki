@@ -17,10 +17,13 @@
 {{- if not $description -}}
   {{- $description = $page.Summary | plainify -}}
 {{- end -}}
+{{- $preview := partialCached "media/hover-preview.html" $page $page.RelPermalink -}}
 
 <a
-  class="catalog-card{{ if eq $variant "compact" }} catalog-card--compact{{ end }}"
+  class="catalog-card{{ if eq $variant "compact" }} catalog-card--compact{{ end }}{{ if $preview }} has-entry-preview{{ end }}"
+  {{ with $preview }}data-entry-preview style="{{ .style }}"{{ end }}
   href="{{ $page.RelPermalink }}">
+  {{ with $preview }}<span class="entry-preview" aria-hidden="true"></span>{{ end }}
   <header class="catalog-card__header">
     <span class="catalog-card__code">
       {{ $catalog | default (printf "%s / %02d" ($kind | upper) $page.Weight) }}

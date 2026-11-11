@@ -1,0 +1,12 @@
+{
+  "extends": "./tsconfig.atlas.json",
+  "include": [
+    "assets/scripts/signal-entry.ts",
+    "assets/scripts/signal-field.ts",
+    "assets/scripts/recommendations.ts",
+    "assets/scripts/entry-preview.ts",
+    "assets/scripts/search.ts",
+    "assets/scripts/theme.ts",
+    "assets/scripts/motion.ts"
+  ]
+}

@@ -55,7 +55,10 @@
         {{- end -}}
       {{- end -}}
 
-      <li class="relation-item relation-item--incoming">
+      {{- $preview := false -}}
+      {{- with $sourcePage -}}{{- $preview = partialCached "media/hover-preview.html" . .RelPermalink -}}{{- end -}}
+      <li class="relation-item relation-item--incoming{{ if $preview }} has-entry-preview{{ end }}" {{ with $preview }}data-entry-preview style="{{ .style }}"{{ end }}>
+        {{ with $preview }}<span class="entry-preview" aria-hidden="true"></span>{{ end }}
         <span class="relation-item__type">{{ $label }}</span>
 
         <div class="relation-item__body">

@@ -5,6 +5,8 @@
   data-search-index-url="{{ "search-index.json" | relURL }}"
   aria-busy="false">
 
+  {{ partialCached "media/hover-preview-map.html" . "search-entry-previews" }}
+
   <noscript>
     <section class="search-nojs">
       <span class="ui-kicker">JavaScript unavailable</span>

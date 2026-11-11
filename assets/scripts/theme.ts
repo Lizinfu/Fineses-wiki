@@ -13,7 +13,7 @@ function getStoredTheme(): Theme | null {
 }
 
 function getPreferredTheme(): Theme {
-  return "light";
+  return "dark";
 }
 
 function applyTheme(theme: Theme): void {
@@ -23,6 +23,9 @@ function applyTheme(theme: Theme): void {
   // intermediate colors from individual hover transitions.
   root.dataset.themeChanging = "true";
   root.dataset.theme = theme;
+  document.querySelector('meta[name="theme-color"]')?.setAttribute(
+    "content", theme === "dark" ? "#090d11" : "#f0f3ee",
+  );
   requestAnimationFrame(() => requestAnimationFrame(() => {
     if (revision === themeRevision) delete root.dataset.themeChanging;
   }));

@@ -28,7 +28,9 @@
       {{ with .Data.Terms }}
         <div class="taxonomy-index">
           {{ range .Alphabetical }}
-            <a class="taxonomy-row" href="{{ .Page.RelPermalink }}">
+            {{- $preview := partialCached "media/hover-preview.html" .Page .Page.RelPermalink -}}
+            <a class="taxonomy-row{{ if $preview }} has-entry-preview{{ end }}" {{ with $preview }}data-entry-preview style="{{ .style }}"{{ end }} href="{{ .Page.RelPermalink }}">
+              {{ with $preview }}<span class="entry-preview" aria-hidden="true"></span>{{ end }}
               <span class="taxonomy-row__title">{{ .Page.LinkTitle }}</span>
               <span class="taxonomy-row__code">
                 {{ .Page.Data.Singular | default "TERM" | upper }}

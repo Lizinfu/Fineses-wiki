@@ -1,4 +1,5 @@
 {{ define "main" }}
+  {{ partial "ui/art-filters.html" . }}
   {{- $timeline := index site.Data.generated "timeline" -}}
   {{- $timelineCount := 0 -}}
   {{- with $timeline -}}
@@ -7,6 +8,7 @@
   <div class="page-main__inner">
     <section class="home-hero" aria-labelledby="home-title">
       <div class="home-hero__content">
+        <span class="home-hero__wordmark" aria-hidden="true">FINESES<span> / ARCHIVE</span></span>
         <span class="ui-kicker">公开馆藏 / PUBLIC ARCHIVE</span>
         <h1 class="home-hero__title" id="home-title">世界的记录，<br>在此交汇。</h1>
         <p class="home-hero__description">国家、人物与历史的公开馆藏。<br>从一份档案，进入彼此相连的世界。</p>
@@ -19,23 +21,9 @@
           <p class="home-search__hint">空格分隔关键词，同时匹配全部关键词</p>
         </form>
       </div>
-      {{ with site.GetPage "/nations/nat-inibholc" }}
-        {{ $feature := . }}
-        {{ with .Resources.GetMatch "media/cuijin.png" }}
-          {{ $image := .Resize "900x webp q80" }}
-          <a class="home-feature" href="{{ $feature.RelPermalink }}" aria-label="调阅{{ $feature.Title }}档案">
-            <div class="home-feature__media">
-              <img src="{{ $image.RelPermalink }}" alt="伊琳沃克高风原野的淬金石柱" width="{{ $image.Width }}" height="{{ $image.Height }}" fetchpriority="high">
-              <span class="home-feature__code">{{ $feature.Params.library.catalog_no }}</span>
-            </div>
-            <div class="home-feature__caption">
-              <div><strong>{{ $feature.Title }}</strong><span>{{ $feature.Description }} · 国家档案</span></div>
-              <span aria-hidden="true">↗</span>
-            </div>
-          </a>
-        {{ end }}
-      {{ end }}
+      {{ partial "ui/home-signal.html" . }}
     </section>
+    {{ partial "ui/recommendations.html" . }}
     <div class="home-summary" aria-label="馆藏概况">
       <span><strong>{{ len site.Data.navigation.portals.portals }}</strong> 馆藏门户</span>
       <span><strong>{{ len site.RegularPages }}</strong> 公开条目</span>

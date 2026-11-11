@@ -12,8 +12,9 @@
     Inter, "Noto Sans SC", "Source Han Sans SC", "PingFang SC",
     "Microsoft YaHei", system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
   --font-display:
-    "Arial Narrow", "Roboto Condensed", Inter, "Noto Sans SC", "PingFang SC",
+    "Archive Display", Bahnschrift, "Arial Narrow", "Roboto Condensed", Inter, "Noto Sans SC", "PingFang SC",
     system-ui, sans-serif;
+  --font-wide: "Arial Black", "Helvetica Neue", Inter, "Microsoft YaHei", sans-serif;
   --font-mono:
     "JetBrains Mono", "SFMono-Regular", Consolas, "Liberation Mono", monospace;
   --font-annotation: "PingFang ChangAnTi", "Kaiti SC", KaiTi, STKaiti, serif;
@@ -62,10 +63,10 @@
   --gutter: clamp(1rem, 2.5vw, 2.5rem);
 
   /* Surfaces */
-  --canvas: #e5e9e4;
-  --surface-0: #f0f3ee;
+  --canvas: #e4eaed;
+  --surface-0: #f0f4f5;
   --surface-1: #ffffff;
-  --surface-2: #e5eae3;
+  --surface-2: #e3eaed;
   --surface-inverse: #202925;
   --surface-inverse-2: #2c3731;
 
@@ -83,10 +84,10 @@
   --line-inverse: rgb(255 255 255 / 24%);
 
   /* Accent and semantic colors */
-  --accent: #e6ad28;
-  --accent-hover: #f0ba3d;
-  --accent-soft: #f4e9c9;
-  --accent-ink: #17130a;
+  --accent: #006c83;
+  --accent-hover: #00586c;
+  --accent-soft: #d6eaf0;
+  --accent-ink: #ffffff;
 
   --status-info: #377ba8;
   --status-success: #397d5d;
@@ -96,7 +97,7 @@
   --status-damaged: #7e6659;
 
   /* Interaction */
-  --focus-ring: 0 0 0 3px rgb(242 169 0 / 44%);
+  --focus-ring: 0 0 0 3px rgb(43 183 213 / 42%);
   --selection-bg: #17191b;
   --selection-text: #ffffff;
 
@@ -126,24 +127,34 @@
 :root[data-theme="dark"] {
   color-scheme: dark;
 
-  --canvas: #0d0f10;
-  --surface-0: #131517;
-  --surface-1: #181b1e;
-  --surface-2: #24282b;
-  --surface-inverse: #f1f2ef;
-  --surface-inverse-2: #d9dbd7;
+  --canvas: #070b0e;
+  --surface-0: #0b1116;
+  --surface-1: #111a21;
+  --surface-2: #1a272f;
+  --surface-inverse: #e8edf0;
+  --surface-inverse-2: #ccd8de;
 
-  --text-strong: #f4f5f2;
-  --text-body: #d6d9d5;
-  --text-muted: #a2a8a5;
-  --text-faint: #727a78;
-  --text-inverse: #111315;
+  --text-strong: #edf3f5;
+  --text-body: #c7d1d7;
+  --text-muted: #9aaeb9;
+  --text-faint: #7b929f;
+  --text-inverse: #091116;
 
-  --line-strong: #f0f1ed;
-  --line-default: #555b5d;
-  --line-subtle: #303537;
+  --line-strong: #9aaeb9;
+  --line-default: #3a4c58;
+  --line-subtle: #24323c;
   --line-inverse: rgb(0 0 0 / 24%);
 
-  --accent-soft: #3b2b03;
-  --accent-ink: #17130a;
+  --accent: #4ed8ef;
+  --accent-hover: #a0eef8;
+  --accent-soft: #123642;
+  --accent-ink: #07171d;
+  --status-info: #68b7e0;
+  --status-success: #68bf9d;
+  --status-warning: #e7bd67;
+  --status-danger: #e98983;
+  --status-disputed: #b49ddc;
+  --status-damaged: #bea18e;
+  --selection-bg: #4ed8ef;
+  --selection-text: #07171d;
 }

@@ -65,6 +65,10 @@ params:
 
 `description`、`keywords` 和 `library.source_refs` 是当前强烈建议字段；模板会使用描述，别名仍用于档案展示与未来扩展，但当前正文检索不以这些元数据作为命中依据。最小校验尚未将前三者全部视为必填。新内容应填写 `description`，并为别名、旧称和外文名使用 `keywords` 或 `params.names`。
 
+## 可选展示属性
+
+所有文档均可选配 `params.hover_preview`，值为本站图片路径，例如 `media/cuijin.png`。不设置或空字符串时不显示悬停预览。此字段只控制矩形档案词条的装饰层，不加入正文检索匹配或关系图，不改变实体 Schema 版本。路径由 Hugo 构建时校验。设置方式见[悬停预览图指南](entry-hover-previews.md)。
+
 ## 稳定 ID 与 URL
 
 - ID 仅允许小写字母、数字、点号和连字符：`^[a-z0-9]+(?:[.-][a-z0-9]+)*$`；

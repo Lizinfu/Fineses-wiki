@@ -206,7 +206,8 @@ export function initMotion(): void {
   const reduced = window.matchMedia(REDUCED_MOTION);
   const controls = document.querySelectorAll<HTMLButtonElement>("[data-motion-toggle]");
   const atlas = Boolean(document.querySelector(".atlas-page"));
-  const header = atlas ? null : document.querySelector<HTMLElement>(".home-hero, .entity-header");
+  // Home owns its point-cloud layer; reading headers keep the smaller dust layer.
+  const header = atlas ? null : document.querySelector<HTMLElement>(".entity-header");
   const particles = header ? new ArchiveParticles(header) : null;
   const detailAnimations = new Set<Animation>();
   let enabled = readPreference();
